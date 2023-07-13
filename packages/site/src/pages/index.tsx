@@ -15,6 +15,8 @@ import {
   Card,
 } from '../components';
 
+import { sendTransactionRisk } from 'controllers/api';
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -119,6 +121,7 @@ const Index = () => {
 
   const handleSendHelloClick = async () => {
     try {
+      await sendTransactionRisk();
       await sendHello();
     } catch (e) {
       console.error(e);
