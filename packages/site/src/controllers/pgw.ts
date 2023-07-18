@@ -15,7 +15,7 @@ import type {
   TPostFeedbackCase,
   TPostTransactionRiskSummary,
   TGetUserProfile,
-  TPostCreateOrder
+  TPostCreateOrder,
 } from 'controllers/types/pgw.type'
 
 import { generatedUUIDV4 } from 'helpers/secret'
@@ -29,8 +29,8 @@ const logger = new Logger('[controllers.pgw]')
 const pgwBase = createUrlBase('PGW')
 
 export const onResponseErrorCode: TOnResponseErrorCode = (response, responseBody) => {
-  //able to be extended if any further spec
-  //there is no any payload sometime when statusCode is 50X
+  // able to be extended if any further spec
+  // there is no any payload sometime when statusCode is 50X
   const { status } = response
   const error = {
     httpStatusCode: status,
@@ -39,28 +39,28 @@ export const onResponseErrorCode: TOnResponseErrorCode = (response, responseBody
     message: responseBody?.message,
     dateTime: responseBody?.datetime,
   }
-  
+
   return error
 }
 
 const header = (addition = {}) => {
   return {
     'Content-Type': 'application/json;charset=utf-8',
-    'X-Trace-ID': generatedUUIDV4(), //frontend generated guid per request, need regenerate when retry
+    'X-Trace-ID': generatedUUIDV4(), // frontend generated guid per request, need regenerate when retry
     'X-Client-ID': storage.get('clientId') || clientId(),
-    Authorization:'Bearer 20230510-MKT-DEMO-SKITTLE-BOMBpgHl7n0JGXlTHCdmr538crxKW1DbFQMZ5E39FKWfPukCLofOlu5A52xdcNveRfXPuTw4ZIBrXTFRvrVZYY1qKhDChaJs/IT2QwVgECl9J0Qa2obti9u5lyU1j2UO9wPnm0TbBy/pFympIGCGAuEV9d71LTmX1JFftuJLzA1oEmzMvRG0KTPFtrTrFsSN0BnTYK3xG96Lu1CKhVLvSNfBJg8WeRdP4BzcNtO7o+U9mKiDVnjHO7ahx+/wjBfuTToIIhlVFlTruA+IqAdryjj1harE76JM8umG0C3lcY9VSwPVcopUpwzO2zs01va9Vb8r22khoVRNRNf4QiQh2jOANg==',
+    Authorization:
+      'Bearer eyJraWQiOiI3Q1NCd2p0cUd2WmJtMzBxOW9ZWUk2cHdqRlQ5elZua3lVMk1kZlVtWHhBPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI2Y2U0YjgzYS04YzM3LTQyM2YtOWU5NS0wNjYwNTMxMmEyZTQiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV9qZGZjVGVVZFciLCJjbGllbnRfaWQiOiIzbjdrdmpwdWIwcGVvcjZoZDRpN3N0aXBrZiIsIm9yaWdpbl9qdGkiOiJiZjYzODVkYS1kM2IxLTQ1ZWYtOGZjMS02NTcyYTkxYTczN2UiLCJldmVudF9pZCI6Ijg4ZmMzYTQ0LWQwYTMtNDhjZS1iMzYxLWJhNTA1YjIzNDNmYyIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE2ODk2NjUwODksImV4cCI6MTY4OTY3NTEwNCwiaWF0IjoxNjg5NjcxNTA0LCJqdGkiOiIzZmJmZWRhNi03YWZiLTQ3MTUtOTM3OC00MzZjNGVkY2IxODgiLCJ1c2VybmFtZSI6ImVvYV82NGI2M2UzZWI0MGUxNzE3N2MzZTgxMWMifQ.hg2S7yEwNAdw3Rvs1MKTWjtcitd2d8zVXkdLjPPoxm0QWLn1B5i4UZGcrn10kzCZxtKCVcWqy6L6YtNpDIKYHGQsT71xsEyUbZA1SXf_B_2aKCeB9tslhok2A8loLcxFM3stoMN91kroppEyPrwCNVo2-IUi3yj2cvNXv1vjwdQ2Ege0plBFHrYOQJLlB6O90mScHX1ph8gjZsiI640mbN-IbPz1XI44wr5VuNc6QgCmfCsF13hDoArk2wILp_HzSXYa05E7ISFEqkoU_7XNfkt246CeYLHaNzBMrgIw33u8ubvoQjnIvy3EUpbeSw7JdeQk6TVlb04FnukuKtY5Wg',
     'X-App-Platform': 'snap',
-    'X-App-Version': window.version,
+    'X-App-Version': '',
     ...addition,
-  };
+  }
 }
 
 const clientId = () => {
-  const clientId = generatedUUIDV4();
-  storage.set('clientId', clientId);
-  return clientId;
-}; 
-
+  const clientId = generatedUUIDV4()
+  storage.set('clientId', clientId)
+  return clientId
+}
 
 const getAddressInfo: TGetAddressInfo = async (address, headerOption = {}) => {
   const keyPath = 'GET_CONTRACT_ADDRESS'
@@ -271,5 +271,5 @@ export default {
   getUserProfile,
   postFeedbackCase,
   postTransactionRiskSummary,
-  postCreateOrder
+  postCreateOrder,
 }

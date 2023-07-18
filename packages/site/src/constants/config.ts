@@ -2,7 +2,8 @@ export const ENABLE_CLIENT_CONSOLE = true
 export const API = {
   PGW: {
     // base: 'https://pgw-us1.nexone.io', // prod
-    base: 'https://pgw-us1.stag.nexone.io', //dev
+    // base: 'https://pgw-us1.stag.nexone.io', //dev-stag
+    base: 'https://metapgw-us1.test.mgcp.a1q7.net', //dev-test
     basicLayer: '/api',
     version: 'v1',
     path: {

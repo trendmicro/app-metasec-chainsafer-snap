@@ -3,10 +3,13 @@ import { proxyConvertToPayload } from 'helpers/proxyRestructure'
 import { TProxyObj } from 'helpers/types/proxyRestructure.type'
 import Logger from 'controllers/logger'
 import { IResponseError } from 'controllers/types/http.type'
+import { IPostTransactionRisksResponseParsed } from 'helpers/parser/pgw/types/postTransactionRisks.type'
 
 const logger = new Logger('[snap]')
 
-export const sendTransactionRisk = async () => {
+export const sendTransactionRisk = async (): Promise<
+  [IPostTransactionRisksResponseParsed, IResponseError]
+> => {
   const mockTxn = {
     method: 'eth_sendTransaction',
     url: 'https://stg.d2xaw2fxxh4153.amplifyapp.com',
@@ -19,15 +22,18 @@ export const sendTransactionRisk = async () => {
       },
     ],
   }
+  let result: IPostTransactionRisksResponseParsed = {} as IPostTransactionRisksResponseParsed
+  let error: IResponseError = {} as IResponseError
   try {
-    const result = await pgw.postTransactionRisks(
+    result = await pgw.postTransactionRisks(
       proxyConvertToPayload(mockTxn.url, mockTxn as TProxyObj),
     )
-    logger.log(`${JSON.stringify(result)}`)
-  } catch (error) {
-    const responseError = error as IResponseError
-    logger.error(`${JSON.stringify(responseError)}`)
+  } catch (e) {
+    error = e
+    logger.error(`${JSON.stringify(error)}`)
   }
+
+  return [result, error]
 }
 
 export default {
