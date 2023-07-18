@@ -7,6 +7,10 @@ export const API = {
     basicLayer: '/api',
     version: 'v1',
     path: {
+      POST_SIGN_UP: 'account/eoa-users',
+      GET_NONCE: 'account/eoa-users/{address}/nonce',
+      POST_LOGIN: 'account/eoa-login',
+      POST_RENEW_TOKEN: 'auth/token',
       GET_CONTRACT_ADDRESS: 'eth/addresses/{address}',
       POST_INQUIRY_ID: 'crypto/transaction-inquiries',
       GET_TRANSACTION_INQUIRES: 'crypto/transaction-inquiries/{inquiry_id}',

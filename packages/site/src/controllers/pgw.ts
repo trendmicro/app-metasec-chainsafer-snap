@@ -1,3 +1,7 @@
+import type { IPostSignUpResponseBody } from 'helpers/parser/pgw/types/postSignUp.type'
+import type { IGetNonceResponseBody } from 'helpers/parser/pgw/types/getNonce.type'
+import type { IPostLoginResponseBody } from 'helpers/parser/pgw/types/postLogin.type'
+import type { IPostRenewTokenResponseBody } from 'helpers/parser/pgw/types/postRenewToken.type'
 import type { IGetAddressInfoResponseBody } from 'helpers/parser/pgw/types/getAddressInfo.type'
 import type { IPostInquiryIdResponseBody } from 'helpers/parser/pgw/types/postInquiryId.type'
 import type { IGetTransactionInquiresResponseBody } from 'helpers/parser/pgw/types/getTransactionInquires.type'
@@ -7,6 +11,10 @@ import type { IPostFeedbackCaseResponseBody } from 'helpers/parser/pgw/types/pos
 import type { IPostCreateOrderResponseBody } from 'helpers/parser/pgw/types/postCreateOrder.type'
 import type { IGetUserProfileResponseBody } from 'helpers/parser/pgw/types/getUserProfile.type'
 import type {
+  TPostSignUp,
+  TGetNonce,
+  TPostLogin,
+  TPostRenewToken,
   TOnResponseErrorCode,
   TGetAddressInfo,
   TPostInquiryId,
@@ -60,6 +68,106 @@ const clientId = () => {
   const clientId = generatedUUIDV4()
   storage.set('clientId', clientId)
   return clientId
+}
+
+const postSignUp: TPostSignUp = async (postSignUpRequestBody, headerOption = {}) => {
+  const keyPath = 'POST_SIGN_UP'
+  const url = pgwBase(keyPath)
+  const body = postSignUpRequestBody
+  const headers = header(headerOption)
+
+  logger.log('postSignUp', 'head', headers)
+  logger.log('postSignUp', 'body', body)
+
+  const request = await post(url, payload(body, headers), onResponseErrorCode)
+  const [error, response] = await request<IPostSignUpResponseBody>()
+
+  logger.log('postSignUp', 'error', error)
+  logger.log('postSignUp', 'response', response)
+
+  if (error && error.httpStatusCode != 409) {
+    throw error
+  }
+
+  const responseParsed = pgwParser[keyPath](response)
+  logger.log('postSignUp', 'responseParsed', responseParsed)
+
+  return responseParsed
+}
+
+const getNonce: TGetNonce = async (address, headerOption = {}) => {
+  const keyPath = 'GET_NONCE'
+  const url = pgwBase(keyPath, (path: string) => path.replace('{address}', address))
+  const body = {}
+  const headers = header(headerOption)
+
+  logger.log('getNonce', 'head', headers)
+  logger.log('getNonce', 'body', body)
+
+  const request = await get(url, payload(body, headers), onResponseErrorCode)
+  const [error, response] = await request<IGetNonceResponseBody>()
+
+  logger.log('getNonce', 'error', error)
+  logger.log('getNonce', 'response', response)
+
+  if (error) {
+    throw error
+  }
+
+  const responseParsed = pgwParser[keyPath](response)
+  logger.log('getNonce', 'responseParsed', responseParsed)
+
+  return responseParsed
+}
+
+const postLogin: TPostLogin = async (postLoginRequestBody, headerOption = {}) => {
+  const keyPath = 'POST_LOGIN'
+  const url = pgwBase(keyPath)
+  const body = postLoginRequestBody
+  const headers = header(headerOption)
+
+  logger.log('postLogin', 'head', headers)
+  logger.log('postLogin', 'body', body)
+
+  const request = await post(url, payload(body, headers), onResponseErrorCode)
+  const [error, response] = await request<IPostLoginResponseBody>()
+
+  logger.log('postLogin', 'error', error)
+  logger.log('postLogin', 'response', response)
+
+  if (error) {
+    throw error
+  }
+
+  const responseParsed = pgwParser[keyPath](response)
+  logger.log('postLogin', 'responseParsed', responseParsed)
+
+  return responseParsed
+}
+
+const postRenewToken: TPostRenewToken = async (postRenewTokenRequestBody, headerOption = {}) => {
+  const keyPath = 'POST_RENEW_TOKEN'
+  const url = pgwBase(keyPath)
+  const body = postRenewTokenRequestBody
+  const headers = header(headerOption)
+
+  logger.log('postRenewToken', 'head', headers)
+  logger.log('postRenewToken', 'body', body)
+
+  const request = await post(url, payload(body, headers), onResponseErrorCode)
+  const [error, response] = await request<IPostRenewTokenResponseBody>()
+
+  logger.log('postRenewToken', 'error', error)
+  logger.log('postRenewToken', 'response', response)
+
+  if (error) {
+    throw error
+  }
+
+  const responseParsed = pgwParser[keyPath](response)
+  logger.log('postRenewToken', 'responseParsed', responseParsed)
+
+  return responseParsed
 }
 
 const getAddressInfo: TGetAddressInfo = async (address, headerOption = {}) => {
@@ -264,6 +372,10 @@ const postCreateOrder: TPostCreateOrder = async (postCreateOrderRequestBody, hea
 }
 
 export default {
+  postSignUp,
+  getNonce,
+  postLogin,
+  postRenewToken,
   getAddressInfo,
   postInquiryId,
   getTransactionInquires,

@@ -55,7 +55,7 @@ export const getSnap = async (version?: string): Promise<Snap | undefined> => {
  */
 
 export const sendHello = async () => {
-  const [result, error] = await sendTransactionRisk() 
+  const [result, error] = await sendTransactionRisk()
 
   await window.ethereum.request({
     method: 'wallet_invokeSnap',
@@ -72,4 +72,34 @@ export const sendHello = async () => {
   })
 }
 
-export const isLocalSnap = (snapId: string) => snapId.startsWith('local:')
+export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');
+
+export const sendLoginToken = async () => {
+  const token = '';
+  const refresh_token = '';
+
+  const accounts = await window.ethereum.request<string[]>({
+    method: 'eth_requestAccounts',
+  });
+
+  console.log("accounts list: ", accounts);
+
+  const account = accounts?.[0];
+  if (!account) {
+    throw new Error('Must accept wallet connection request.');
+  }
+
+  const address = account;
+  console.log('account: ', `${ address }`);
+
+
+  //...call api get token
+
+  await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: { method: 'storeToken', params: { address, token, refresh_token } },
+    },
+  });
+};

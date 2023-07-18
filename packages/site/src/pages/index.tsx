@@ -5,6 +5,7 @@ import {
   connectSnap,
   getSnap,
   sendHello,
+  sendLogin,
   shouldDisplayReconnectButton,
 } from '../utils';
 import {
@@ -12,8 +13,10 @@ import {
   InstallFlaskButton,
   ReconnectButton,
   SendHelloButton,
+  LoginButton,
   Card,
 } from '../components';
+import storage from 'controllers/storage';
 
 const Container = styled.div`
   display: flex;
@@ -126,6 +129,19 @@ const Index = () => {
     }
   };
 
+  const handleLogin = async () => {
+    try {
+      await sendLogin();
+
+      console.log("username", storage.get("username"))
+      console.log("access_token", storage.get("access_token"))
+      console.log("refresh_token", storage.get("refresh_token"))
+    } catch (e) {
+      console.error(e);
+      dispatch({ type: MetamaskActions.SetError, payload: e });
+    }
+  };
+
   return (
     <Container>
       <Heading>
@@ -174,6 +190,21 @@ const Index = () => {
             disabled={!state.installedSnap}
           />
         )}
+        <Card
+          content={{
+            title: 'SignUp/LogIn',
+            description: 'This is call mock api from this Dapp and show result in snap dialog message',
+            button: (
+              <LoginButton onClick={handleLogin} disabled={!state.installedSnap} />
+            ),
+          }}
+          disabled={!state.installedSnap}
+          fullWidth={
+            state.isFlask &&
+            Boolean(state.installedSnap) &&
+            !shouldDisplayReconnectButton(state.installedSnap)
+          }
+        />
         <Card
           content={{
             title: 'Send Transaction Risk',
