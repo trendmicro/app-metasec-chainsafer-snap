@@ -1,11 +1,13 @@
 import { useContext } from 'react';
 import styled from 'styled-components';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
+import { getLatestSwitchAccount } from 'utils/metamask';
 import {
   connectSnap,
   getSnap,
   sendHello,
-  sendLogin,
+  sendLatestSignUpAccountLogin,
+  sendLatestSwitchAccountLogin,
   shouldDisplayReconnectButton,
 } from '../utils';
 import {
@@ -129,13 +131,18 @@ const Index = () => {
     }
   };
 
-  const handleLogin = async () => {
+  const handleLatestSignUpLogin = async () => {
     try {
-      await sendLogin();
+      await sendLatestSignUpAccountLogin();
+    } catch (e) {
+      console.error(e);
+      dispatch({ type: MetamaskActions.SetError, payload: e });
+    }
+  };
 
-      console.log("username", storage.get("username"))
-      console.log("access_token", storage.get("access_token"))
-      console.log("refresh_token", storage.get("refresh_token"))
+  const handleLatestSwitchLogin = async () => {
+    try {
+      await sendLatestSwitchAccountLogin();
     } catch (e) {
       console.error(e);
       dispatch({ type: MetamaskActions.SetError, payload: e });
@@ -145,7 +152,7 @@ const Index = () => {
   return (
     <Container>
       <Heading>
-        Welcome to <Span>template-snap</Span>
+        Welcome to <Span>ChainSafer Dapp</Span>
       </Heading>
       <Subtitle>
         Get started by editing <code>src/index.ts</code>
@@ -192,21 +199,6 @@ const Index = () => {
         )}
         <Card
           content={{
-            title: 'SignUp/LogIn',
-            description: 'This is call mock api from this Dapp and show result in snap dialog message',
-            button: (
-              <LoginButton onClick={handleLogin} disabled={!state.installedSnap} />
-            ),
-          }}
-          disabled={!state.installedSnap}
-          fullWidth={
-            state.isFlask &&
-            Boolean(state.installedSnap) &&
-            !shouldDisplayReconnectButton(state.installedSnap)
-          }
-        />
-        <Card
-          content={{
             title: 'Send Transaction Risk',
             description: 'This is call mock api from this Dapp and show result in snap dialog message',
             button: (
@@ -220,11 +212,39 @@ const Index = () => {
             !shouldDisplayReconnectButton(state.installedSnap)
           }
         />
+        <Card
+          content={{
+            title: 'SignUp/LogIn By Latest SignUp Account',
+            description: 'This is call mock api from this Dapp and show result in snap dialog message',
+            button: (
+              <LoginButton onClick={handleLatestSignUpLogin} disabled={!state.installedSnap} />
+            ),
+          }}
+          disabled={!state.installedSnap}
+          fullWidth={
+            state.isFlask &&
+            Boolean(state.installedSnap) &&
+            !shouldDisplayReconnectButton(state.installedSnap)
+          }
+        />
+        <Card
+          content={{
+            title: 'SignUp/LogIn By Latest Switch Account',
+            description: 'This is call mock api from this Dapp and show result in snap dialog message',
+            button: (
+              <LoginButton onClick={handleLatestSwitchLogin} disabled={!state.installedSnap} />
+            ),
+          }}
+          disabled={!state.installedSnap}
+          fullWidth={
+            state.isFlask &&
+            Boolean(state.installedSnap) &&
+            !shouldDisplayReconnectButton(state.installedSnap)
+          }
+        />
         <Notice>
           <p>
-            Please note that the <b>snap.manifest.json</b> and <b>package.json</b> must be located
-            in the server root directory and the bundle must be hosted at the location specified by
-            the location field.
+            Latest sign up account <b>{storage.get("signup_account") || "waiting sign up"}</b>
           </p>
         </Notice>
       </CardContainer>
