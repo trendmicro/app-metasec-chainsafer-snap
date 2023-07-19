@@ -155,14 +155,8 @@ const Index = () => {
           <Card
             content={{
               title: 'Connect',
-              description:
-                'Get started by connecting to and installing the example snap.',
-              button: (
-                <ConnectButton
-                  onClick={handleConnectClick}
-                  disabled={!state.isFlask}
-                />
-              ),
+              description: 'Get started by connecting to and installing the example snap.',
+              button: <ConnectButton onClick={handleConnectClick} disabled={!state.isFlask} />,
             }}
             disabled={!state.isFlask}
           />
@@ -174,10 +168,7 @@ const Index = () => {
               description:
                 'While connected to a local running snap this button will always be displayed in order to update the snap if a change is made.',
               button: (
-                <ReconnectButton
-                  onClick={handleConnectClick}
-                  disabled={!state.installedSnap}
-                />
+                <ReconnectButton onClick={handleConnectClick} disabled={!state.installedSnap} />
               ),
             }}
             disabled={!state.installedSnap}
@@ -185,14 +176,10 @@ const Index = () => {
         )}
         <Card
           content={{
-            title: 'Send Hello message',
-            description:
-              'Display a custom message within a confirmation screen in MetaMask.',
+            title: 'Send Transaction Risk',
+            description: 'This is call mock api from this Dapp and show result in snap dialog message',
             button: (
-              <SendHelloButton
-                onClick={handleSendHelloClick}
-                disabled={!state.installedSnap}
-              />
+              <SendHelloButton onClick={handleSendHelloClick} disabled={!state.installedSnap} />
             ),
           }}
           disabled={!state.installedSnap}
@@ -204,15 +191,14 @@ const Index = () => {
         />
         <Notice>
           <p>
-            Please note that the <b>snap.manifest.json</b> and{' '}
-            <b>package.json</b> must be located in the server root directory and
-            the bundle must be hosted at the location specified by the location
-            field.
+            Please note that the <b>snap.manifest.json</b> and <b>package.json</b> must be located
+            in the server root directory and the bundle must be hosted at the location specified by
+            the location field.
           </p>
         </Notice>
       </CardContainer>
     </Container>
-  );
+  )
 };
 
 export default Index;
