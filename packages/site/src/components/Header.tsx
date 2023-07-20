@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
-import { connectSnap, getThemePreference, getSnap } from '../utils';
+import { connectSnap, getThemePreference, getSnap, requestAccount } from '../utils';
 import { HeaderButtons } from './Buttons';
 import { SnapLogo } from './SnapLogo';
 import { Toggle } from './Toggle';
@@ -45,32 +45,31 @@ export const Header = ({
   const theme = useTheme();
   const [state, dispatch] = useContext(MetaMaskContext);
 
-  const handleConnectClick = async () => {
+  const handleWalletConnectClick = async () => {
     try {
-      await connectSnap();
-      const installedSnap = await getSnap();
-
+      const [accounts, currentAccount] = await requestAccount()
       dispatch({
-        type: MetamaskActions.SetInstalled,
-        payload: installedSnap,
-      });
+        type: MetamaskActions.SetAccount,
+        payload: { accounts, currentAccount },
+      })
     } catch (e) {
-      console.error(e);
-      dispatch({ type: MetamaskActions.SetError, payload: e });
+      console.error(e)
+      dispatch({ type: MetamaskActions.SetError, payload: e })
     }
-  };
+  }
+
   return (
     <HeaderWrapper>
       <LogoWrapper>
         <SnapLogo color={theme.colors.icon.default} size={36} />
-        <Title>template-snap</Title>
+        <Title>ChainSafer-Snap</Title>
       </LogoWrapper>
       <RightContainer>
         <Toggle
           onToggle={handleToggleClick}
           defaultChecked={getThemePreference()}
         />
-        <HeaderButtons state={state} onConnectClick={handleConnectClick} />
+        <HeaderButtons state={state} onConnectClick={handleWalletConnectClick} />
       </RightContainer>
     </HeaderWrapper>
   );

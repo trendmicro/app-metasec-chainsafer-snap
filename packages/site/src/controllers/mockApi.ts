@@ -7,7 +7,7 @@ import { IPostTransactionRisksResponseParsed } from 'helpers/parser/pgw/types/po
 
 const logger = new Logger('[snap]')
 
-export const sendTransactionRisk = async (): Promise<
+export const sendMockTransactionRisk = async (): Promise<
   [IPostTransactionRisksResponseParsed, IResponseError]
 > => {
   const mockTxn = {
@@ -26,7 +26,7 @@ export const sendTransactionRisk = async (): Promise<
   let error: IResponseError = {} as IResponseError
   try {
     result = await pgw.postTransactionRisks(
-      proxyConvertToPayload(mockTxn.url, mockTxn as TProxyObj),
+      proxyConvertToPayload(mockTxn.url, mockTxn as TProxyObj)
     )
   } catch (e) {
     error = e
@@ -37,5 +37,5 @@ export const sendTransactionRisk = async (): Promise<
 }
 
 export default {
-  sendTransactionRisk,
+  sendMockTransactionRisk,
 }

@@ -24,8 +24,10 @@ export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
             text(`${JSON.stringify(request.params)}`),
           ]),
         },
-      })
+      });
+    case 'login':
+    case 'reNewToken':
     default:
       throw new Error('Method not found.')
   }
-}
+};

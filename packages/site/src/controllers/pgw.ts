@@ -1,3 +1,7 @@
+import type { IPostSignUpResponseBody } from 'helpers/parser/pgw/types/postSignUp.type'
+import type { IGetNonceResponseBody } from 'helpers/parser/pgw/types/getNonce.type'
+import type { IPostLoginResponseBody } from 'helpers/parser/pgw/types/postLogin.type'
+import type { IPostRenewTokenResponseBody } from 'helpers/parser/pgw/types/postRenewToken.type'
 import type { IGetAddressInfoResponseBody } from 'helpers/parser/pgw/types/getAddressInfo.type'
 import type { IPostInquiryIdResponseBody } from 'helpers/parser/pgw/types/postInquiryId.type'
 import type { IGetTransactionInquiresResponseBody } from 'helpers/parser/pgw/types/getTransactionInquires.type'
@@ -7,6 +11,10 @@ import type { IPostFeedbackCaseResponseBody } from 'helpers/parser/pgw/types/pos
 import type { IPostCreateOrderResponseBody } from 'helpers/parser/pgw/types/postCreateOrder.type'
 import type { IGetUserProfileResponseBody } from 'helpers/parser/pgw/types/getUserProfile.type'
 import type {
+  TPostSignUp,
+  TGetNonce,
+  TPostLogin,
+  TPostRenewToken,
   TOnResponseErrorCode,
   TGetAddressInfo,
   TPostInquiryId,
@@ -47,19 +55,141 @@ const header = (addition = {}) => {
   return {
     'Content-Type': 'application/json;charset=utf-8',
     'X-Trace-ID': generatedUUIDV4(), // frontend generated guid per request, need regenerate when retry
-    'X-Client-ID': storage.get('clientId') || clientId(),
-    Authorization:
-      'Bearer eyJraWQiOiI3Q1NCd2p0cUd2WmJtMzBxOW9ZWUk2cHdqRlQ5elZua3lVMk1kZlVtWHhBPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI2Y2U0YjgzYS04YzM3LTQyM2YtOWU5NS0wNjYwNTMxMmEyZTQiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV9qZGZjVGVVZFciLCJjbGllbnRfaWQiOiIzbjdrdmpwdWIwcGVvcjZoZDRpN3N0aXBrZiIsIm9yaWdpbl9qdGkiOiJiZjYzODVkYS1kM2IxLTQ1ZWYtOGZjMS02NTcyYTkxYTczN2UiLCJldmVudF9pZCI6Ijg4ZmMzYTQ0LWQwYTMtNDhjZS1iMzYxLWJhNTA1YjIzNDNmYyIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE2ODk2NjUwODksImV4cCI6MTY4OTY3NTEwNCwiaWF0IjoxNjg5NjcxNTA0LCJqdGkiOiIzZmJmZWRhNi03YWZiLTQ3MTUtOTM3OC00MzZjNGVkY2IxODgiLCJ1c2VybmFtZSI6ImVvYV82NGI2M2UzZWI0MGUxNzE3N2MzZTgxMWMifQ.hg2S7yEwNAdw3Rvs1MKTWjtcitd2d8zVXkdLjPPoxm0QWLn1B5i4UZGcrn10kzCZxtKCVcWqy6L6YtNpDIKYHGQsT71xsEyUbZA1SXf_B_2aKCeB9tslhok2A8loLcxFM3stoMN91kroppEyPrwCNVo2-IUi3yj2cvNXv1vjwdQ2Ege0plBFHrYOQJLlB6O90mScHX1ph8gjZsiI640mbN-IbPz1XI44wr5VuNc6QgCmfCsF13hDoArk2wILp_HzSXYa05E7ISFEqkoU_7XNfkt246CeYLHaNzBMrgIw33u8ubvoQjnIvy3EUpbeSw7JdeQk6TVlb04FnukuKtY5Wg',
+    'X-Client-ID': getClientId(),
     'X-App-Platform': 'snap',
+    Authorization: getAuthorization(),
     'X-App-Version': '',
     ...addition,
   }
 }
 
-const clientId = () => {
+const getAuthorization = (): string => {
+  let accessToken = ''
+  try {
+    accessToken =`Bearer ${storage.get('accessToken')}`
+  } catch (e) {
+    return ''
+  }
+  return accessToken
+}
+ 
+const getClientId = (): string => { 
+  let clientId:string|null
+  try {
+    clientId = storage.get('clientId')
+    if (!clientId) {
+      clientId = genClientId()
+    }
+  } catch (e) {
+    return ''
+  }
+  return clientId
+}
+
+const genClientId = () => {
   const clientId = generatedUUIDV4()
   storage.set('clientId', clientId)
   return clientId
+}
+
+const postSignUp: TPostSignUp = async (postSignUpRequestBody, headerOption = {}) => {
+  const keyPath = 'POST_SIGN_UP'
+  const url = pgwBase(keyPath)
+  const body = postSignUpRequestBody
+  const headers = header(headerOption)
+
+  logger.log('postSignUp', 'head', headers)
+  logger.log('postSignUp', 'body', body)
+
+  const request = await post(url, payload(body, headers), onResponseErrorCode)
+  const [error, response] = await request<IPostSignUpResponseBody>()
+
+  logger.log('postSignUp', 'error', error)
+  logger.log('postSignUp', 'response', response)
+
+  if (error) {
+    throw error
+  }
+
+  const responseParsed = pgwParser[keyPath](response)
+  logger.log('postSignUp', 'responseParsed', responseParsed)
+
+  return responseParsed
+}
+
+const getNonce: TGetNonce = async (address, headerOption = {}) => {
+  const keyPath = 'GET_NONCE'
+  const url = pgwBase(keyPath, (path: string) => path.replace('{address}', address))
+  const body = {}
+  const headers = header(headerOption)
+
+  logger.log('getNonce', 'head', headers)
+  logger.log('getNonce', 'body', body)
+
+  const request = await get(url, payload(body, headers), onResponseErrorCode)
+  const [error, response] = await request<IGetNonceResponseBody>()
+
+  logger.log('getNonce', 'error', error)
+  logger.log('getNonce', 'response', response)
+
+  if (error) {
+    throw error
+  }
+
+  const responseParsed = pgwParser[keyPath](response)
+  logger.log('getNonce', 'responseParsed', responseParsed)
+
+  return responseParsed
+}
+
+const postLogin: TPostLogin = async (postLoginRequestBody, headerOption = {}) => {
+  const keyPath = 'POST_LOGIN'
+  const url = pgwBase(keyPath)
+  const body = postLoginRequestBody
+  const headers = header(headerOption)
+
+  logger.log('postLogin', 'head', headers)
+  logger.log('postLogin', 'body', body)
+
+  const request = await post(url, payload(body, headers), onResponseErrorCode)
+  const [error, response] = await request<IPostLoginResponseBody>()
+
+  logger.log('postLogin', 'error', error)
+  logger.log('postLogin', 'response', response)
+
+  if (error) {
+    throw error
+  }
+
+  const responseParsed = pgwParser[keyPath](response)
+  logger.log('postLogin', 'responseParsed', responseParsed)
+
+  return responseParsed
+}
+
+const postRenewToken: TPostRenewToken = async (postRenewTokenRequestBody, headerOption = {}) => {
+  const keyPath = 'POST_RENEW_TOKEN'
+  const url = pgwBase(keyPath)
+  const body = postRenewTokenRequestBody
+  const headers = header(headerOption)
+
+  logger.log('postRenewToken', 'head', headers)
+  logger.log('postRenewToken', 'body', body)
+
+  const request = await post(url, payload(body, headers), onResponseErrorCode)
+  const [error, response] = await request<IPostRenewTokenResponseBody>()
+
+  logger.log('postRenewToken', 'error', error)
+  logger.log('postRenewToken', 'response', response)
+
+  if (error) {
+    throw error
+  }
+
+  const responseParsed = pgwParser[keyPath](response)
+  logger.log('postRenewToken', 'responseParsed', responseParsed)
+
+  return responseParsed
 }
 
 const getAddressInfo: TGetAddressInfo = async (address, headerOption = {}) => {
@@ -264,6 +394,10 @@ const postCreateOrder: TPostCreateOrder = async (postCreateOrderRequestBody, hea
 }
 
 export default {
+  postSignUp,
+  getNonce,
+  postLogin,
+  postRenewToken,
   getAddressInfo,
   postInquiryId,
   getTransactionInquires,
