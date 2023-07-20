@@ -1,8 +1,9 @@
-import { ComponentProps } from 'react';
-import styled from 'styled-components';
-import { MetamaskState } from '../hooks';
-import { ReactComponent as FlaskFox } from '../assets/flask_fox.svg';
-import { shouldDisplayReconnectButton } from '../utils';
+import { ComponentProps } from 'react'
+import styled from 'styled-components'
+import { MetamaskState } from '../hooks'
+import { ReactComponent as FlaskFox } from '../assets/flask_fox.svg'
+import { clearTokenFromStorage, shouldDisplayReconnectButton } from '../utils'
+import { showAccount } from 'utils/eoa'
 
 const Link = styled.a`
   display: flex;
@@ -30,7 +31,7 @@ const Link = styled.a`
     width: 100%;
     box-sizing: border-box;
   }
-`;
+`
 
 const Button = styled.button`
   display: flex;
@@ -41,11 +42,11 @@ const Button = styled.button`
   ${({ theme }) => theme.mediaQueries.small} {
     width: 100%;
   }
-`;
+`
 
 const ButtonText = styled.span`
   margin-left: 1rem;
-`;
+`
 
 const ConnectedContainer = styled.div`
   display: flex;
@@ -59,7 +60,7 @@ const ConnectedContainer = styled.div`
   color: ${(props) => props.theme.colors.text.inverse};
   font-weight: bold;
   padding: 1.2rem;
-`;
+`
 
 const ConnectedIndicator = styled.div`
   content: ' ';
@@ -67,64 +68,90 @@ const ConnectedIndicator = styled.div`
   height: 10px;
   border-radius: 50%;
   background-color: green;
-`;
+`
 
 export const InstallFlaskButton = () => (
   <Link href="https://metamask.io/flask/" target="_blank">
     <FlaskFox />
     <ButtonText>Install MetaMask Flask</ButtonText>
   </Link>
-);
+)
 
-export const ConnectButton = (props: ComponentProps<typeof Button>) => {
+export const WallectConnectButton = (props: ComponentProps<typeof Button>) => {
   return (
     <Button {...props}>
       <FlaskFox />
-      <ButtonText>Connect</ButtonText>
+      <ButtonText>Wallect Connect</ButtonText>
     </Button>
-  );
-};
+  )
+}
 
-export const ReconnectButton = (props: ComponentProps<typeof Button>) => {
+export const InstallSnapButton = (props: ComponentProps<typeof Button>) => {
+  return <Button {...props}>Install Snap</Button>
+}
+
+export const ReInstallSnapButton = (props: ComponentProps<typeof Button>) => {
   return (
-    <Button {...props}>
-      <FlaskFox />
-      <ButtonText>Reconnect</ButtonText>
-    </Button>
-  );
-};
+    <div>
+      {/* <Button {...props}>ReInstall Snap</Button>
+      <br></br> */}
+      <ConnectedContainer>
+        <ConnectedIndicator />
+        <ButtonText>Snap Installed</ButtonText>
+      </ConnectedContainer>
+    </div>
+  )
+}
 
 export const SendHelloButton = (props: ComponentProps<typeof Button>) => {
-  return <Button {...props}>Send</Button>;
-};
+  return <Button {...props}>Send</Button>
+}
 
 export const LoginButton = (props: ComponentProps<typeof Button>) => {
-  return <Button {...props}>SignUp/Login</Button>;
-};
+  return <Button {...props}>Login</Button>
+}
 
-export const HeaderButtons = ({
+export const SendLogoutButton = (props: ComponentProps<typeof Button>) => { 
+  return <Button {...props}>Logout</Button>
+}
+
+export const LoginButtons = ({
   state,
-  onConnectClick,
+  onClick,
+  disabled,
 }: {
-  state: MetamaskState;
-  onConnectClick(): unknown;
+  state: MetamaskState
+    onClick(): unknown
+  disabled: boolean
 }) => {
-  if (!state.isFlask && !state.installedSnap) {
-    return <InstallFlaskButton />;
-  }
-
-  if (!state.installedSnap) {
-    return <ConnectButton onClick={onConnectClick} />;
-  }
-
-  if (shouldDisplayReconnectButton(state.installedSnap)) {
-    return <ReconnectButton onClick={onConnectClick} />;
+  if (state.token.accessToken === undefined || state.token.accessToken === null) {
+    return <LoginButton onClick={onClick} disabled={disabled} />
   }
 
   return (
     <ConnectedContainer>
       <ConnectedIndicator />
-      <ButtonText>Connected</ButtonText>
+      <ButtonText>Account Logined</ButtonText>
     </ConnectedContainer>
-  );
-};
+  )
+}
+
+export const HeaderButtons = ({
+  state,
+  onConnectClick,
+}: {
+  state: MetamaskState
+  onConnectClick(): unknown
+}) => {
+  if (state.account.currentAccount === undefined || state.account.currentAccount === '') {
+    return <WallectConnectButton onClick={onConnectClick} />
+  }
+  let address =
+    state.account.currentAccount.slice(0, 4) + '...' + state.account.currentAccount.slice(-4)
+  return (
+    <ConnectedContainer>
+      <ConnectedIndicator />
+      <ButtonText>Wallect Connect {address}</ButtonText>
+    </ConnectedContainer>
+  )
+}

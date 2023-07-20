@@ -1,24 +1,26 @@
-import { useContext } from 'react';
-import styled from 'styled-components';
-import { MetamaskActions, MetaMaskContext } from '../hooks';
-import { getLatestSwitchAccount } from 'utils/metamask';
+import { useContext } from 'react'
+import styled from 'styled-components'
+import { MetamaskActions, MetaMaskContext } from '../hooks'
+
 import {
   connectSnap,
   getSnap,
-  sendHello,
-  sendLatestSignUpAccountLogin,
-  sendLatestSwitchAccountLogin,
+  sendTransactionRisk,
+  sendCurrentAccountToLogin,
   shouldDisplayReconnectButton,
-} from '../utils';
+  clearTokenFromStorage,
+} from '../utils'
 import {
-  ConnectButton,
+  InstallSnapButton,
   InstallFlaskButton,
-  ReconnectButton,
+  ReInstallSnapButton,
   SendHelloButton,
-  LoginButton,
   Card,
-} from '../components';
-import storage from 'controllers/storage';
+  LoginButtons,
+  SendLogoutButton,
+} from '../components'
+import storage from 'controllers/storage'
+import { showAccount } from 'utils/eoa'
 
 const Container = styled.div`
   display: flex;
@@ -34,17 +36,17 @@ const Container = styled.div`
     margin-bottom: 2rem;
     width: auto;
   }
-`;
+`
 
 const Heading = styled.h1`
   margin-top: 0;
   margin-bottom: 2.4rem;
   text-align: center;
-`;
+`
 
 const Span = styled.span`
   color: ${(props) => props.theme.colors.primary.default};
-`;
+`
 
 const Subtitle = styled.p`
   font-size: ${({ theme }) => theme.fontSizes.large};
@@ -54,7 +56,7 @@ const Subtitle = styled.p`
   ${({ theme }) => theme.mediaQueries.small} {
     font-size: ${({ theme }) => theme.fontSizes.text};
   }
-`;
+`
 
 const CardContainer = styled.div`
   display: flex;
@@ -65,7 +67,7 @@ const CardContainer = styled.div`
   width: 100%;
   height: 100%;
   margin-top: 1.5rem;
-`;
+`
 
 const Notice = styled.div`
   background-color: ${({ theme }) => theme.colors.background.alternative};
@@ -84,7 +86,7 @@ const Notice = styled.div`
     margin-top: 1.2rem;
     padding: 1.6rem;
   }
-`;
+`
 
 const ErrorMessage = styled.div`
   background-color: ${({ theme }) => theme.colors.error.muted};
@@ -102,52 +104,62 @@ const ErrorMessage = styled.div`
     margin-top: 1.2rem;
     max-width: 100%;
   }
-`;
+`
 
 const Index = () => {
-  const [state, dispatch] = useContext(MetaMaskContext);
+  const [state, dispatch] = useContext(MetaMaskContext)
 
   const handleConnectClick = async () => {
     try {
-      await connectSnap();
-      const installedSnap = await getSnap();
+      await connectSnap()
+      const installedSnap = await getSnap()
 
       dispatch({
         type: MetamaskActions.SetInstalled,
         payload: installedSnap,
-      });
+      })
     } catch (e) {
-      console.error(e);
-      dispatch({ type: MetamaskActions.SetError, payload: e });
+      console.error(e)
+      dispatch({ type: MetamaskActions.SetError, payload: e })
     }
-  };
+  }
 
-  const handleSendHelloClick = async () => {
+  const handleLogin = async () => {
     try {
-      await sendHello();
-    } catch (e) {
-      console.error(e);
-      dispatch({ type: MetamaskActions.SetError, payload: e });
-    }
-  };
+      console.log('handleLogin', state.account.currentAccount)
+      const token = await sendCurrentAccountToLogin(state.account.currentAccount ?? '')
 
-  const handleLatestSignUpLogin = async () => {
-    try {
-      await sendLatestSignUpAccountLogin();
+      dispatch({
+        type: MetamaskActions.SetToken,
+        payload: token,
+      })
     } catch (e) {
-      console.error(e);
-      dispatch({ type: MetamaskActions.SetError, payload: e });
+      console.error(e)
+      dispatch({ type: MetamaskActions.SetError, payload: e })
     }
-  };
+  }
 
-  const handleLatestSwitchLogin = async () => {
+  const handleClearToken = () => {
     try {
-      await sendLatestSwitchAccountLogin();
+      storage.clear()
+      dispatch({
+        type: MetamaskActions.SetToken,
+        payload: '',
+      })
     } catch (e) {
-      console.error(e);
-      dispatch({ type: MetamaskActions.SetError, payload: e });
+      console.error(e)
+      dispatch({ type: MetamaskActions.SetError, payload: e })
     }
-  };
+  }
+
+  const handleSendTransationRisk = async () => {
+    try {
+      await sendTransactionRisk()
+    } catch (e) {
+      console.error(e)
+      dispatch({ type: MetamaskActions.SetError, payload: e })
+    }
+  }
 
   return (
     <Container>
@@ -166,7 +178,7 @@ const Index = () => {
         {!state.isFlask && (
           <Card
             content={{
-              title: 'Install',
+              title: 'Install Flask',
               description:
                 'Snaps is pre-release software only available in MetaMask Flask, a canary distribution for developers with access to upcoming features.',
               button: <InstallFlaskButton />,
@@ -177,9 +189,9 @@ const Index = () => {
         {!state.installedSnap && (
           <Card
             content={{
-              title: 'Connect',
+              title: 'Install Snap',
               description: 'Get started by connecting to and installing the example snap.',
-              button: <ConnectButton onClick={handleConnectClick} disabled={!state.isFlask} />,
+              button: <InstallSnapButton onClick={handleConnectClick} disabled={!state.isFlask} />,
             }}
             disabled={!state.isFlask}
           />
@@ -187,11 +199,11 @@ const Index = () => {
         {shouldDisplayReconnectButton(state.installedSnap) && (
           <Card
             content={{
-              title: 'Reconnect',
+              title: 'Snap Installed',
               description:
                 'While connected to a local running snap this button will always be displayed in order to update the snap if a change is made.',
               button: (
-                <ReconnectButton onClick={handleConnectClick} disabled={!state.installedSnap} />
+                <ReInstallSnapButton onClick={handleConnectClick} disabled={!state.installedSnap} />
               ),
             }}
             disabled={!state.installedSnap}
@@ -199,13 +211,37 @@ const Index = () => {
         )}
         <Card
           content={{
+            title: 'Login ChainSafer',
+            description: `After we can access wallect account and get user current account then we can implement login ChainSafer with current connect account.`,
+            button: (
+              <LoginButtons
+                state={state}
+                onClick={handleLogin}
+                disabled={!state.installedSnap || !state.account.currentAccount}
+              />
+            ),
+          }}
+          disabled={!state.installedSnap || !state.account.currentAccount}
+          fullWidth={
+            state.isFlask &&
+            Boolean(state.installedSnap) &&
+            !shouldDisplayReconnectButton(state.installedSnap)
+          }
+        />
+
+        <Card
+          content={{
             title: 'Send Transaction Risk',
-            description: 'This is call mock api from this Dapp and show result in snap dialog message',
+            description:
+              'This is call mock api from this Dapp and show result in snap dialog message',
             button: (
-              <SendHelloButton onClick={handleSendHelloClick} disabled={!state.installedSnap} />
+              <SendHelloButton
+                onClick={handleSendTransationRisk}
+                disabled={!state.token.accessToken}
+              />
             ),
           }}
-          disabled={!state.installedSnap}
+          disabled={!state.token.accessToken}
           fullWidth={
             state.isFlask &&
             Boolean(state.installedSnap) &&
@@ -214,42 +250,44 @@ const Index = () => {
         />
         <Card
           content={{
-            title: 'SignUp/LogIn By Latest SignUp Account',
-            description: 'This is call mock api from this Dapp and show result in snap dialog message',
+            title: 'Logout ChainSafer',
+            description: 'This is clear storage and set state to empty token',
             button: (
-              <LoginButton onClick={handleLatestSignUpLogin} disabled={!state.installedSnap} />
+              <SendLogoutButton onClick={handleClearToken} disabled={!state.token.accessToken} />
             ),
           }}
-          disabled={!state.installedSnap}
+          disabled={!state.token.accessToken}
           fullWidth={
             state.isFlask &&
             Boolean(state.installedSnap) &&
             !shouldDisplayReconnectButton(state.installedSnap)
           }
         />
-        <Card
-          content={{
-            title: 'SignUp/LogIn By Latest Switch Account',
-            description: 'This is call mock api from this Dapp and show result in snap dialog message',
-            button: (
-              <LoginButton onClick={handleLatestSwitchLogin} disabled={!state.installedSnap} />
-            ),
-          }}
-          disabled={!state.installedSnap}
-          fullWidth={
-            state.isFlask &&
-            Boolean(state.installedSnap) &&
-            !shouldDisplayReconnectButton(state.installedSnap)
-          }
-        />
+
         <Notice>
-          <p>
-            Latest sign up account <b>{storage.get("signup_account") || "waiting sign up"}</b>
-          </p>
+          <div>
+            <p>
+              <b>Current account: </b>
+              <i>
+                {state.account.currentAccount
+                  ? showAccount(state.account.currentAccount)
+                  : 'waiting for wallect connet'}
+              </i>
+            </p>
+
+            <p>
+              <b>Logined account: </b>
+              <i>
+                {state.token.loginedAccount
+                  ? showAccount(state.token.loginedAccount)
+                  : 'waiting for login'}
+              </i>
+            </p>
+          </div>
         </Notice>
       </CardContainer>
     </Container>
   )
-};
+}
 
-export default Index;
+export default Index

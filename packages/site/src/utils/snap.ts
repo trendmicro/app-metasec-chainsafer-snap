@@ -1,4 +1,4 @@
-import { sendTransactionRisk } from 'controllers/mockApi'
+import { sendMockTransactionRisk } from 'controllers/mockApi'
 import { defaultSnapOrigin } from '../config'
 import { GetSnapsResponse, Snap } from '../types'
 
@@ -54,8 +54,8 @@ export const getSnap = async (version?: string): Promise<Snap | undefined> => {
  * Invoke the "hello" method from the example snap.
  */
 
-export const sendHello = async () => {
-  const [result, error] = await sendTransactionRisk()
+export const sendTransactionRisk = async () => {
+  const [result, error] = await sendMockTransactionRisk()
 
   await window.ethereum.request({
     method: 'wallet_invokeSnap',
@@ -72,28 +72,27 @@ export const sendHello = async () => {
   })
 }
 
-export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');
+export const isLocalSnap = (snapId: string) => snapId.startsWith('local:')
 
 export const sendLoginToken = async () => {
-  const token = '';
-  const refresh_token = '';
+  const token = ''
+  const refresh_token = ''
 
   const accounts = await window.ethereum.request<string[]>({
     method: 'eth_requestAccounts',
-  });
+  })
 
-  console.log("accounts list: ", accounts);
+  console.log('accounts list: ', accounts)
 
-  const account = accounts?.[0];
+  const account = accounts?.[0]
   if (!account) {
-    throw new Error('Must accept wallet connection request.');
+    throw new Error('Must accept wallet connection request.')
   }
 
-  const address = account;
-  console.log('account: ', `${ address }`);
+  const address = account
+  console.log('account: ', `${address}`)
 
-
-  //...call api get token
+  // ...call api get token
 
   await window.ethereum.request({
     method: 'wallet_invokeSnap',
@@ -101,5 +100,5 @@ export const sendLoginToken = async () => {
       snapId: defaultSnapOrigin,
       request: { method: 'storeToken', params: { address, token, refresh_token } },
     },
-  });
-};
+  })
+}

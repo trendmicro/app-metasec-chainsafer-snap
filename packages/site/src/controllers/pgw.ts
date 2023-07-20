@@ -55,14 +55,38 @@ const header = (addition = {}) => {
   return {
     'Content-Type': 'application/json;charset=utf-8',
     'X-Trace-ID': generatedUUIDV4(), // frontend generated guid per request, need regenerate when retry
-    'X-Client-ID': storage.get('clientId') || clientId(),
+    'X-Client-ID': getClientId(),
     'X-App-Platform': 'snap',
+    Authorization: getAuthorization(),
     'X-App-Version': '',
     ...addition,
   }
 }
 
-const clientId = () => {
+const getAuthorization = (): string => {
+  let accessToken = ''
+  try {
+    accessToken =`Bearer ${storage.get('accessToken')}`
+  } catch (e) {
+    return ''
+  }
+  return accessToken
+}
+ 
+const getClientId = (): string => { 
+  let clientId:string|null
+  try {
+    clientId = storage.get('clientId')
+    if (!clientId) {
+      clientId = genClientId()
+    }
+  } catch (e) {
+    return ''
+  }
+  return clientId
+}
+
+const genClientId = () => {
   const clientId = generatedUUIDV4()
   storage.set('clientId', clientId)
   return clientId

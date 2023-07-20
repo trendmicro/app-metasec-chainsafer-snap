@@ -4,11 +4,10 @@ import { TProxyObj } from 'helpers/types/proxyRestructure.type'
 import Logger from 'controllers/logger'
 import { IResponseError } from 'controllers/types/http.type'
 import { IPostTransactionRisksResponseParsed } from 'helpers/parser/pgw/types/postTransactionRisks.type'
-import storage from './storage'
 
 const logger = new Logger('[snap]')
 
-export const sendTransactionRisk = async (): Promise<
+export const sendMockTransactionRisk = async (): Promise<
   [IPostTransactionRisksResponseParsed, IResponseError]
 > => {
   const mockTxn = {
@@ -27,8 +26,7 @@ export const sendTransactionRisk = async (): Promise<
   let error: IResponseError = {} as IResponseError
   try {
     result = await pgw.postTransactionRisks(
-      proxyConvertToPayload(mockTxn.url, mockTxn as TProxyObj),
-      {Authorization: "Bearer "+ storage.get("access_token") || ""}
+      proxyConvertToPayload(mockTxn.url, mockTxn as TProxyObj)
     )
   } catch (e) {
     error = e
@@ -39,5 +37,5 @@ export const sendTransactionRisk = async (): Promise<
 }
 
 export default {
-  sendTransactionRisk,
+  sendMockTransactionRisk,
 }
