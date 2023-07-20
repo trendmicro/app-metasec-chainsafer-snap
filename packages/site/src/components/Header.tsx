@@ -45,7 +45,7 @@ export const Header = ({
   const theme = useTheme();
   const [state, dispatch] = useContext(MetaMaskContext);
 
-  const handleWallectConnectClick = async () => {
+  const handleWalletConnectClick = async () => {
     try {
       const [accounts, currentAccount] = await requestAccount()
       dispatch({
@@ -69,7 +69,7 @@ export const Header = ({
           onToggle={handleToggleClick}
           defaultChecked={getThemePreference()}
         />
-        <HeaderButtons state={state} onConnectClick={handleWallectConnectClick} />
+        <HeaderButtons state={state} onConnectClick={handleWalletConnectClick} />
       </RightContainer>
     </HeaderWrapper>
   );

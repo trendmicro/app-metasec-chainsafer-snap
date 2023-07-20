@@ -77,11 +77,11 @@ export const InstallFlaskButton = () => (
   </Link>
 )
 
-export const WallectConnectButton = (props: ComponentProps<typeof Button>) => {
+export const WalletConnectButton = (props: ComponentProps<typeof Button>) => {
   return (
     <Button {...props}>
       <FlaskFox />
-      <ButtonText>Wallect Connect</ButtonText>
+      <ButtonText>Wallet Connect</ButtonText>
     </Button>
   )
 }
@@ -144,14 +144,14 @@ export const HeaderButtons = ({
   onConnectClick(): unknown
 }) => {
   if (state.account.currentAccount === undefined || state.account.currentAccount === '') {
-    return <WallectConnectButton onClick={onConnectClick} />
+    return <WalletConnectButton onClick={onConnectClick} />
   }
   let address =
     state.account.currentAccount.slice(0, 4) + '...' + state.account.currentAccount.slice(-4)
   return (
     <ConnectedContainer>
       <ConnectedIndicator />
-      <ButtonText>Wallect Connect {address}</ButtonText>
+      <ButtonText>Wallet Connect {address}</ButtonText>
     </ConnectedContainer>
   )
 }

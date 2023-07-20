@@ -212,7 +212,7 @@ const Index = () => {
         <Card
           content={{
             title: 'Login ChainSafer',
-            description: `After we can access wallect account and get user current account then we can implement login ChainSafer with current connect account.`,
+            description: `After we can access wallet account and get user current account then we can implement login ChainSafer with current connect account.`,
             button: (
               <LoginButtons
                 state={state}
@@ -271,7 +271,7 @@ const Index = () => {
               <i>
                 {state.account.currentAccount
                   ? showAccount(state.account.currentAccount)
-                  : 'waiting for wallect connet'}
+                  : 'waiting for wallet connet'}
               </i>
             </p>
 
