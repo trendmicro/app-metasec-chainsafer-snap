@@ -1,5 +1,6 @@
 import { OnRpcRequestHandler } from '@metamask/snaps-types'
 import { panel, text } from '@metamask/snaps-ui'
+import { ENV, API_KEY } from './config'
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -12,6 +13,7 @@ import { panel, text } from '@metamask/snaps-ui'
  * @throws If the request method is not valid for this snap.
  */
 export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
+  console.log(`!!!!! node_env ${process.env.NODE_ENV} var ${process.env.API_KEY}!!!!!!`)
   switch (request.method) {
     case 'hello':
       return snap.request({
@@ -21,13 +23,15 @@ export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
           content: panel([
             text(`Hello, **${origin}**!`),
             text('Response:'),
+            text(`${ENV}`),
+            text(`${API_KEY}`),
             text(`${JSON.stringify(request.params)}`),
           ]),
         },
-      });
+      })
     case 'login':
     case 'reNewToken':
     default:
       throw new Error('Method not found.')
   }
-};
+}

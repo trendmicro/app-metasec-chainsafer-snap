@@ -93,8 +93,8 @@ export const InstallSnapButton = (props: ComponentProps<typeof Button>) => {
 export const ReInstallSnapButton = (props: ComponentProps<typeof Button>) => {
   return (
     <div>
-      {/* <Button {...props}>ReInstall Snap</Button>
-      <br></br> */}
+      <Button {...props}>ReInstall Snap</Button>
+      <br></br>
       <ConnectedContainer>
         <ConnectedIndicator />
         <ButtonText>Snap Installed</ButtonText>
