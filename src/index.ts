@@ -1,5 +1,5 @@
 import { OnRpcRequestHandler } from '@metamask/snaps-types'
-import { panel, text } from '@metamask/snaps-ui'
+import { divider, panel, text } from '@metamask/snaps-ui'
 import { API_KEY, ENV } from './config'
 
 /**
@@ -18,12 +18,16 @@ export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
       return snap.request({
         method: 'snap_dialog',
         params: {
-          type: 'confirmation',
+          type: 'alert',
           content: panel([
-            text(`Hello, **${origin}**!`),
-            text('Response:'),
-            text(`ENV: ${ENV}`),
-            text(`API_KEY: ${API_KEY}`),
+            text(`Hello, **${ origin }**!`),
+            divider(),
+            text('**Envirment Variable:**'),
+            text(`ENV: ${ ENV }`),
+            text(`API_KEY: ${ API_KEY }`),
+            divider(),
+            text(`Params from: **${ origin }**`),
+            text(`${JSON.stringify(request.params)}`)
           ]),
         },
       })
