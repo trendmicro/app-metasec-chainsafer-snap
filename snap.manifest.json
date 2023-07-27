@@ -19,10 +19,15 @@
   },
   "initialPermissions": {
     "snap_dialog": {},
+    "snap_manageState": {},
     "endowment:rpc": {
       "dapps": true,
       "snaps": false
-    }
+    },
+    "endowment:transaction-insight": {
+      "allowTransactionOrigin": true
+    },
+    "endowment:network-access": {}
   },
   "manifestVersion": "0.1"
 }
