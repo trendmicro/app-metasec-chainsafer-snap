@@ -1,6 +1,8 @@
 import { OnRpcRequestHandler } from '@metamask/snaps-types'
 import { divider, panel, text } from '@metamask/snaps-ui'
-import { API_KEY, ENV } from './config'
+import { ENV, API } from './constants/config'
+import Logger from './controllers/logger'
+const logger = new Logger('[src.index]')
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -13,6 +15,7 @@ import { API_KEY, ENV } from './config'
  * @throws If the request method is not valid for this snap.
  */
 export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
+  logger.log('onRpcRequest', { origin, request })
   switch (request.method) {
     case 'hello':
       return snap.request({
@@ -24,7 +27,7 @@ export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
             divider(),
             text('**Envirment Variable:**'),
             text(`ENV: ${ ENV }`),
-            text(`API_KEY: ${ API_KEY }`),
+            text(`API PGW BASE: ${ API.PGW.base }`),
             divider(),
             text(`Params from: **${ origin }**`),
             text(`${JSON.stringify(request.params)}`)
