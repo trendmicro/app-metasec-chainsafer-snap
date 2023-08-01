@@ -3,10 +3,6 @@ export const ENV = process.env.ENV;
 export const APP_PLATFORM = process.env.APP_PLATFORM;
 export const API = {
     PGW: {
-        //this is for internal use
-        //base: 'https://metapgw-us1.stag.mgcp.a1q7.net',
-        //depreciated
-        // base: 'https://metapgw-us1.stag.mgcp.trendmicro.com',
         base:  process.env.API_PGW_BASE,
         basicLayer: process.env.API_PGW_BASE_LAYER,
         version:process.env.API_PGW_VAESION,

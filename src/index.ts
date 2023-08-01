@@ -1,9 +1,28 @@
-import { OnRpcRequestHandler } from '@metamask/snaps-types'
-import { CopyableStruct, NodeType, copyable, divider, heading, panel, spinner, text } from '@metamask/snaps-ui'
+import { OnRpcRequestHandler, OnTransactionHandler } from '@metamask/snaps-types'
+import { copyable, divider, heading, panel, spinner, text } from '@metamask/snaps-ui'
 import { ENV, API } from './constants/config'
 import Logger from './controllers/logger'
 import { sendTransactionRisk } from './controllers/mockApi'
+import { postTransactionRisk } from './chainsafer'
+import { IPostTransactionRisksResponseParsed } from './helpers/parser/pgw/types/postTransactionRisks.type'
 const logger = new Logger('[src.index]')
+
+
+export const onTransaction: OnTransactionHandler = async ({ transactionOrigin, chainId ,transaction }) => {
+  console.log("transactionOrigin:", transactionOrigin)
+  console.log("chainId:", chainId)
+  console.log("transaction:", transaction)
+
+  let result: IPostTransactionRisksResponseParsed = {} as IPostTransactionRisksResponseParsed
+  try {
+    result = await postTransactionRisk(transactionOrigin, transaction)
+  } catch (e) {
+    console.log("onTransaction error: ", e)
+    return { content: panel([heading('Transaction Risk'), divider(), text(`${e}`)])};
+  }
+  
+  return { content: panel([heading('Transaction Risk'), divider(), ...result.factors.map((insight) => text(`Name: ${insight.name},\n\nType: ${insight.type},\n\nMessage: ${insight.message}`))]) };
+};
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
