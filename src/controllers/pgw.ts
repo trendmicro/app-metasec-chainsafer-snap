@@ -23,6 +23,7 @@ import Logger from '../controllers/logger'
 import { createUrlBase, payload, get, post, put, patch } from '../controllers/http'
 
 import pgwParser from '../helpers/parser/pgw'
+import { APP_PLATFORM } from '../constants/config'
 
 const logger = new Logger('[controllers.pgw]')
 const pgwBase = createUrlBase('PGW')
@@ -46,10 +47,7 @@ const header = (addition = {}) => {
   return {
     'Content-Type': 'application/json;charset=utf-8',
     'X-Trace-ID': generatedUUIDV4(), //frontend generated guid per request, need regenerate when retry
-    // 'X-Client-ID': clientId(),
-    // Authorization:'Bearer eyJraWQiOiI3Q1NCd2p0cUd2WmJtMzBxOW9ZWUk2cHdqRlQ5elZua3lVMk1kZlVtWHhBPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI2Y2U0YjgzYS04YzM3LTQyM2YtOWU5NS0wNjYwNTMxMmEyZTQiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV9qZGZjVGVVZFciLCJjbGllbnRfaWQiOiIzbjdrdmpwdWIwcGVvcjZoZDRpN3N0aXBrZiIsIm9yaWdpbl9qdGkiOiJiZjYzODVkYS1kM2IxLTQ1ZWYtOGZjMS02NTcyYTkxYTczN2UiLCJldmVudF9pZCI6Ijg4ZmMzYTQ0LWQwYTMtNDhjZS1iMzYxLWJhNTA1YjIzNDNmYyIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE2ODk2NjUwODksImV4cCI6MTY4OTY3NTEwNCwiaWF0IjoxNjg5NjcxNTA0LCJqdGkiOiIzZmJmZWRhNi03YWZiLTQ3MTUtOTM3OC00MzZjNGVkY2IxODgiLCJ1c2VybmFtZSI6ImVvYV82NGI2M2UzZWI0MGUxNzE3N2MzZTgxMWMifQ.hg2S7yEwNAdw3Rvs1MKTWjtcitd2d8zVXkdLjPPoxm0QWLn1B5i4UZGcrn10kzCZxtKCVcWqy6L6YtNpDIKYHGQsT71xsEyUbZA1SXf_B_2aKCeB9tslhok2A8loLcxFM3stoMN91kroppEyPrwCNVo2-IUi3yj2cvNXv1vjwdQ2Ege0plBFHrYOQJLlB6O90mScHX1ph8gjZsiI640mbN-IbPz1XI44wr5VuNc6QgCmfCsF13hDoArk2wILp_HzSXYa05E7ISFEqkoU_7XNfkt246CeYLHaNzBMrgIw33u8ubvoQjnIvy3EUpbeSw7JdeQk6TVlb04FnukuKtY5Wg',
-    'X-App-Platform': 'snap',
-    // 'X-App-Version': "",
+    'X-App-Platform': APP_PLATFORM,
     ...addition,
   };
 }

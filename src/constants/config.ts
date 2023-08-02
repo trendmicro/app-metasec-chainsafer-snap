@@ -1,5 +1,6 @@
 export const ENABLE_CLIENT_CONSOLE = process.env.ENV === 'dev';
 export const ENV = process.env.ENV;
+export const APP_PLATFORM = process.env.APP_PLATFORM;
 export const API = {
     PGW: {
         //this is for internal use
