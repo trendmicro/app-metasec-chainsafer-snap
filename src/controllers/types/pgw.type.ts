@@ -4,6 +4,7 @@ import type { IGetTransactionInquiresResponseParsed } from '../../helpers/parser
 import type { IPostTransactionRisksResponseParsed } from '../../helpers/parser/pgw/types/postTransactionRisks.type'
 import type { IPostPostFeedbackCaseResponseParsed, TFeedbackCaseRequestPayload } from '../../helpers/parser/pgw/types/postFeedbackCase.type'
 import type { IPostTransactionRiskSummaryResponseParsed } from '../../helpers/parser/pgw/types/postTransactionRiskSummary.type'
+import type { IPostTransactionSimulationResponseParsed, IPostTransactionSimulationRequestPayload } from '../../helpers/parser/pgw/types/postTransactionSimulation.type'
 import type { IGetUserProfileResponseParsed } from '../../helpers/parser/pgw/types/getUserProfile.type'
 import type { TRestructuredPayload } from '../../helpers/types/proxyRestructure.type'
 import type { IPostCreateOrderResponseParsed, TCreateOrderRequestPayload } from '../../helpers/parser/pgw/types/postCreateOrder.type'
@@ -18,3 +19,4 @@ export type TPostFeedbackCase = (postFeedbackcaseRequestBody: TFeedbackCaseReque
 export type TPostTransactionRiskSummary = (postTransactionRequestBody: TRestructuredPayload, headerOption?: Record<string, string>) => Promise<IPostTransactionRiskSummaryResponseParsed>
 export type TPostCreateOrder = (postCreateOrderRequestBody: TCreateOrderRequestPayload, headerOption?: Record<string, string>) => Promise<IPostCreateOrderResponseParsed>
 export type TGetUserProfile = (username: string, headerOption?: Record<string, string>) => Promise<IGetUserProfileResponseParsed>
+export type TPostTransactionSimulation = (postTransactionRequestBody: IPostTransactionSimulationRequestPayload, headerOption?: Record<string, string>) => Promise<IPostTransactionSimulationResponseParsed>
