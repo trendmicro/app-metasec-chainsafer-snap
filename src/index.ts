@@ -3,28 +3,81 @@ import { Panel, copyable, divider, heading, panel, spinner, text } from '@metama
 import { ENV, API } from './constants/config'
 import Logger from './controllers/logger'
 import { sendTransactionRisk } from './controllers/mockApi'
-import { postTransactionRisk, postTransactionSimulation } from './chainsafer'
+import { postTransactionRisk, postTransactionSimulation } from './controllers/chainsafer'
+import { IResponseError } from './controllers/types/http.type'
 import { IPostTransactionRisksResponseParsed } from './helpers/parser/pgw/types/postTransactionRisks.type'
+import { ApiMapping, SnapContentMapping } from './locales/pages'
 import { IPostTransactionSimulationResponseParsed } from './helpers/parser/pgw/types/postTransactionSimulation.type'
+
 const logger = new Logger('[src.index]')
-
-
 export const onTransaction: OnTransactionHandler = async ({ transactionOrigin, chainId ,transaction }) => {
   console.log("transactionOrigin:", transactionOrigin)
   console.log("chainId:", chainId)
   console.log("transaction:", transaction)
 
-  let riskPanel = await postTransactionRisk(transactionOrigin, transaction)
-  let simulationPanel = await postTransactionSimulation(transactionOrigin, transaction)
+  const [riskResult, riskError] = await postTransactionRisk(transactionOrigin, transaction)
+  const [simulationResult, simulationError] = await postTransactionSimulation(transactionOrigin, transaction)
 
   return { content: 
     panel([
-      riskPanel,
-      simulationPanel,
-    ]
-    )
+      convertToRiskPanel(riskResult, riskError),
+      convertToSimulationPanel(simulationResult, simulationError),
+    ])
   };
 };
+
+function convertToRiskPanel(result: IPostTransactionRisksResponseParsed, error: IResponseError) { 
+  console.log("Transaction Risk error:", error, error != {} as IResponseError)
+  if (error) { 
+    return panel([
+      heading('Transaction Risk'),
+      divider(),
+      text(`⛔️**Oops, service have something problems...**!😬`),
+      text(`${JSON.stringify(error)}`)
+    ])
+  }
+
+  return panel([
+    heading('Transaction Risk'),
+    divider(), 
+    ...result.factors.map((insight) => 
+      panel([
+        text(`${SnapContentMapping.transaction_risk_type[insight.type]} ${ ApiMapping.api.transaction_risks[insight.name]}`),
+        text(`💬 ${insight.message}`)
+      ])
+    ),
+  ])
+}
+
+function convertToSimulationPanel(result: IPostTransactionSimulationResponseParsed, error: IResponseError) { 
+  if (error) { 
+    return panel([
+      heading('Transaction Simulation'),
+      divider(),
+      text(`⛔️**Oops, service have something problems...**!😑`),
+      text(`${JSON.stringify(error)}`)
+    ]);
+  }
+  
+  return panel([
+    heading('Transaction Simulation'),
+    divider(), 
+    text(`**EVM Err Address:** ${JSON.stringify(result.evmErrAddress)}`),
+    text(`**EVM Err Message:** ${JSON.stringify(result.evmErrMessage)}`),
+    text(`**From Address:** ${JSON.stringify(result.fromAddress)}`),
+    text(`**To Address:** ${JSON.stringify(result.toAddress)}`),
+    panel([
+      heading('Simulation'),
+      divider(),
+      text(`**From Address Balance Original:** ${JSON.stringify(result.simulationResult.fromAddressBalanceOriginal)}`),
+      text(`**From Address Balance Diff:** ${JSON.stringify(result.simulationResult.fromAddressBalanceDiff)}`),
+      text(`**To Address Balance Original:** ${JSON.stringify(result.simulationResult.toAddressBalanceOriginal)}`),
+      text(`**To Address Balance Diff:** ${JSON.stringify(result.simulationResult.toAddressBalanceDiff)}`),
+      text(`**Signature Function:** ${JSON.stringify(result.simulationResult.signatureFunction)}`),
+      text(`**Transfer Token Address:** ${JSON.stringify(result.simulationResult.transferTokenAddress)}`),
+    ]),
+  ])
+}
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -64,8 +117,6 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ origin, request }) => 
           ]),
         },
       })
-    case 'login':
-    case 'reNewToken':
     default:
       throw new Error('Method not found.')
   }
