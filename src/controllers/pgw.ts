@@ -6,6 +6,7 @@ import type { IPostTransactionRiskSummaryResponseBody } from '../helpers/parser/
 import type { IPostFeedbackCaseResponseBody } from '../helpers/parser/pgw/types/postFeedbackCase.type'
 import type { IPostCreateOrderResponseBody } from '../helpers/parser/pgw/types/postCreateOrder.type'
 import type { IGetUserProfileResponseBody } from '../helpers/parser/pgw/types/getUserProfile.type'
+import type { IPostTransactionSimulationResponseBody } from '../helpers/parser/pgw/types/postTransactionSimulation.type'
 import type {
   TOnResponseErrorCode,
   TGetAddressInfo,
@@ -15,7 +16,8 @@ import type {
   TPostFeedbackCase,
   TPostTransactionRiskSummary,
   TGetUserProfile,
-  TPostCreateOrder
+  TPostCreateOrder,
+  TPostTransactionSimulation,
 } from '../controllers/types/pgw.type'
 
 import { generatedUUIDV4 } from '../helpers/secret'
@@ -234,6 +236,31 @@ const postTransactionRiskSummary: TPostTransactionRiskSummary = async (postTrans
   return responseParsed
 }
 
+const postTransactionSimulation: TPostTransactionSimulation = async (postTransactionRequestBody, headerOption = {}) => {
+  const keyPath = 'POST_TRANSACTION_SIMULATION'
+  const url = pgwBase(keyPath)
+  const body = postTransactionRequestBody
+  const headers = await header(headerOption)
+
+  logger.log('postTransactionSimulation', 'head', headers)
+  logger.log('postTransactionSimulation', 'body', body)
+
+  const request = await post(url, payload(body, headers), onResponseErrorCode)
+  const [error, response] = await request<IPostTransactionSimulationResponseBody>()
+
+  logger.log('postTransactionSimulation', 'error', error)
+  logger.log('postTransactionSimulation', 'response', response)
+
+  if (error) {
+    throw error
+  }
+
+  const responseParsed = pgwParser[keyPath](response)
+  logger.log('postTransactionSimulation', 'responseParsed', responseParsed)
+
+  return responseParsed
+}
+
 const postCreateOrder: TPostCreateOrder = async (postCreateOrderRequestBody, headerOption = {}) => {
   const keyPath = 'POST_CREATE_ORDER'
   const url = pgwBase(keyPath)
@@ -267,5 +294,6 @@ export default {
   getUserProfile,
   postFeedbackCase,
   postTransactionRiskSummary,
-  postCreateOrder
+  postCreateOrder,
+  postTransactionSimulation
 }

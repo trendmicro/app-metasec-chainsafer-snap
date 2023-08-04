@@ -1,10 +1,11 @@
 import { OnRpcRequestHandler, OnTransactionHandler } from '@metamask/snaps-types'
-import { copyable, divider, heading, panel, spinner, text } from '@metamask/snaps-ui'
+import { Panel, copyable, divider, heading, panel, spinner, text } from '@metamask/snaps-ui'
 import { ENV, API } from './constants/config'
 import Logger from './controllers/logger'
 import { sendTransactionRisk } from './controllers/mockApi'
-import { postTransactionRisk } from './chainsafer'
+import { postTransactionRisk, postTransactionSimulation } from './chainsafer'
 import { IPostTransactionRisksResponseParsed } from './helpers/parser/pgw/types/postTransactionRisks.type'
+import { IPostTransactionSimulationResponseParsed } from './helpers/parser/pgw/types/postTransactionSimulation.type'
 const logger = new Logger('[src.index]')
 
 
@@ -13,15 +14,16 @@ export const onTransaction: OnTransactionHandler = async ({ transactionOrigin, c
   console.log("chainId:", chainId)
   console.log("transaction:", transaction)
 
-  let result: IPostTransactionRisksResponseParsed = {} as IPostTransactionRisksResponseParsed
-  try {
-    result = await postTransactionRisk(transactionOrigin, transaction)
-  } catch (e) {
-    console.log("onTransaction error: ", e)
-    return { content: panel([heading('Transaction Risk'), divider(), text(`${e}`)])};
-  }
-  
-  return { content: panel([heading('Transaction Risk'), divider(), ...result.factors.map((insight) => text(`Name: ${insight.name},\n\nType: ${insight.type},\n\nMessage: ${insight.message}`))]) };
+  let riskPanel = await postTransactionRisk(transactionOrigin, transaction)
+  let simulationPanel = await postTransactionSimulation(transactionOrigin, transaction)
+
+  return { content: 
+    panel([
+      riskPanel,
+      simulationPanel,
+    ]
+    )
+  };
 };
 
 /**
