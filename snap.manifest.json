@@ -1,18 +1,14 @@
 {
-  "version": "0.1.0",
-  "description": "An example Snap written in TypeScript.",
+  "version": "0.1.36",
+  "description": "Chainsafer of MetaMask Snaps.",
   "proposedName": "ChainSafer Snap",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/MetaMask/template-snap-monorepo.git"
-  },
   "source": {
-    "shasum": "rhcbkdFEOf9Yl5cSBAnLIWCYUXF3YAWG2b9Hwf5isjU=",
+    "shasum": "z1fe36IvKWnQuRzAvuI9Bej6eKxeqWDkMsFdz4pmKmE=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
         "iconPath": "images/icon.svg",
-        "packageName": "snap",
+        "packageName": "tm-chainsafer-snap-beta",
         "registry": "https://registry.npmjs.org/"
       }
     }
