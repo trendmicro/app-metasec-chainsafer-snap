@@ -1,9 +1,9 @@
 export interface IPostTransactionSimulationRequestPayload {
-  data: string | null
+  data?: string
   from: string
   gas: string
   to: string
-  value: string | null
+  value?: string
 }
 
 export interface IPostTransactionSimulationResult {
