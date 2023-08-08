@@ -3,6 +3,11 @@ export const SnapContentMapping = {
         "severe_risk": "🔴",
         "minor_risk": "🟠",
         "attention_required": "🟡",
+    },
+    "transaction_risk_summary": {
+        "fatal_risk": "❌",
+        "high_risk": "🔶",
+        "caution": "🟨",
     }
 }
 
