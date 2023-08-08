@@ -1,0 +1,68 @@
+version: 0.2
+
+env:
+  shell: bash
+  variables:
+    VERSION_LIBRARY_CICD: "latest"
+    VERSION_AWSCLI: "1.17.13"
+phases:
+  install:
+    runtime-versions:
+      python: 3.7
+    commands:
+      # install library-cicd
+      - aws s3 cp s3://${MGCP_CB_PACKAGE_BUCKET_NAME}/library-cicd/library-cicd-${VERSION_LIBRARY_CICD}.tar.gz library-cicd.tar.gz
+      - pip install -q -U pip==22.2.2
+      - pip install -q library-cicd.tar.gz
+      # aws cli upgrade
+      - pip install -q --upgrade awscli==${VERSION_AWSCLI}
+      - aws --version
+  pre_build:
+    commands:
+      # Init build env
+      - mgcp-cicd env init --app-cd
+      - . ./.mgcp-cicd.env
+      #check env
+      - |
+        if [ "${MGCP_CICD_ACCOUNT_NAME}" == "test" ] ; then
+          BUILD_PHASE=beta
+        elif [ "${MGCP_CICD_ACCOUNT_NAME}" == "stag" ] ; then
+          BUILD_PHASE=beta
+        elif [ "${MGCP_CICD_ACCOUNT_NAME}" == "int" ] ; then
+          BUILD_PHASE=beta
+        elif [ "${MGCP_CICD_ACCOUNT_NAME}" == "beta" ] ; then
+          BUILD_PHASE=beta
+        elif [ "${MGCP_CICD_ACCOUNT_NAME}" == "prod" ] ; then
+          BUILD_PHASE=prod
+        fi
+      # Get deploy version
+      - DEPLOY_VERSION=$(mgcp-cicd env deploy-version)
+      # Get artifacts from CI, download build
+      - mgcp-cicd artifact download -p snap.tar.gz --version ${DEPLOY_VERSION}-${BUILD_PHASE}
+      # extract build artifacts
+      - mkdir -p snap
+      - tar -xzf snap.tar.gz --directory=snap
+      # Get Application secrets and variables
+      - SNAP_NPM_ADMIN_EMAIL=$(mgcp-cicd secret get-secret --key snap_npm_admin_email --name "metasec")
+      - SNAP_NPM_ADMIN_USERNAME=$(mgcp-cicd secret get-secret --key snap_npm_admin_username --name "metasec")
+      - SNAP_NPM_ACCESS_TOKEN=$(mgcp-cicd secret get-secret --key snap_npm_access_token --name "metasec")
+  build:
+    commands:
+      # Upload swagger related files to S3
+      - |
+        if [ "${MGCP_CICD_REGION}" != "us-east-1" ] ; then
+          exit 1
+        fi
+      # Deploy NPM
+      - ./build/deploy.sh "${SNAP_NPM_ADMIN_EMAIL}" "${SNAP_NPM_ADMIN_USERNAME}" "${SNAP_NPM_ACCESS_TOKEN}"
+      # Create Github release
+      - mgcp-cicd git create-release --tag ${DEPLOY_VERSION} --merged-only
+      # Run L2 testing
+      # mgcp-cicd test trigger-l2 --task-number ${CODEBUILD_BUILD_NUMBER} --app-version ${DEPLOY_VERSION};
+      # Save deploy file
+      - mgcp-cicd env save-deploy-version --version ${DEPLOY_VERSION}
+  post_build:
+    commands:
+      - echo "post build"
+      # send notification to Urbancode
+      - mgcp-cicd valuestream report-deploy --application ${MGCP_CB_APP_NAME} --version ${DEPLOY_VERSION} --status ${CODEBUILD_BUILD_SUCCEEDING}
