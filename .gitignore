@@ -76,6 +76,4 @@ node_modules/
 .yarn/install-state.gz
 .pnp.*
 
-# dotenv environment variables file
-.env.development
-.env.production
+
