@@ -30,12 +30,54 @@ export const onTransaction: OnTransactionHandler = async ({
       transaction
     )
     const [riskResult, riskError] = await postTransactionRisk(transactionOrigin, transaction)
-    const [simulationResult, simulationError] = await postTransactionSimulation(transaction)
+    // const [simulationResult, simulationError] = await postTransactionSimulation(transaction)
+
+    let factors = {}
+    riskResult.factors.forEach((factor, index) => {
+      factors[factor.name] = ''
+    })
+
+
     return {
       content: panel([
+        panel([
+          heading('Balance Changes'),
+          text('-0.010000003 Ether'), // ${JSON.stringify( result.simulationResult.fromAddressBalanceDiff)}
+          text('+14.324342342 (Token)'), // ${JSON.stringify( result.simulationResult.toAddressBalanceDiff)}
+        ]),
+        divider(),
         convertToRiskSummaryPanel(riskSummaryResult, riskSummaryError),
         convertToRiskPanel(riskResult, riskError),
-        convertToSimulationPanel(simulationResult, simulationError),
+        divider(),
+        // convertToSimulationPanel(simulationResult, simulationError),
+        panel([
+          heading('Transaction Insight'),
+          text(`${factors.hasOwnProperty('factor_contract_not_public') ? `❌` : `✅`} Is Public Contract `),
+        ]),
+        divider(),
+        panel([
+          heading('Web Insight'),
+          text(`**Domain Check:**`),
+          text(`${factors.hasOwnProperty('factor_domain_short_create') ? `❌` : `✅`} ${ApiMapping.api.transaction_risks['factor_domain_short_create']}`),
+          text(`${factors.hasOwnProperty('factor_domain_short_available') ? `❌` : `✅`} ${ApiMapping.api.transaction_risks['factor_domain_short_available']}`),
+          text(`${factors.hasOwnProperty('factor_ssl_domain_mismatch') ? `❌` : `✅`} ${ApiMapping.api.transaction_risks['factor_ssl_domain_mismatch']}`),
+          text(`**Certificate Check:**`),
+          text(`${factors.hasOwnProperty('factor_ssl_short_create') ? `❌` : `✅`} ${ApiMapping.api.transaction_risks['factor_ssl_short_create']}`),
+          text(`${factors.hasOwnProperty('factor_ssl_short_available') ? `❌` : `✅`} ${ApiMapping.api.transaction_risks['factor_ssl_short_available']}`),
+          text(`${factors.hasOwnProperty('factor_url_ai_scam') ? `❌` : `✅`} **AI Scam Detected**`),
+          text(`${factors.hasOwnProperty('factor_url_blocklist') ? `❌` : `✅`} **Malicious Detected**`),
+        ]),
+        divider(),
+        panel([
+          heading(`Account/Project Insight`),
+          text(`**Token Name:** #9656`),
+          text(`**Official Website:** `), copyable(`https://boredapeyachtclub.com/#/`),
+          text(`**Twitter:** `), copyable(`https://twitter.com/BoredApeYC`),
+          text(`**Instagram:** `), copyable(`https://www.instagram.com/boredapeyachtclub/reels/`),
+          text(`**Facebook:** `), copyable(`https://www.facebook.com/groups/166513018615984/`),
+          text(`**Discord:** `), copyable(`https://discord.com/invite/3P5K3dzgdB`),
+          text(`**OpenSea:** `), copyable(`https://opensea.io/collection/boredapeyachtclub`),
+        ]),
       ]),
     }
   } else {
@@ -58,7 +100,6 @@ function convertToRiskSummaryPanel(
     return panel([
       heading(`${SnapContentMapping.transaction_risk_summary[result.severity]} ${ApiMapping.pages.transaction_risk[result.severity]}`),
       text(`**${ApiMapping.api.transaction_risks_summary[result.ruleName]}**`),
-      divider(),
     ])
   }
 }
@@ -76,8 +117,7 @@ function convertToRiskPanel(result: IPostTransactionRisksResponseParsed, error: 
     ...result.factors.map((insight) =>
       panel([
         text(
-          `${SnapContentMapping.transaction_risk_type[insight.type]} ${
-            ApiMapping.api.transaction_risks[insight.name]
+          `${SnapContentMapping.transaction_risk_type[insight.type]} ${ApiMapping.api.transaction_risks[insight.name]
           }`
         ),
         // text(`💬 ${insight.message}`),
@@ -101,41 +141,22 @@ function convertToSimulationPanel(
 
   return panel([
     heading('Transaction Simulation'),
-    divider(),
-    text(`**EVM Err Address:** ${JSON.stringify(result.evmErrAddress)}`),
-    text(`**EVM Err Message:** ${JSON.stringify(result.evmErrMessage)}`),
-    text(`**From Address:** ${JSON.stringify(result.fromAddress)}`),
-    text(`**To Address:** ${JSON.stringify(result.toAddress)}`),
-    panel([
-      heading('Simulation'),
-      divider(),
-      text(
-        `**From Address Balance Original:** ${JSON.stringify(
-          result.simulationResult.fromAddressBalanceOriginal
-        )}`
-      ),
-      text(
-        `**From Address Balance Diff:** ${JSON.stringify(
-          result.simulationResult.fromAddressBalanceDiff
-        )}`
-      ),
-      text(
-        `**To Address Balance Original:** ${JSON.stringify(
-          result.simulationResult.toAddressBalanceOriginal
-        )}`
-      ),
-      text(
-        `**To Address Balance Diff:** ${JSON.stringify(
-          result.simulationResult.toAddressBalanceDiff
-        )}`
-      ),
-      text(`**Signature Function:** ${JSON.stringify(result.simulationResult.signatureFunction)}`),
-      text(
-        `**Transfer Token Address:** ${JSON.stringify(
-          result.simulationResult.transferTokenAddress
-        )}`
-      ),
-    ]),
+    text(
+      `**From Address Balance Diff:** ${JSON.stringify(
+        result.simulationResult.fromAddressBalanceDiff
+      )}`
+    ),
+    text(
+      `**To Address Balance Diff:** ${JSON.stringify(
+        result.simulationResult.toAddressBalanceDiff
+      )}`
+    ),
+    text(`**Signature Function:** ${JSON.stringify(result.simulationResult.signatureFunction)}`),
+    text(
+      `**Transfer Token Address:** ${JSON.stringify(
+        result.simulationResult.transferTokenAddress
+      )}`
+    ),
   ])
 }
 
