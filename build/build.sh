@@ -40,10 +40,10 @@ echo "ready to run build"
 if [ ${1} == "beta" ] 
 then
   npm run update:version ${appVersions}
-  npm run build:stag 
+  npm run build:stag
 else
   npm run update:version ${appVersions}
-  npm run build ${appVersions}
+  npm run build
 fi
 
 fileName="${CURRENT_PATH}/snap-${BUILD_ENV}.tar.gz"

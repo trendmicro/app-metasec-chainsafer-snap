@@ -17,7 +17,7 @@
     "LICENSE-MIT"
   ],
   "scripts": {
-    "update:version": "npm version $npm_config_version --no-git-tag-version",
+    "update:version": "npm version --no-git-tag-version",
     "build": "json -I -f package.json -e 'this.name=\"tm-chainsafer-snap\"' && NODE_ENV=production mm-snap build ",
     "build:stag": "json -I -f package.json -e 'this.name=\"tm-chainsafer-snap-beta\"' && NODE_ENV=development mm-snap build",
     "build:clean": "yarn clean && yarn build",
