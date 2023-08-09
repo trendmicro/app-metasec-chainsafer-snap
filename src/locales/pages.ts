@@ -13,16 +13,16 @@ export const SnapContentMapping = {
 
 export const ApiMapping = {
     "common": {
-            "freemium": "Free member",
-            "premium": "Premium member",
-            "footer": {
-                "about": "About",
-                "not_scam": "Not a scam?",
-                "report_to_us": "Report to us",
-                "continue": "Continue",
-                "cancel_this_operation": "cancel this Operation"
-            },
-            "loading": "Loading..."
+        "freemium": "Free member",
+        "premium": "Premium member",
+        "footer": {
+            "about": "About",
+            "not_scam": "Not a scam?",
+            "report_to_us": "Report to us",
+            "continue": "Continue",
+            "cancel_this_operation": "cancel this Operation"
+        },
+        "loading": "Loading..."
     },
     "pages": {
         "profile": {
@@ -37,7 +37,7 @@ export const ApiMapping = {
             "popup": {
                 "error_title": "Error occurred",
                 "error_trace_id": "traceId: {0}",
-                "error_body": "Please close Chainsafer and try again",
+                "error_body": "Please close TM-Chainsafer and try again",
                 "error_show_detail": "Show detail >",
                 "error_hide_detail": "Hide detail",
                 "error_footer": "Contact support"
@@ -46,110 +46,110 @@ export const ApiMapping = {
                 "title": "Please close this page and go back to the App"
             }
         },
-    "report_scam": {
-        "report_scam": "Report scam",
-        "not_scam": "Not a scam",
-        "address": "Address",
-        "input_address": "input address",
-        "url": "URL",
-        "input_url": "input url",
-        "hint": "Provide the suspicious contract address, URL, or both.",
-        "lost_asset": "I’ve lost assets 🥲",
-        "additional_info": "Additional information",
-        "input_comment": "input comment",
-        "cancel": "cancel",
-        "submit": "submit",
-        "error_message": "Fill either address or URL.",
-        "popup": {
-            "200": {
-                "title": "Submitted successfully!",
-                "body": "",
-                "footer": "Close"
-            },
-            "400": {
-                "title": "Submission failed.",
-                "body": "Submission failed. Please correct the input and try again. If the error persists, please contact support.",
-                "footer": "Contact support"
-            },
-            "500": {
-                "title": "Submission failed.",
-                "body": "Please try again later.",
-                "footer": "Close"
-            },
-            "error_trace_id": "traceId: {0}",
-            "error_show_detail": "Show detail >",
-            "error_hide_detail": "Hide detail"
-        }
-    },
-    "coupon": {
-        "popup": {
-            "submit_msg": "submit",
-            "input_qrcode": "Type the promo code or scan the QR code to unlock your exclusive offer",
-            "general_customer_msg": "*The exclusive offer is available to our co-brand customers.\nFor general version customers, please join the waiting list for the latest release news!",
-            "input_placeholder": "input promo code",
-            "200": {
-                "card_title": "Success!",
-                "card_sub_title": "Congratulations! You have upgraded to a ChainSafer premium membership.\n\nYour Web3 transactions are now even more secure.",
-                "card_link": "View Membership Details"
-            },
-            "404": {
-                "card_title": "Upgrade failed",
-                "card_sub_title": "The promo code you entered does not exist in our system. Ensure the promo code is correct and try again. \n\nIf the problem persist, contact our support team for assistance.",
-                "card_link": "Contact support"
-            },
-            "400": {
-                "card_title": "Upgrade failed",
-                "card_sub_title": "Oops! It looks like the coupon code you entered has already been used or is no longer valid. \n\nPlease check your input and try again with a valid coupon code.",
-                "card_link": "Contact support"
-            },
-            "401": {
-                "card_title": "Not signed in",
-                "card_sub_title": "Access to this feature requires you to sign in to your ChainSafer account.",
-                "card_link": "Contact support"
-            },
-            "500": {
-                "card_title": "Service error",
-                "card_sub_title": "We apologize, it appears that an error has occurred. \n\nPlease try again. If the issue persists, contact our customer support team for further assistance.",
-                "card_link": "Contact support"
-            },
-            "error_trace_id": "traceId: {0}",
-            "error_show_detail": "Show detail >",
-            "error_hide_detail": "Hide detail",
-            "common": {
-                "card_title": "Error",
-                "card_sub_title": "Something goes wrong. Please try again.\n\nIf the issue persists, contact our customer support team for further assistance.",
-                "card_link": "Contact support"
+        "report_scam": {
+            "report_scam": "Report scam",
+            "not_scam": "Not a scam",
+            "address": "Address",
+            "input_address": "input address",
+            "url": "URL",
+            "input_url": "input url",
+            "hint": "Provide the suspicious contract address, URL, or both.",
+            "lost_asset": "I’ve lost assets 🥲",
+            "additional_info": "Additional information",
+            "input_comment": "input comment",
+            "cancel": "cancel",
+            "submit": "submit",
+            "error_message": "Fill either address or URL.",
+            "popup": {
+                "200": {
+                    "title": "Submitted successfully!",
+                    "body": "",
+                    "footer": "Close"
+                },
+                "400": {
+                    "title": "Submission failed.",
+                    "body": "Submission failed. Please correct the input and try again. If the error persists, please contact support.",
+                    "footer": "Contact support"
+                },
+                "500": {
+                    "title": "Submission failed.",
+                    "body": "Please try again later.",
+                    "footer": "Close"
+                },
+                "error_trace_id": "traceId: {0}",
+                "error_show_detail": "Show detail >",
+                "error_hide_detail": "Hide detail"
             }
-        }
-    },
-    "transaction_risk": {
-        "fatal_risk": "Extreme Risk",
-        "high_risk": "Medium Risk",
-        "caution": "Low Risk",
-        "no_risk": "No Detected Risk",
-        "factor_detected": "{0} factor(s) detected",
-        "title_details": "Details",
-        "title_labels": "Labels",
-        "advanced_message": "Advanced check with Chainsight",
-        "severe_risk": "Extreme risk",
-        "minor_risk": "Medium risk",
-        "attention_required": "Low risk",
-        "wait_list_card_title": "Coming soon",
-        "wait_list_card_subtitle": "Upgrade to premium to check risk factors",
-        "wait_list_card_link": "Get Premium Early Access\n(Join the waiting list)",
-        "popup": {
-            "chainsignt_title": "Coming soon!",
-            "chainsight_body": " ChainSafer’s Chainsight integration will be launched in June 2023.",
-            "chainsight_footer": {
-            "button": "Close"
-            },
-            "error_title": "Error occurred",
-            "error_trace_id": "traceId: {0}",
-            "error_body": "Please close Chainsafer and try again",
-            "error_show_detail": "Show detail >",
-            "error_hide_detail": "Hide detail",
-            "error_footer": "Contact support"
         },
+        "coupon": {
+            "popup": {
+                "submit_msg": "submit",
+                "input_qrcode": "Type the promo code or scan the QR code to unlock your exclusive offer",
+                "general_customer_msg": "*The exclusive offer is available to our co-brand customers.\nFor general version customers, please join the waiting list for the latest release news!",
+                "input_placeholder": "input promo code",
+                "200": {
+                    "card_title": "Success!",
+                    "card_sub_title": "Congratulations! You have upgraded to a ChainSafer premium membership.\n\nYour Web3 transactions are now even more secure.",
+                    "card_link": "View Membership Details"
+                },
+                "404": {
+                    "card_title": "Upgrade failed",
+                    "card_sub_title": "The promo code you entered does not exist in our system. Ensure the promo code is correct and try again. \n\nIf the problem persist, contact our support team for assistance.",
+                    "card_link": "Contact support"
+                },
+                "400": {
+                    "card_title": "Upgrade failed",
+                    "card_sub_title": "Oops! It looks like the coupon code you entered has already been used or is no longer valid. \n\nPlease check your input and try again with a valid coupon code.",
+                    "card_link": "Contact support"
+                },
+                "401": {
+                    "card_title": "Not signed in",
+                    "card_sub_title": "Access to this feature requires you to sign in to your ChainSafer account.",
+                    "card_link": "Contact support"
+                },
+                "500": {
+                    "card_title": "Service error",
+                    "card_sub_title": "We apologize, it appears that an error has occurred. \n\nPlease try again. If the issue persists, contact our customer support team for further assistance.",
+                    "card_link": "Contact support"
+                },
+                "error_trace_id": "traceId: {0}",
+                "error_show_detail": "Show detail >",
+                "error_hide_detail": "Hide detail",
+                "common": {
+                    "card_title": "Error",
+                    "card_sub_title": "Something goes wrong. Please try again.\n\nIf the issue persists, contact our customer support team for further assistance.",
+                    "card_link": "Contact support"
+                }
+            }
+        },
+        "transaction_risk": {
+            "fatal_risk": "Extreme Risk",
+            "high_risk": "Medium Risk",
+            "caution": "Low Risk",
+            "no_risk": "No Detected Risk",
+            "factor_detected": "{0} factor(s) detected",
+            "title_details": "Details",
+            "title_labels": "Labels",
+            "advanced_message": "Advanced check with Chainsight",
+            "severe_risk": "Extreme risk",
+            "minor_risk": "Medium risk",
+            "attention_required": "Low risk",
+            "wait_list_card_title": "Coming soon",
+            "wait_list_card_subtitle": "Upgrade to premium to check risk factors",
+            "wait_list_card_link": "Get Premium Early Access\n(Join the waiting list)",
+            "popup": {
+                "chainsignt_title": "Coming soon!",
+                "chainsight_body": " ChainSafer’s Chainsight integration will be launched in June 2023.",
+                "chainsight_footer": {
+                    "button": "Close"
+                },
+                "error_title": "Error occurred",
+                "error_trace_id": "traceId: {0}",
+                "error_body": "Please close TM-Chainsafer and try again",
+                "error_show_detail": "Show detail >",
+                "error_hide_detail": "Hide detail",
+                "error_footer": "Contact support"
+            },
             "error": {
                 "title": "Please close this page and go back to the App"
             }

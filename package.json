@@ -1,11 +1,11 @@
 {
     "name": "tm-chainsafer-snap-beta",
     "version": "0.1.55",
-    "description": "Chainsafer of MetaMask Snaps.",
+    "description": "TM Chainsafer of MetaMask Snaps.",
     "license": "(MIT-0 OR Apache-2.0)",
     "keywords": [
         "Snap",
-        "Chainsafer"
+        "TM-Chainsafer"
     ],
     "author": "John Chang",
     "main": "src/index.ts",
