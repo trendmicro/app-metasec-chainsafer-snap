@@ -23,7 +23,8 @@ sed s/{MAJOR_VERSION}/${MAJOR_VERSION}/g ${appVersionBak} \
   | sed s/{BUILD_VERSION}/${BUILD_VERSION}/g \
   > ${appVersion}
 
-echo "appVersion ${MAJOR_VERSION}.${MINOR_VERSION}.${BUILD_VERSION}"
+appVersions="${MAJOR_VERSION}.${MINOR_VERSION}.${BUILD_VERSION}"
+echo "appVersions ${appVersions}"
 
 echo "npm version"
 npm -version
@@ -38,11 +39,11 @@ npm install --unsafe-perm
 echo "ready to run build"
 if [ ${1} == "beta" ] 
 then
-  npm version ${MAJOR_VERSION}.${MINOR_VERSION}.${BUILD_VERSION} --no-git-tag-version
-  npm run build:stag
+  npm run update:version ${appVersions}
+  npm run build:stag 
 else
-  npm version ${MAJOR_VERSION}.${MINOR_VERSION}.${BUILD_VERSION} --no-git-tag-version
-  npm run build
+  npm run update:version ${appVersions}
+  npm run build ${appVersions}
 fi
 
 fileName="${CURRENT_PATH}/snap-${BUILD_ENV}.tar.gz"
