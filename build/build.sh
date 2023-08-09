@@ -23,6 +23,7 @@ sed s/{MAJOR_VERSION}/${MAJOR_VERSION}/g ${appVersionBak} \
   | sed s/{BUILD_VERSION}/${BUILD_VERSION}/g \
   > ${appVersion}
 
+echo "appVersion ${appVersion}"
 
 echo "npm version"
 npm -version
@@ -37,8 +38,10 @@ npm install --unsafe-perm
 echo "ready to run build"
 if [ ${1} == "beta" ] 
 then
+  npm version ${appVersion} --no-git-tag-version
   npm run build:stag
 else
+  npm version ${appVersion} --no-git-tag-version
   npm run build
 fi
 
