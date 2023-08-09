@@ -42,6 +42,8 @@ phases:
       # extract build artifacts
       - mkdir -p snap
       - tar -xzf snap.tar.gz --directory=snap
+      - rm -rf ./snap/node_modules
+      - yes | cp -rf ./snap/* .
       # Get Application secrets and variables
       - SNAP_NPM_ADMIN_EMAIL=$(mgcp-cicd secret get-secret --key snap_npm_admin_email --name "metasec")
       - SNAP_NPM_ADMIN_USERNAME=$(mgcp-cicd secret get-secret --key snap_npm_admin_username --name "metasec")
