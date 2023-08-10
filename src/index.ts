@@ -31,54 +31,39 @@ export const onTransaction: OnTransactionHandler = async ({
     )
     const [riskResult, riskError] = await postTransactionRisk(transactionOrigin, transaction)
     // const [simulationResult, simulationError] = await postTransactionSimulation(transaction)
-
     let factors = {}
     riskResult.factors.forEach((factor, index) => {
-      factors[factor.name] = ''
+      factors[factor.name] = factor.type
     })
 
+    let riskPanel = convertToRiskPanel(riskResult, riskError)
+    let riskSummaryPanel = convertToRiskSummaryPanel(riskSummaryResult, riskSummaryError)
+    let simulationPanel = convertToSimulationPanel(null, null)
+    let projectPanel = convertToProjectPanel()
+
+    let displayPanel = panel([])
+    if (riskSummaryResult.severity == "caution") {
+      displayPanel = panel([
+        simulationPanel,
+        divider(),
+        riskSummaryPanel,
+        divider(),
+        riskPanel,
+        projectPanel,
+      ])
+    } else {
+      displayPanel = panel([
+        riskSummaryPanel,
+        divider(),
+        riskPanel,
+        divider(),
+        simulationPanel,
+        projectPanel,
+      ])
+    }
 
     return {
-      content: panel([
-        panel([
-          heading('Balance Changes'),
-          text('-0.010000003 Ether'), // ${JSON.stringify( result.simulationResult.fromAddressBalanceDiff)}
-          text('+14.324342342 (Token)'), // ${JSON.stringify( result.simulationResult.toAddressBalanceDiff)}
-        ]),
-        divider(),
-        convertToRiskSummaryPanel(riskSummaryResult, riskSummaryError),
-        convertToRiskPanel(riskResult, riskError),
-        divider(),
-        // convertToSimulationPanel(simulationResult, simulationError),
-        panel([
-          heading('Transaction Insight'),
-          text(`${factors.hasOwnProperty('factor_contract_not_public') ? `❌` : `✅`} Is Public Contract `),
-        ]),
-        divider(),
-        panel([
-          heading('Web Insight'),
-          text(`**Domain Check:**`),
-          text(`${factors.hasOwnProperty('factor_domain_short_create') ? `❌` : `✅`} ${ApiMapping.api.transaction_risks['factor_domain_short_create']}`),
-          text(`${factors.hasOwnProperty('factor_domain_short_available') ? `❌` : `✅`} ${ApiMapping.api.transaction_risks['factor_domain_short_available']}`),
-          text(`${factors.hasOwnProperty('factor_ssl_domain_mismatch') ? `❌` : `✅`} ${ApiMapping.api.transaction_risks['factor_ssl_domain_mismatch']}`),
-          text(`**Certificate Check:**`),
-          text(`${factors.hasOwnProperty('factor_ssl_short_create') ? `❌` : `✅`} ${ApiMapping.api.transaction_risks['factor_ssl_short_create']}`),
-          text(`${factors.hasOwnProperty('factor_ssl_short_available') ? `❌` : `✅`} ${ApiMapping.api.transaction_risks['factor_ssl_short_available']}`),
-          text(`${factors.hasOwnProperty('factor_url_ai_scam') ? `❌` : `✅`} **AI Scam Detected**`),
-          text(`${factors.hasOwnProperty('factor_url_blocklist') ? `❌` : `✅`} **Malicious Detected**`),
-        ]),
-        divider(),
-        panel([
-          heading(`Account/Project Insight`),
-          text(`**Token Name:** #9656`),
-          text(`**Official Website:** `), copyable(`https://boredapeyachtclub.com/#/`),
-          text(`**Twitter:** `), copyable(`https://twitter.com/BoredApeYC`),
-          text(`**Instagram:** `), copyable(`https://www.instagram.com/boredapeyachtclub/reels/`),
-          text(`**Facebook:** `), copyable(`https://www.facebook.com/groups/166513018615984/`),
-          text(`**Discord:** `), copyable(`https://discord.com/invite/3P5K3dzgdB`),
-          text(`**OpenSea:** `), copyable(`https://opensea.io/collection/boredapeyachtclub`),
-        ]),
-      ]),
+      content: displayPanel,
     }
   } else {
     return {
@@ -93,6 +78,7 @@ function convertToRiskSummaryPanel(
 ) {
   if (error) {
     return panel([
+      heading(`Risk Summary Check`),
       text(`⛔️**Oops, service have something problems...**!😬`),
       text(`${JSON.stringify(error)}`),
     ])
@@ -108,19 +94,18 @@ function convertToRiskPanel(result: IPostTransactionRisksResponseParsed, error: 
   console.log('Transaction Risk error:', error, error != ({} as IResponseError))
   if (error) {
     return panel([
+      text(`**- Risky factors -**`),
       text(`⛔️**Oops, service have something problems...**!😬`),
       text(`${JSON.stringify(error)}`),
     ])
   }
 
   return panel([
+    text(`**- Risky factors -**`),
     ...result.factors.map((insight) =>
       panel([
-        text(
-          `${SnapContentMapping.transaction_risk_type[insight.type]} ${ApiMapping.api.transaction_risks[insight.name]
-          }`
-        ),
-        // text(`💬 ${insight.message}`),
+        text(`${SnapContentMapping.transaction_risk_type[insight.type]} ${ApiMapping.api.transaction_risks[insight.name]}`),
+        text(`${insight.message}`),
       ])
     ),
   ])
@@ -140,23 +125,48 @@ function convertToSimulationPanel(
   }
 
   return panel([
-    heading('Transaction Simulation'),
-    text(
-      `**From Address Balance Diff:** ${JSON.stringify(
-        result.simulationResult.fromAddressBalanceDiff
-      )}`
-    ),
-    text(
-      `**To Address Balance Diff:** ${JSON.stringify(
-        result.simulationResult.toAddressBalanceDiff
-      )}`
-    ),
-    text(`**Signature Function:** ${JSON.stringify(result.simulationResult.signatureFunction)}`),
-    text(
-      `**Transfer Token Address:** ${JSON.stringify(
-        result.simulationResult.transferTokenAddress
-      )}`
-    ),
+    panel([
+      text(`**You're about to buy a NFT via a smart contract.**`),
+    ]),
+    divider(),
+    panel([
+      heading(`Payment Detail`),
+      text(`Pay ➞`),
+      text(`-0.00099 ETH ($1.81)`),
+      text(`➞ Get`),
+      text(`Ethernal Butterfly_Ovum Miraculi ($3.50)`),
+      text(`**---**`),
+      text(`**Via Seaport and other 4 contracts ✅**`),
+      text(`1.[Seaport] Contract address 👉[ 0xed1Bd4A5244D35Be12e84A3E9821290032a47a99] 🌐[Contract: Open✅]`),
+      text(`2.[PayableProxy] Contract address 👉[ 0x0000a26b00c1f0df003000390027140000faa719] 🌐[Contract: Open✅] ▶ -0.00002475 ETH ($0.0449)️ *Platform fee exchange, opensea`),
+      text(`3.[Conduit] Contract address 👉[ 0x1e0049783f008a0085193e00003d00cd54003c71] 🌐[Contract: Open✅]`),
+      text(`4.[ERC1155CreatorImplementation] Contract address 👉[ 0xe9ff7ca11280553af56d04ecb8be6b8c4468dcb2] 🌐[Contract: Open✅]`),
+      text(`5.[EB] Contract address 👉[ 0xed1bd4a5244d35be12e84a3e9821290032a47a99] 🌐[Contract: Open✅] ▶ -0.00096525 ETH ($1.77)️ *Price of the NFT 🏷️ New`),
+    ]),
+    panel([
+      heading('Balance Changes'),
+      divider(),
+      text(`Before ➞`),
+      text('8,166,276,251,901,340 Wei ($ 14.8089)'), // ${JSON.stringify( result.simulationResult.fromAddressBalanceOriginal)}
+      text(`➞ After`),
+      text('7,176,276,251,901,340 Wei ($ 13.0136)'),
+      text(`**---**`),
+      text(`**💰Balance Diff.**`),
+      text(`990,000,000,000,000 wei ($1.81)`),  // ${JSON.stringify( result.simulationResult.fromAddressBalanceDiff)}
+    ]),
+  ])
+}
+
+function convertToProjectPanel() {
+  return panel([
+    heading(`Project Insight`),
+    divider(),
+    text(`**Ethernal Butterfly**`),
+    text(`Contract address 👉🏻 [0xed1bd4a5244d35be12e84a3e9821290032a47a99]`),
+    text(`URL 🌐 [https://www.example.com]`),
+    text(`Twitter 👉🏻 [https://www.twitter.com/const_quary]`),
+    text(`Discord 👉🏻 [https://discord.gg/quary]`),
+    text(`OpenSea 👉🏻 [https://opensea.io/collection/ethernal-butterfly]`),
   ])
 }
 
