@@ -105,7 +105,9 @@ function convertToRiskPanel(result: IPostTransactionRisksResponseParsed, error: 
     ...result.factors.map((insight) =>
       panel([
         text(`${SnapContentMapping.transaction_risk_type[insight.type]} ${ApiMapping.api.transaction_risks[insight.name]}`),
-        text(`${insight.message}`),
+        ...insight.message.split("\n").map((message) =>
+          text(`${message}`)
+        )
       ])
     ),
   ])
