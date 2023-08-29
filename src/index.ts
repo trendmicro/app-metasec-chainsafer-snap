@@ -13,6 +13,7 @@ import { IPostTransactionRisksResponseParsed } from './helpers/parser/pgw/types/
 import { ApiMapping, SnapContentMapping } from './locales/pages'
 import { IPostTransactionSimulationResponseParsed } from './helpers/parser/pgw/types/postTransactionSimulation.type'
 import { IPostTransactionRiskSummaryResponseParsed } from './helpers/parser/pgw/types/postTransactionRiskSummary.type'
+import Web3 from 'web3'
 
 const logger = new Logger('[src.index]')
 export const onTransaction: OnTransactionHandler = async ({
@@ -30,16 +31,12 @@ export const onTransaction: OnTransactionHandler = async ({
       transaction
     )
     const [riskResult, riskError] = await postTransactionRisk(transactionOrigin, transaction)
-    // const [simulationResult, simulationError] = await postTransactionSimulation(transaction)
-    let factors = {}
-    riskResult.factors.forEach((factor, index) => {
-      factors[factor.name] = factor.type
-    })
+    const [simulationResult, simulationError] = await postTransactionSimulation(chainId, transaction)
 
     let riskPanel = convertToRiskPanel(riskResult, riskError)
     let riskSummaryPanel = convertToRiskSummaryPanel(riskSummaryResult, riskSummaryError)
-    let simulationPanel = convertToSimulationPanel(null, null)
-    let projectPanel = convertToProjectPanel()
+    let simulationPanel = convertToSimulationPanel(simulationResult, simulationError)
+    // let projectPanel = convertToProjectPanel()
 
     let displayPanel = panel([])
     if (riskSummaryResult.severity == "caution") {
@@ -49,7 +46,7 @@ export const onTransaction: OnTransactionHandler = async ({
         riskSummaryPanel,
         divider(),
         riskPanel,
-        projectPanel,
+        // projectPanel,
       ])
     } else {
       displayPanel = panel([
@@ -58,7 +55,7 @@ export const onTransaction: OnTransactionHandler = async ({
         riskPanel,
         divider(),
         simulationPanel,
-        projectPanel,
+        // projectPanel,
       ])
     }
 
@@ -82,12 +79,16 @@ function convertToRiskSummaryPanel(
       text(`⛔️**Oops, service have something problems...**!😬`),
       text(`${JSON.stringify(error)}`),
     ])
-  } else {
-    return panel([
-      heading(`${SnapContentMapping.transaction_risk_summary[result.severity]} ${ApiMapping.pages.transaction_risk[result.severity]}`),
-      text(`**${ApiMapping.api.transaction_risks_summary[result.ruleName]}**`),
-    ])
   }
+
+  if (result == null) {
+    return panel([])
+  }
+
+  return panel([
+    heading(`${SnapContentMapping.transaction_risk_summary[result.severity]} ${ApiMapping.pages.transaction_risk[result.severity]}`),
+    text(`**${ApiMapping.api.transaction_risks_summary[result.ruleName]}**`),
+  ])
 }
 
 function convertToRiskPanel(result: IPostTransactionRisksResponseParsed, error: IResponseError) {
@@ -98,6 +99,10 @@ function convertToRiskPanel(result: IPostTransactionRisksResponseParsed, error: 
       text(`⛔️**Oops, service have something problems...**!😬`),
       text(`${JSON.stringify(error)}`),
     ])
+  }
+
+  if (result == null) {
+    return panel([])
   }
 
   return panel([
@@ -126,36 +131,92 @@ function convertToSimulationPanel(
     ])
   }
 
-  return panel([
-    panel([
-      text(`**You're about to buy a NFT via a smart contract.**`),
-    ]),
-    divider(),
-    panel([
-      heading(`Payment Detail`),
+  if (result == null) {
+    return panel([])
+  }
+
+  if (result.evmErrAddress != "" || result.evmErrMessage != "") {
+    return panel([
+      heading('Transaction Simulation'),
+      divider(),
+      text(`⛔️**Oops, service have something problems...**!😑`),
+      text(`address: ${result.evmErrAddress}`),
+      text(`error: ${result.evmErrMessage}`),
+    ])
+  }
+
+  if (result.senderAssetChange == null && result.contracts == null) {
+    return panel([])
+  }
+
+  console.log("convertToSimulationPanel result:", result)
+
+  let paymentDetailPanel = []
+  let tokenChangePanel = []
+  let contractPanel = []
+  let balanceChangePanel = []
+
+  if (result.senderAssetChange != null && result.senderAssetChange.balanceDiff != null) {
+    const originWei = parseFloat(result.senderAssetChange.balanceDiff.origin)
+    const originUSD = parseFloat(result.senderAssetChange.balanceDiff.originDollarValue)
+    const afterWei = parseFloat(result.senderAssetChange.balanceDiff.after)
+    const afterUSD = parseFloat(result.senderAssetChange.balanceDiff.afterDollarValue)
+    const diffWei = originWei - afterWei
+    const diffUSD = afterUSD - originUSD
+
+    paymentDetailPanel = [
       text(`Pay ➞`),
-      text(`-0.00099 ETH ($1.81)`),
-      text(`➞ Get`),
-      text(`Ethernal Butterfly_Ovum Miraculi ($3.50)`),
-      text(`**---**`),
-      text(`**Via Seaport and other 4 contracts ✅**`),
-      text(`1.[Seaport] Contract address 👉[ 0xed1Bd4A5244D35Be12e84A3E9821290032a47a99] 🌐[Contract: Open✅]`),
-      text(`2.[PayableProxy] Contract address 👉[ 0x0000a26b00c1f0df003000390027140000faa719] 🌐[Contract: Open✅] ▶ -0.00002475 ETH ($0.0449)️ *Platform fee exchange, opensea`),
-      text(`3.[Conduit] Contract address 👉[ 0x1e0049783f008a0085193e00003d00cd54003c71] 🌐[Contract: Open✅]`),
-      text(`4.[ERC1155CreatorImplementation] Contract address 👉[ 0xe9ff7ca11280553af56d04ecb8be6b8c4468dcb2] 🌐[Contract: Open✅]`),
-      text(`5.[EB] Contract address 👉[ 0xed1bd4a5244d35be12e84a3e9821290032a47a99] 🌐[Contract: Open✅] ▶ -0.00096525 ETH ($1.77)️ *Price of the NFT 🏷️ New`),
-    ]),
-    panel([
+      text(`${convertWeiToEth(diffWei.toString())} Eth ($ ${diffUSD})`),
+    ]
+    balanceChangePanel = [
       heading('Balance Changes'),
       divider(),
       text(`Before ➞`),
-      text('8,166,276,251,901,340 Wei ($ 14.8089)'), // ${JSON.stringify( result.simulationResult.fromAddressBalanceOriginal)}
+      text(`${convertWeiToEth(originWei.toString())} Eth ($ ${originUSD})`),
       text(`➞ After`),
-      text('7,176,276,251,901,340 Wei ($ 13.0136)'),
+      text(`${convertWeiToEth(afterWei.toString())} Eth ($ ${afterUSD})`),
       text(`**---**`),
       text(`**💰Balance Diff.**`),
-      text(`990,000,000,000,000 wei ($1.81)`),  // ${JSON.stringify( result.simulationResult.fromAddressBalanceDiff)}
-    ]),
+      text(`${convertWeiToEth(diffWei.toString())} Eth ($ ${diffUSD})`),
+    ]
+  }
+
+  // payment detail panel
+  if (result.senderAssetChange != null && result.senderAssetChange.tokenChanges != null && result.senderAssetChange.tokenChanges.length > 0) {
+    result.senderAssetChange.tokenChanges.forEach(function (tokenChange) {
+      tokenChangePanel.push(
+        text(`➞ ${tokenChange.direction == 'in' ? "Get" : "Sell"}`),
+        text(`${tokenChange.name} ($${tokenChange.dollarValue})`)
+      )
+    })
+    tokenChangePanel.push(
+      text(`**---**`),
+    )
+  }
+
+  // contract panel
+  if (result.contracts != null && result.contracts.length > 0) {
+    contractPanel.push(
+      text(`**Via ${result.contracts[0].contractName} and other ${result.contracts.length - 1} contracts ✅**`),
+    )
+    result.contracts.forEach(function (contract, index) {
+      contractPanel.push(
+        text(`${index + 1}.[${contract.contractName}] 
+        Contract address 👉[${contract.address}] 
+        🌐[Contract: ${contract.isPublic == true ? "Open✅" : "Private❗️"}] 
+        ${parseFloat(contract.fee) > 0 ? `▶ ${convertWeiToEth(contract.fee).toString()} ETH ($ ${contract.feeDollarValue})️` : ""}
+        `),
+      )
+    })
+  }
+
+  return panel([
+    text(`**You're about to buy a NFT via a smart contract.**`),
+    divider(),
+    ...paymentDetailPanel,
+    ...tokenChangePanel,
+    ...contractPanel,
+    ...balanceChangePanel,
   ])
 }
 
@@ -170,6 +231,10 @@ function convertToProjectPanel() {
     text(`Discord 👉🏻 [https://discord.gg/quary]`),
     text(`OpenSea 👉🏻 [https://opensea.io/collection/ethernal-butterfly]`),
   ])
+}
+
+function convertWeiToEth(wei: string): string {
+  return Web3.utils.fromWei(parseFloat(wei), "ether")
 }
 
 /**

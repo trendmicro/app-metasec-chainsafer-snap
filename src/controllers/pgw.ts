@@ -41,7 +41,7 @@ export const onResponseErrorCode: TOnResponseErrorCode = (response, responseBody
     message: responseBody?.message,
     dateTime: responseBody?.datetime,
   }
-  
+
   return error
 }
 
@@ -53,12 +53,6 @@ const header = (addition = {}) => {
     ...addition,
   };
 }
-
-const clientId = () => {
-  const clientId = generatedUUIDV4();
-  return clientId;
-}; 
-
 
 const getAddressInfo: TGetAddressInfo = async (address, headerOption = {}) => {
   const keyPath = 'GET_CONTRACT_ADDRESS'

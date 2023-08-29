@@ -60,24 +60,25 @@ export const postTransactionRisk = async (original: string, transaction: Json): 
   return [result, error]
 }
 
-export const postTransactionSimulation = async (transaction: Json): Promise<
+export const postTransactionSimulation = async (chainId: string, transaction: Json): Promise<
   [IPostTransactionSimulationResponseParsed, IResponseError]
 > => {
   let result: IPostTransactionSimulationResponseParsed = {} as IPostTransactionSimulationResponseParsed
   let error: IResponseError = null
 
   let payload = {
-    data: transaction["data"] || "",
+    network_id: chainId.split(":")[1].length == 2 ? chainId.split(":")[1] : "1",
     from: transaction["from"] || "",
     to: transaction["to"] || "",
-    gas: parseInt(transaction["gas"], 16).toString() || "",
-    value: parseInt(transaction["value"], 16).toString() || "",
+    call_data: transaction["data"] || "",
+    value: parseInt(transaction["value"], 16) || 0,
+    gas: parseInt(transaction["gas"], 16) || 0,
   } as IPostTransactionSimulationRequestPayload
 
   try {
     result = await pgw.postTransactionSimulation(payload)
   } catch (e) {
-    logger.error(`${ JSON.stringify(e) }`)
+    logger.error(`${JSON.stringify(e)}`)
     error = e
   }
 
