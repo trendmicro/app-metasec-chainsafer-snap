@@ -157,27 +157,27 @@ function convertToSimulationPanel(
   let balanceChangePanel = []
 
   if (result.senderAssetChange != null && result.senderAssetChange.balanceDiff != null) {
-    const originWei = parseFloat(result.senderAssetChange.balanceDiff.origin)
-    const originUSD = parseFloat(result.senderAssetChange.balanceDiff.originDollarValue)
-    const afterWei = parseFloat(result.senderAssetChange.balanceDiff.after)
-    const afterUSD = parseFloat(result.senderAssetChange.balanceDiff.afterDollarValue)
-    const diffWei = originWei - afterWei
+    const originWei = parseInt(result.senderAssetChange.balanceDiff.origin)
+    const originUSD = parseInt(result.senderAssetChange.balanceDiff.originDollarValue)
+    const afterWei = parseInt(result.senderAssetChange.balanceDiff.after)
+    const afterUSD = parseInt(result.senderAssetChange.balanceDiff.afterDollarValue)
+    const diffWei = afterWei - originWei
     const diffUSD = afterUSD - originUSD
 
     paymentDetailPanel = [
       text(`Pay ➞`),
-      text(`${convertWeiToEth(diffWei.toString())} Eth ($ ${diffUSD})`),
+      text(`${convertWeiToEth(diffWei.toString())} Eth${Number.isNaN(diffUSD) ? `` : ` ($ ${diffUSD})`}`),
     ]
     balanceChangePanel = [
       heading('Balance Changes'),
       divider(),
       text(`Before ➞`),
-      text(`${convertWeiToEth(originWei.toString())} Eth ($ ${originUSD})`),
+      text(`${convertWeiToEth(originWei.toString())} Eth ${Number.isNaN(originUSD) ? `` : ` ($ ${originUSD})`}`),
       text(`➞ After`),
-      text(`${convertWeiToEth(afterWei.toString())} Eth ($ ${afterUSD})`),
+      text(`${convertWeiToEth(afterWei.toString())} Eth ${Number.isNaN(afterUSD) ? `` : ` ($ ${afterUSD})`}`),
       text(`**---**`),
       text(`**💰Balance Diff.**`),
-      text(`${convertWeiToEth(diffWei.toString())} Eth ($ ${diffUSD})`),
+      text(`${convertWeiToEth(diffWei.toString())} Eth${Number.isNaN(diffUSD) ? `` : ` ($ ${diffUSD})`}`),
     ]
   }
 
@@ -201,10 +201,7 @@ function convertToSimulationPanel(
     )
     result.contracts.forEach(function (contract, index) {
       contractPanel.push(
-        text(`${index + 1}.[${contract.contractName}] 
-        Contract address 👉[${contract.address}] 
-        🌐[Contract: ${contract.isPublic == true ? "Open✅" : "Private❗️"}] 
-        ${parseFloat(contract.fee) > 0 ? `▶ ${convertWeiToEth(contract.fee).toString()} ETH ($ ${contract.feeDollarValue})️` : ""}
+        text(`${index + 1}.[${contract.contractName}] Contract address 👉[${contract.address}] 🌐[Contract: ${contract.isPublic == true ? "Open✅" : "Private❗️"}] ${parseFloat(contract.fee) > 0 ? `▶ ${convertWeiToEth(contract.fee).toString()} ETH` : ""} ${Number.isNaN(parseInt(contract.feeDollarValue)) ? "" : `($${contract.feeDollarValue})`}
         `),
       )
     })
@@ -234,7 +231,13 @@ function convertToProjectPanel() {
 }
 
 function convertWeiToEth(wei: string): string {
-  return Web3.utils.fromWei(parseFloat(wei), "ether")
+  let eth = Web3.utils.fromWei(parseInt(wei), "ether")
+  // because web3 will output like 0.00000-5, 
+  // so we need convert to -0.000005
+  if (eth.search("-") > 0) {
+    return "-" + eth.replace("-", "")
+  }
+  return eth
 }
 
 /**
