@@ -231,6 +231,10 @@ function convertToProjectPanel() {
 }
 
 function convertWeiToEth(wei: string): string {
+  if (Number.isNaN(parseInt(wei))) {
+    return "0"
+  }
+
   let eth = Web3.utils.fromWei(parseInt(wei), "ether")
   // because web3 will output like 0.00000-5, 
   // so we need convert to -0.000005
