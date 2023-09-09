@@ -13,7 +13,8 @@ import { IPostTransactionRisksResponseParsed } from './helpers/parser/pgw/types/
 import { ApiMapping, SnapContentMapping } from './locales/pages'
 import { IPostTransactionSimulationResponseParsed } from './helpers/parser/pgw/types/postTransactionSimulation.type'
 import { IPostTransactionRiskSummaryResponseParsed } from './helpers/parser/pgw/types/postTransactionRiskSummary.type'
-import Web3 from 'web3'
+
+const {formatEther} = require("@ethersproject/units");
 
 const logger = new Logger('[src.index]')
 export const onTransaction: OnTransactionHandler = async ({
@@ -234,13 +235,8 @@ function convertWeiToEth(wei: string): string {
   if (Number.isNaN(parseInt(wei))) {
     return "0"
   }
+  let eth = formatEther(wei)
 
-  let eth = Web3.utils.fromWei(parseInt(wei), "ether")
-  // because web3 will output like 0.00000-5, 
-  // so we need convert to -0.000005
-  if (eth.search("-") > 0) {
-    return "-" + eth.replace("-", "")
-  }
   return eth
 }
 
