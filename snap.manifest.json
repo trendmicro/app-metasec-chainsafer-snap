@@ -14,12 +14,6 @@
     }
   },
   "initialPermissions": {
-    "snap_dialog": {},
-    "snap_manageState": {},
-    "endowment:rpc": {
-      "dapps": true,
-      "snaps": false
-    },
     "endowment:transaction-insight": {
       "allowTransactionOrigin": true
     },
