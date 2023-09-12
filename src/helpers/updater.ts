@@ -2,7 +2,7 @@ import type { TNestedKeyUpdater, TUpdater } from '../helpers/types/updater.type'
 
 import Logger from '../controllers/logger'
 
-const logger = new Logger('[updater]')
+const logger = new Logger('[helper.updater]')
 const nestedKeyUpdater: TNestedKeyUpdater = (context, nestedKey, value) => {
   let currentNest = context
   const keys = nestedKey.split('.')
