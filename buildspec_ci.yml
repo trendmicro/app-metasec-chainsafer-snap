@@ -6,6 +6,9 @@ env:
     VERSION_MAJOR: "1"
     VERSION_MINOR: "0"
     VERSION_LIBRARY_CICD: "latest"
+    INFRA_NAME: "mgcp"
+    INFRA_PREFIX: "mgcp"
+    TM_PROJECT_CODE: "PDG_220016"
 phases:
   install:
     runtime-versions:
@@ -44,6 +47,7 @@ phases:
       - mgcp-cicd artifact upload --file snap-beta.tar.gz --version $BUILD_VERSION-beta
       # Scan secrets in code
       - mgcp-cicd scan secrets
+      - mgcp-cicd scan source --path $(pwd) --jid ${TM_PROJECT_CODE} --merged-only || true
       # Tagging on Github repo ONLY when PR is merged
       - mgcp-cicd git create-tag --tag ${BUILD_VERSION} --commit-id ${CODEBUILD_RESOLVED_SOURCE_VERSION} --merged-only
   post_build:
