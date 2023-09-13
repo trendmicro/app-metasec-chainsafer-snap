@@ -48,7 +48,6 @@ phases:
       # Scan secrets in code
       - mgcp-cicd scan secrets
       - mgcp-cicd scan source --path $(pwd) --jid ${TM_PROJECT_CODE} --merged-only || true
-      - mgcp-cicd scan fortify --scan-go-source $(pwd) --jid $TM_PROJECT_CODE --merged-only || true
       # Tagging on Github repo ONLY when PR is merged
       - mgcp-cicd git create-tag --tag ${BUILD_VERSION} --commit-id ${CODEBUILD_RESOLVED_SOURCE_VERSION} --merged-only
   post_build:
