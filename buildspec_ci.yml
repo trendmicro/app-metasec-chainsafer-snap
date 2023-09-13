@@ -6,6 +6,8 @@ env:
     VERSION_MAJOR: "1"
     VERSION_MINOR: "0"
     VERSION_LIBRARY_CICD: "latest"
+    INFRA_NAME: "mgcp"
+    INFRA_PREFIX: "mgcp"
     TM_PROJECT_CODE: "PDG_220016"
 phases:
   install:
