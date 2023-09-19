@@ -1,10 +1,10 @@
-export const ENABLE_CLIENT_CONSOLE = process.env.ENV === 'dev';
-export const APP_PLATFORM = process.env.APP_PLATFORM;
+export const ENABLE_CLIENT_CONSOLE = process.env.ENV === 'dev'
+export const APP_PLATFORM = process.env.APP_PLATFORM
 export const API = {
     PGW: {
-        base:  process.env.API_PGW_BASE,
+        base: process.env.API_PGW_BASE,
         basicLayer: process.env.API_PGW_BASE_LAYER,
-        version:process.env.API_PGW_VAESION,
+        version: process.env.API_PGW_VAESION,
         path: {
             GET_CONTRACT_ADDRESS: process.env.API_PGW_PATH_GET_CONTRACT_ADDRESS,
             POST_INQUIRY_ID: process.env.API_PGW_PATH_POST_INQUIRY_ID,
@@ -15,6 +15,6 @@ export const API = {
             GET_USER_PROFILE: process.env.API_PGW_PATH_GET_USER_PROFILE,
             POST_CREATE_ORDER: process.env.API_PGW_PATH_POST_CREATE_ORDER,
             POST_TRANSACTION_SIMULATION: process.env.API_PGW_PATH_POST_TRANSACTION_SIMULATION,
-        }
-    }
+        },
+    },
 }
