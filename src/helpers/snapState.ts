@@ -1,6 +1,6 @@
 import { TGetSnapState, TSnapState } from './types/snapState.type'
 import Logger from '../controllers/logger'
-const looger = new Logger('[helpers.snapState]')
+const logger = new Logger('[helpers.snapState]')
 
 export const getSnapState: TGetSnapState = async () => {
     const state = await snap.request({
@@ -9,12 +9,12 @@ export const getSnapState: TGetSnapState = async () => {
             operation: 'get',
         },
     })
-    looger.log('get state:', state)
+    logger.log('get state:', state)
     return state
 }
 
 export const setSnapState = async (newState: TSnapState) => {
-    looger.log('set state:', newState)
+    logger.log('set state:', newState)
     return snap.request({
         method: 'snap_manageState',
         params: {
@@ -25,7 +25,7 @@ export const setSnapState = async (newState: TSnapState) => {
 }
 
 export const clearSnapState = async () => {
-    looger.log('clearSnapState:')
+    logger.log('clearSnapState:')
     return snap.request({
         method: 'snap_manageState',
         params: { operation: 'clear' },
