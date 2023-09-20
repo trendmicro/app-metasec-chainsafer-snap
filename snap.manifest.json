@@ -1,9 +1,9 @@
 {
-  "version": "0.2.0",
+  "version": "1.0.92",
   "description": "TM Chainsafer of MetaMask Snaps.",
   "proposedName": "TM ChainSafer",
   "source": {
-    "shasum": "HNZJflVBupqp7188olnWPFvy9ac5RjNWI7BMOg5JzO0=",
+    "shasum": "Bd4/jjJ2H7IFEWnhaOYJx/xdwBMyPww78MZL8EYfL4I=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
