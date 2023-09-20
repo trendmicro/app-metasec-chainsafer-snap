@@ -4,6 +4,7 @@ import type {
     IPostTransactionSimulationResponseParsed,
     IPostTransactionSimulationRequestPayload,
 } from '../../helpers/parser/pgw/types/postTransactionSimulation.type'
+import type { IGetSnapLatestVersionResponseParsed } from '../../helpers/parser/pgw/types/getSnapLatestVersion.type'
 import type { TRestructuredPayload } from '../../helpers/types/proxyRestructure.type'
 import type { IResponseError } from '../../controllers/types/http.type'
 
@@ -20,3 +21,7 @@ export type TPostTransactionSimulation = (
     postTransactionRequestBody: IPostTransactionSimulationRequestPayload,
     headerOption?: Record<string, string>
 ) => Promise<IPostTransactionSimulationResponseParsed>
+
+export type TGetSnapLatestVersion = (
+    headerOption?: Record<string, string>
+) => Promise<IGetSnapLatestVersionResponseParsed>

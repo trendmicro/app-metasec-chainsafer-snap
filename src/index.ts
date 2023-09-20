@@ -15,8 +15,9 @@ export const onTransaction: OnTransactionHandler = async ({
     logger.log('chainId:', chainId)
     logger.log('transaction:', transaction)
     logger.log('snap state:', getSnapState())
+    const snapState = (await getSnapState()) as TSnapState
 
-    return transactionInsightLayout({ transactionOrigin, chainId, transaction })
+    return transactionInsightLayout({ transactionOrigin, chainId, transaction }, snapState)
 }
 
 export const onRpcRequest: OnRpcRequestHandler = async ({ origin, request }) => {

@@ -10,6 +10,7 @@ import {
     IPostTransactionSimulationResponseParsed,
 } from '../helpers/parser/pgw/types/postTransactionSimulation.type'
 import { IPostTransactionRiskSummaryResponseParsed } from './../helpers/parser/pgw/types/postTransactionRiskSummary.type'
+import { IGetSnapLatestVersionResponseParsed } from '../helpers/parser/pgw/types/getSnapLatestVersion.type'
 
 const logger = new Logger('[controllers.chainsafer]')
 
@@ -83,6 +84,22 @@ export const postTransactionSimulation = async (
 
     try {
         result = await pgw.postTransactionSimulation(payload)
+    } catch (e) {
+        logger.error(`${JSON.stringify(e)}`)
+        error = e
+    }
+
+    return [result, error]
+}
+
+export const getSnapLatestVersion = async (): Promise<
+    [IGetSnapLatestVersionResponseParsed, IResponseError]
+> => {
+    let result: IGetSnapLatestVersionResponseParsed = {} as IGetSnapLatestVersionResponseParsed
+    let error: IResponseError = null
+
+    try {
+        result = await pgw.getSnapLatestVersion()
     } catch (e) {
         logger.error(`${JSON.stringify(e)}`)
         error = e

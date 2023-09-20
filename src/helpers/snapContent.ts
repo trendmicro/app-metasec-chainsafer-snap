@@ -2,25 +2,48 @@ import {
     postTransactionRisk,
     postTransactionSimulation,
     postTransactionRiskSummary,
+    getSnapLatestVersion,
 } from '../controllers/chainsafer'
-import { OnTransactionHandler } from '@metamask/snaps-types'
+import { OnTransactionHandler, OnTransactionResponse } from '@metamask/snaps-types'
 import { panel, divider, heading, text } from '@metamask/snaps-ui'
 import { riskIconMapping, apiMapping } from '../constants/content'
 import { IResponseError } from '../controllers/types/http.type'
 import { IPostTransactionRisksResponseParsed } from '../helpers/parser/pgw/types/postTransactionRisks.type'
 import { IPostTransactionSimulationResponseParsed } from '../helpers/parser/pgw/types/postTransactionSimulation.type'
 import { IPostTransactionRiskSummaryResponseParsed } from '../helpers/parser/pgw/types/postTransactionRiskSummary.type'
+import { TTransactionInsightLayout } from './types/snapContent.type'
 import Logger from '../controllers/logger'
+import { isGreaterVersion } from './versionCheck'
 
 const logger = new Logger('[helpers.snapContent]')
 const { formatEther } = require('@ethersproject/units')
 
-export const transactionInsightLayout: OnTransactionHandler = async ({
-    transactionOrigin,
-    chainId,
-    transaction,
-}) => {
+export const transactionInsightLayout: TTransactionInsightLayout = async (
+    { transactionOrigin, chainId, transaction },
+    state
+) => {
     if (transaction) {
+        const [latestVersionResult, latestVersionError] = await getSnapLatestVersion()
+        const isUpdateAvailable = isGreaterVersion(
+            latestVersionResult.latestVersion,
+            state.snapInfo.version
+        )
+        const isForceUpdate = isGreaterVersion(
+            latestVersionResult.latestForceUpdateVersion,
+            state.snapInfo.version
+        )
+        let updateAlertPanel = convertToUpdateAlertPanel(
+            isUpdateAvailable,
+            isForceUpdate,
+            latestVersionError
+        )
+
+        if (isForceUpdate) {
+            return {
+                content: panel([updateAlertPanel]),
+            }
+        }
+
         const [
             [riskSummaryResult, riskSummaryError],
             [riskResult, riskError],
@@ -38,6 +61,7 @@ export const transactionInsightLayout: OnTransactionHandler = async ({
         let displayPanel = panel([])
         if (riskSummaryResult.severity == 'caution') {
             displayPanel = panel([
+                updateAlertPanel,
                 simulationPanel,
                 divider(),
                 riskSummaryPanel,
@@ -46,6 +70,7 @@ export const transactionInsightLayout: OnTransactionHandler = async ({
             ])
         } else {
             displayPanel = panel([
+                updateAlertPanel,
                 riskSummaryPanel,
                 divider(),
                 riskPanel,
@@ -60,6 +85,39 @@ export const transactionInsightLayout: OnTransactionHandler = async ({
     }
 
     return { content: panel([text(`⛔️**Oops, transaction is null**!😬`)]) }
+}
+
+function convertToUpdateAlertPanel(isUpdateAvailable: boolean, isForceUpdate: boolean, error) {
+    logger.log('Snap Latest Version error:', error, error != ({} as IResponseError))
+    if (error) {
+        return panel([
+            text(`**- Latest Version -**`),
+            text(`⛔️**Oops, service have something problems...**!😬`),
+            text(`${JSON.stringify(error)}`),
+        ])
+    }
+
+    if (isUpdateAvailable) {
+        if (isForceUpdate) {
+            return panel([
+                divider(),
+                text(
+                    '[❕ ALERT] Current version is not available anymore! Please visit 🌐“https://chainsafer.stag.nexone.io/snap/#/” to update. '
+                ),
+                divider(),
+            ])
+        } else {
+            return panel([
+                divider(),
+                text(
+                    '[❕ ALERT] There is an update of ChainSafer Snap, for better protection, please visit 🌐“https://chainsafer.stag.nexone.io/snap/#/” to update.'
+                ),
+                divider(),
+            ])
+        }
+    } else {
+        return panel([])
+    }
 }
 
 function convertToRiskSummaryPanel(

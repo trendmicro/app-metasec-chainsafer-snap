@@ -1,7 +1,9 @@
 import type { IPostTransactionRisksResponseBody } from '../helpers/parser/pgw/types/postTransactionRisks.type'
 import type { IPostTransactionRiskSummaryResponseBody } from '../helpers/parser/pgw/types/postTransactionRiskSummary.type'
 import type { IPostTransactionSimulationResponseBody } from '../helpers/parser/pgw/types/postTransactionSimulation.type'
+import type { IGetSnapLatestVersionResponseBody } from '../helpers/parser/pgw/types/getSnapLatestVersion.type'
 import type {
+    TGetSnapLatestVersion,
     TOnResponseErrorCode,
     TPostTransactionRisks,
     TPostTransactionRiskSummary,
@@ -10,7 +12,7 @@ import type {
 
 import { generatedUUIDV4 } from '../helpers/secret'
 import Logger from '../controllers/logger'
-import { createUrlBase, payload, post } from '../controllers/http'
+import { createUrlBase, get, payload, post } from '../controllers/http'
 
 import pgwParser from '../helpers/parser/pgw'
 import { APP_PLATFORM } from '../constants/config'
@@ -126,8 +128,36 @@ const postTransactionSimulation: TPostTransactionSimulation = async (
     return responseParsed
 }
 
+const getSnapLatestVersion: TGetSnapLatestVersion = async (
+    headerOption = {}
+) => {
+    const keyPath = 'GET_SNAP_LATEST_VERSION'
+    const url = pgwBase(keyPath)
+    const body = {}
+    const headers = header(headerOption)
+
+    logger.log('getSnapLatestVersion', 'head', headers)
+    logger.log('getSnapLatestVersion', 'body', body)
+
+    const request = await get(url, payload(body, headers), onResponseErrorCode)
+    const [error, response] = await request<IGetSnapLatestVersionResponseBody>()
+
+    logger.log('getSnapLatestVersion', 'error', error)
+    logger.log('getSnapLatestVersion', 'response', response)
+
+    if (error) {
+        throw error
+    }
+
+    const responseParsed = pgwParser[keyPath](response)
+    logger.log('getSnapLatestVersion', 'responseParsed', responseParsed)
+
+    return responseParsed
+}
+
 export default {
     postTransactionRisks,
     postTransactionRiskSummary,
     postTransactionSimulation,
+    getSnapLatestVersion,
 }
