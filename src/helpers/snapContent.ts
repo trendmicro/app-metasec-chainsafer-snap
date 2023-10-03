@@ -6,7 +6,7 @@ import {
 } from '../controllers/chainsafer'
 import { OnTransactionHandler, OnTransactionResponse } from '@metamask/snaps-types'
 import { panel, divider, heading, text } from '@metamask/snaps-ui'
-import { riskIconMapping, apiMapping } from '../constants/content'
+import { riskIconMapping, apiMapping, updateAlert,serviceError } from '../constants/content'
 import { IResponseError } from '../controllers/types/http.type'
 import { IPostTransactionRisksResponseParsed } from '../helpers/parser/pgw/types/postTransactionRisks.type'
 import { IPostTransactionSimulationResponseParsed } from '../helpers/parser/pgw/types/postTransactionSimulation.type'
@@ -91,8 +91,8 @@ function convertToUpdateAlertPanel(isUpdateAvailable: boolean, isForceUpdate: bo
     logger.log('Snap Latest Version error:', error, error != ({} as IResponseError))
     if (error) {
         return panel([
-            text(`**- Latest Version -**`),
-            text(`⛔️**Oops, service have something problems...**!😬`),
+            text(`${updateAlert.latestVersion}`),
+            text(`${serviceError.serviceError}`),
             text(`${JSON.stringify(error)}`),
         ])
     }
@@ -101,17 +101,13 @@ function convertToUpdateAlertPanel(isUpdateAvailable: boolean, isForceUpdate: bo
         if (isForceUpdate) {
             return panel([
                 divider(),
-                text(
-                    '[❕ ALERT] Current version is not available anymore! Please visit 🌐“https://chainsafer.stag.nexone.io/snap/#/” to update. '
-                ),
+                text(`${updateAlert.forceUpdate}`),
                 divider(),
             ])
         } else {
             return panel([
                 divider(),
-                text(
-                    '[❕ ALERT] There is an update of ChainSafer Snap, for better protection, please visit 🌐“https://chainsafer.stag.nexone.io/snap/#/” to update.'
-                ),
+                text(`${updateAlert.snapUpdate}`),
                 divider(),
             ])
         }
