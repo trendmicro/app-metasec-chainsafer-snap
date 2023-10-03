@@ -123,7 +123,7 @@ function convertToRiskSummaryPanel(
     if (error) {
         return panel([
             heading(`Risk Summary Check`),
-            text(`⛔️**Oops, service have something problems...**!😬`),
+            text(`${serviceError.serviceError}`),
             text(`${JSON.stringify(error)}`),
         ])
     }
