@@ -91,7 +91,7 @@ function convertToUpdateAlertPanel(isUpdateAvailable: boolean, isForceUpdate: bo
     logger.log('Snap Latest Version error:', error, error != ({} as IResponseError))
     if (error) {
         return panel([
-            text(`${updateAlert.latestVersion}`),
+            text(`${headingText.latestVersion}`),
             text(`${serviceError.serviceError}`),
             text(`${JSON.stringify(error)}`),
         ])
@@ -122,7 +122,7 @@ function convertToRiskSummaryPanel(
 ) {
     if (error) {
         return panel([
-            heading(`${headingText.RiskSummary}`),
+            heading(`${headingText.riskSummary}`),
             text(`${serviceError.serviceError}`),
             text(`${JSON.stringify(error)}`),
         ])
