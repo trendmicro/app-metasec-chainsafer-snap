@@ -10,6 +10,15 @@ export const riskIconMapping = {
         attention_required: '🟡',
     },
 }
+export const updateAlert = {
+    latestVersion:'Latest Version',
+    forceUpdate: '[❕ ALERT] Current version is not available anymore! Please visit 🌐“https://chainsafer.stag.nexone.io/snap/#/” to update.',
+    snapUpdate: '[❕ ALERT] There is an update of ChainSafer Snap, for better protection, please visit 🌐“https://chainsafer.stag.nexone.io/snap/#/” to update.'
+}
+   
+export const serviceError ={
+    serviceError: '⛔️**Oops, service have something problems...**!😬'
+}
 
 export const apiMapping = {
     transaction_risks_summary: {
