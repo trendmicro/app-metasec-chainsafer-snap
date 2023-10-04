@@ -20,6 +20,10 @@ export const serviceError ={
     serviceError: '⛔️**Oops, service have something problems...**!😬'
 }
 
+export const headingText = {
+    RiskSummary: 'Risk Summary Check'
+}
+
 export const apiMapping = {
     transaction_risks_summary: {
         fatal_risk: 'Extreme Risk',

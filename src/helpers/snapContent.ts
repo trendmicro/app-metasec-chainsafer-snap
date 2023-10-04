@@ -6,7 +6,7 @@ import {
 } from '../controllers/chainsafer'
 import { OnTransactionHandler, OnTransactionResponse } from '@metamask/snaps-types'
 import { panel, divider, heading, text } from '@metamask/snaps-ui'
-import { riskIconMapping, apiMapping, updateAlert,serviceError } from '../constants/content'
+import { riskIconMapping, apiMapping, updateAlert,serviceError,headingText } from '../constants/content'
 import { IResponseError } from '../controllers/types/http.type'
 import { IPostTransactionRisksResponseParsed } from '../helpers/parser/pgw/types/postTransactionRisks.type'
 import { IPostTransactionSimulationResponseParsed } from '../helpers/parser/pgw/types/postTransactionSimulation.type'
@@ -122,7 +122,7 @@ function convertToRiskSummaryPanel(
 ) {
     if (error) {
         return panel([
-            heading(`Risk Summary Check`),
+            heading(`${headingText.RiskSummary}`),
             text(`${serviceError.serviceError}`),
             text(`${JSON.stringify(error)}`),
         ])
