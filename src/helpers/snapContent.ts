@@ -84,7 +84,7 @@ export const transactionInsightLayout: TTransactionInsightLayout = async (
         }
     }
 
-    return { content: panel([text(`⛔️**Oops, transaction is null**!😬`)]) }
+    return { content: panel([text(`${serviceError.serviceError}`)]) }
 }
 
 function convertToUpdateAlertPanel(isUpdateAvailable: boolean, isForceUpdate: boolean, error) {
