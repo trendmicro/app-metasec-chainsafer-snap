@@ -146,8 +146,8 @@ function convertToRiskPanel(result: IPostTransactionRisksResponseParsed, error: 
     logger.log('Transaction Risk error:', error, error != ({} as IResponseError))
     if (error) {
         return panel([
-            text(`**- Risky factors -**`),
-            text(`⛔️**Oops, service have something problems...**!😬`),
+            text(`${headingText.riskFactor}`),
+            text(`${serviceError.serviceError}`),
             text(`${JSON.stringify(error)}`),
         ])
     }
@@ -157,7 +157,7 @@ function convertToRiskPanel(result: IPostTransactionRisksResponseParsed, error: 
     }
 
     return panel([
-        text(`**- Risky factors -**`),
+        text(`${headingText.riskFactor}`),
         ...result.factors.map((insight) =>
             panel([
                 text(

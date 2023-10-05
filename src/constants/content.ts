@@ -21,7 +21,8 @@ export const serviceError ={
 
 export const headingText = {
     latestVersion:'Latest Version',
-    riskSummary: 'Risk Summary Check'
+    riskSummary: 'Risk Summary Check',
+    riskFactor: '**- Risky factors -**'
 }
 
 export const apiMapping = {
