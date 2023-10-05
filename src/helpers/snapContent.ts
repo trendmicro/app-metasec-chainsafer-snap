@@ -6,7 +6,7 @@ import {
 } from '../controllers/chainsafer'
 import { OnTransactionHandler, OnTransactionResponse } from '@metamask/snaps-types'
 import { panel, divider, heading, text } from '@metamask/snaps-ui'
-import { riskIconMapping, apiMapping, updateAlert,serviceError } from '../constants/content'
+import { riskIconMapping, apiMapping, updateAlert,serviceError,headingText } from '../constants/content'
 import { IResponseError } from '../controllers/types/http.type'
 import { IPostTransactionRisksResponseParsed } from '../helpers/parser/pgw/types/postTransactionRisks.type'
 import { IPostTransactionSimulationResponseParsed } from '../helpers/parser/pgw/types/postTransactionSimulation.type'
@@ -84,14 +84,14 @@ export const transactionInsightLayout: TTransactionInsightLayout = async (
         }
     }
 
-    return { content: panel([text(`⛔️**Oops, transaction is null**!😬`)]) }
+    return { content: panel([text(`${serviceError.serviceError}`)]) }
 }
 
 function convertToUpdateAlertPanel(isUpdateAvailable: boolean, isForceUpdate: boolean, error) {
     logger.log('Snap Latest Version error:', error, error != ({} as IResponseError))
     if (error) {
         return panel([
-            text(`${updateAlert.latestVersion}`),
+            text(`${headingText.latestVersion}`),
             text(`${serviceError.serviceError}`),
             text(`${JSON.stringify(error)}`),
         ])
@@ -122,8 +122,8 @@ function convertToRiskSummaryPanel(
 ) {
     if (error) {
         return panel([
-            heading(`Risk Summary Check`),
-            text(`⛔️**Oops, service have something problems...**!😬`),
+            heading(`${headingText.riskSummary}`),
+            text(`${serviceError.serviceError}`),
             text(`${JSON.stringify(error)}`),
         ])
     }
