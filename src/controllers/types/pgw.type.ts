@@ -7,6 +7,7 @@ import type {
 import type { IGetSnapLatestVersionResponseParsed } from '../../helpers/parser/pgw/types/getSnapLatestVersion.type'
 import type { TRestructuredPayload } from '../../helpers/types/proxyRestructure.type'
 import type { IResponseError } from '../../controllers/types/http.type'
+import type { IGetTokenInfoResponseParsed } from '../../helpers/parser/pgw/types/getTokenInfo.type'
 
 export type TOnResponseErrorCode = (response: any, responseBody: any) => IResponseError
 export type TPostTransactionRisks = (
@@ -25,3 +26,8 @@ export type TPostTransactionSimulation = (
 export type TGetSnapLatestVersion = (
     headerOption?: Record<string, string>
 ) => Promise<IGetSnapLatestVersionResponseParsed>
+
+export type TGetTokenInfo = (
+    contractAddress: string,
+    headerOption?: Record<string, string>
+) => Promise<IGetTokenInfoResponseParsed>
