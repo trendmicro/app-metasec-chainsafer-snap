@@ -3,10 +3,17 @@ import {
     postTransactionSimulation,
     postTransactionRiskSummary,
     getSnapLatestVersion,
+    getTokenInfo,
 } from '../controllers/chainsafer'
 import { OnTransactionHandler, OnTransactionResponse } from '@metamask/snaps-types'
 import { panel, divider, heading, text } from '@metamask/snaps-ui'
-import { riskIconMapping, apiMapping, updateAlert,serviceError,headingText } from '../constants/content'
+import {
+    riskIconMapping,
+    apiMapping,
+    updateAlert,
+    serviceError,
+    headingText,
+} from '../constants/content'
 import { IResponseError } from '../controllers/types/http.type'
 import { IPostTransactionRisksResponseParsed } from '../helpers/parser/pgw/types/postTransactionRisks.type'
 import { IPostTransactionSimulationResponseParsed } from '../helpers/parser/pgw/types/postTransactionSimulation.type'
@@ -54,6 +61,17 @@ export const transactionInsightLayout: TTransactionInsightLayout = async (
             postTransactionSimulation(chainId, transaction),
         ])
 
+        if (
+            simulationResult &&
+            simulationResult.senderAssetChange.tokenChanges!= null &&
+            simulationResult.senderAssetChange.tokenChanges.length > 0 &&
+            simulationResult.senderAssetChange.tokenChanges[0].contractAddress != ''
+        ) {
+            const [tokenInfoResult, tokenInfoError] = await getTokenInfo(
+                simulationResult.senderAssetChange.tokenChanges[0].contractAddress
+            )
+        }
+
         let riskPanel = convertToRiskPanel(riskResult, riskError)
         let riskSummaryPanel = convertToRiskSummaryPanel(riskSummaryResult, riskSummaryError)
         let simulationPanel = convertToSimulationPanel(simulationResult, simulationError)
@@ -99,17 +117,9 @@ function convertToUpdateAlertPanel(isUpdateAvailable: boolean, isForceUpdate: bo
 
     if (isUpdateAvailable) {
         if (isForceUpdate) {
-            return panel([
-                divider(),
-                text(`${updateAlert.forceUpdate}`),
-                divider(),
-            ])
+            return panel([divider(), text(`${updateAlert.forceUpdate}`), divider()])
         } else {
-            return panel([
-                divider(),
-                text(`${updateAlert.snapUpdate}`),
-                divider(),
-            ])
+            return panel([divider(), text(`${updateAlert.snapUpdate}`), divider()])
         }
     } else {
         return panel([])
