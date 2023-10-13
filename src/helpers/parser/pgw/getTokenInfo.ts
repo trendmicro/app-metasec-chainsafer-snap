@@ -19,7 +19,7 @@ const getTokenInfo: TGetTokenInfo = (responseBody) => {
     if (responseBody.hasOwnProperty('blue_checkmark') && responseBody.blue_checkmark !== null ) { 
         tokenInfo = {
             ...tokenInfo,
-            blueCheckMark: parserMapping<string>(responseBody, 'blue_checkmark', ''),
+            blueCheckMark: parserMapping<boolean>(responseBody, 'blue_checkmark', ''),
         }
     }
     if (responseBody.hasOwnProperty('contract_address') && responseBody.contract_address !== null && responseBody.contract_address !== '') {
