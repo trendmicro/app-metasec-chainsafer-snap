@@ -4,139 +4,219 @@ import { parserMapping } from '../../../helpers/parser/parser'
 
 const getTokenInfo: TGetTokenInfo = (responseBody) => {
     let tokenInfo = {}
-    if (responseBody.hasOwnProperty('bitcointalk') && responseBody.bitcointalk !== null && responseBody.bitcointalk !== '') { 
+    if (
+        responseBody.hasOwnProperty('website') &&
+        responseBody.website !== null &&
+        responseBody.website !== ''
+    ) {
         tokenInfo = {
             ...tokenInfo,
-            bitcointalk: parserMapping<string>(responseBody, 'bitcointalk', ''),
+            Website: parserMapping<string>(responseBody, 'website', ''),
         }
     }
-    if (responseBody.hasOwnProperty('blog') && responseBody.blog !== null && responseBody.blog !== '') { 
+    if (
+        responseBody.hasOwnProperty('bitcointalk') &&
+        responseBody.bitcointalk !== null &&
+        responseBody.bitcointalk !== ''
+    ) {
         tokenInfo = {
             ...tokenInfo,
-            blog: parserMapping<string>(responseBody, 'blog', ''),
+            Bitcointalk: parserMapping<string>(responseBody, 'bitcointalk', ''),
         }
     }
-    if (responseBody.hasOwnProperty('blue_checkmark') && responseBody.blue_checkmark !== null ) { 
+    if (
+        responseBody.hasOwnProperty('blog') &&
+        responseBody.blog !== null &&
+        responseBody.blog !== ''
+    ) {
         tokenInfo = {
             ...tokenInfo,
-            blueCheckMark: parserMapping<boolean>(responseBody, 'blue_checkmark', ''),
+            Blog: parserMapping<string>(responseBody, 'blog', ''),
         }
     }
-    if (responseBody.hasOwnProperty('contract_address') && responseBody.contract_address !== null && responseBody.contract_address !== '') {
+    if (responseBody.hasOwnProperty('blue_checkmark') && responseBody.blue_checkmark !== null) {
         tokenInfo = {
             ...tokenInfo,
-            contractAddress: parserMapping<string>(responseBody, 'contract_address', ''),
+            BlueCheckMark: parserMapping<boolean>(responseBody, 'blue_checkmark', ''),
         }
     }
-    if (responseBody.hasOwnProperty('description') && responseBody.description !== null && responseBody.description !== '') {
+    if (
+        responseBody.hasOwnProperty('contract_address') &&
+        responseBody.contract_address !== null &&
+        responseBody.contract_address !== ''
+    ) {
         tokenInfo = {
             ...tokenInfo,
-            description: parserMapping<string>(responseBody, 'description', ''),
+            ContractAddress: parserMapping<string>(responseBody, 'contract_address', ''),
         }
     }
-    if (responseBody.hasOwnProperty('discord') && responseBody.discord !== null && responseBody.discord !== '') {
+    if (
+        responseBody.hasOwnProperty('description') &&
+        responseBody.description !== null &&
+        responseBody.description !== ''
+    ) {
         tokenInfo = {
             ...tokenInfo,
-            discord: parserMapping<string>(responseBody, 'discord', ''),
+            Description: parserMapping<string>(responseBody, 'description', ''),
         }
     }
-    if (responseBody.hasOwnProperty('divisor') && responseBody.divisor !== null ) {
+    if (
+        responseBody.hasOwnProperty('discord') &&
+        responseBody.discord !== null &&
+        responseBody.discord !== ''
+    ) {
         tokenInfo = {
             ...tokenInfo,
-            divisor: parserMapping<number>(responseBody, 'divisor', 0),
+            Discord: parserMapping<string>(responseBody, 'discord', ''),
         }
     }
-    if (responseBody.hasOwnProperty('email') && responseBody.email !== null && responseBody.email !== '') {
+    if (responseBody.hasOwnProperty('divisor') && responseBody.divisor !== null) {
         tokenInfo = {
             ...tokenInfo,
-            email: parserMapping<string>(responseBody, 'email', ''),
+            Divisor: parserMapping<number>(responseBody, 'divisor', 0),
         }
     }
-    if (responseBody.hasOwnProperty('facebook') && responseBody.facebook !== null && responseBody.facebook !== '') {
+    if (
+        responseBody.hasOwnProperty('email') &&
+        responseBody.email !== null &&
+        responseBody.email !== ''
+    ) {
         tokenInfo = {
             ...tokenInfo,
-            facebook: parserMapping<string>(responseBody, 'facebook', ''),
+            Email: parserMapping<string>(responseBody, 'email', ''),
         }
     }
-    if (responseBody.hasOwnProperty('github') && responseBody.github !== null && responseBody.github !== '') {
+    if (
+        responseBody.hasOwnProperty('facebook') &&
+        responseBody.facebook !== null &&
+        responseBody.facebook !== ''
+    ) {
         tokenInfo = {
             ...tokenInfo,
-            github: parserMapping<string>(responseBody, 'github', ''),
+            Facebook: parserMapping<string>(responseBody, 'facebook', ''),
         }
     }
-    if (responseBody.hasOwnProperty('linkedin') && responseBody.linkedin !== null && responseBody.linkedin !== '') {
+    if (
+        responseBody.hasOwnProperty('github') &&
+        responseBody.github !== null &&
+        responseBody.github !== ''
+    ) {
         tokenInfo = {
             ...tokenInfo,
-            linkedin: parserMapping<string>(responseBody, 'linkedin', ''),
+            Github: parserMapping<string>(responseBody, 'github', ''),
         }
     }
-    if (responseBody.hasOwnProperty('reddit') && responseBody.reddit !== null && responseBody.reddit !== '') {
+    if (
+        responseBody.hasOwnProperty('linkedin') &&
+        responseBody.linkedin !== null &&
+        responseBody.linkedin !== ''
+    ) {
         tokenInfo = {
             ...tokenInfo,
-            reddit: parserMapping<string>(responseBody, 'reddit', ''),
+            Linkedin: parserMapping<string>(responseBody, 'linkedin', ''),
         }
     }
-    if (responseBody.hasOwnProperty('slack') && responseBody.slack !== null && responseBody.slack !== '') {
+    if (
+        responseBody.hasOwnProperty('reddit') &&
+        responseBody.reddit !== null &&
+        responseBody.reddit !== ''
+    ) {
         tokenInfo = {
             ...tokenInfo,
-            slack: parserMapping<string>(responseBody, 'slack', ''),
+            Reddit: parserMapping<string>(responseBody, 'reddit', ''),
         }
     }
-    if (responseBody.hasOwnProperty('symbol') && responseBody.symbol !== null && responseBody.symbol !== '') {
+    if (
+        responseBody.hasOwnProperty('slack') &&
+        responseBody.slack !== null &&
+        responseBody.slack !== ''
+    ) {
         tokenInfo = {
             ...tokenInfo,
-            symbol: parserMapping<string>(responseBody, 'symbol', ''),
+            Slack: parserMapping<string>(responseBody, 'slack', ''),
         }
     }
-    if (responseBody.hasOwnProperty('telegram') && responseBody.telegram !== null && responseBody.telegram !== '') {
+    if (
+        responseBody.hasOwnProperty('symbol') &&
+        responseBody.symbol !== null &&
+        responseBody.symbol !== ''
+    ) {
         tokenInfo = {
             ...tokenInfo,
-            telegram: parserMapping<string>(responseBody, 'telegram', ''),
+            Symbol: parserMapping<string>(responseBody, 'symbol', ''),
         }
     }
-    if (responseBody.hasOwnProperty('token_name') && responseBody.token_name !== null && responseBody.token_name !== '') {
+    if (
+        responseBody.hasOwnProperty('telegram') &&
+        responseBody.telegram !== null &&
+        responseBody.telegram !== ''
+    ) {
         tokenInfo = {
             ...tokenInfo,
-            tokenName: parserMapping<string>(responseBody, 'token_name', ''),
+            Telegram: parserMapping<string>(responseBody, 'telegram', ''),
         }
     }
-    if (responseBody.hasOwnProperty('tokenPriceUSD') && responseBody.tokenPriceUSD !== null && responseBody.tokenPriceUSD !== '') {
+    if (
+        responseBody.hasOwnProperty('token_name') &&
+        responseBody.token_name !== null &&
+        responseBody.token_name !== ''
+    ) {
         tokenInfo = {
             ...tokenInfo,
-            tokenPriceUSD: parserMapping<string>(responseBody, 'tokenPriceUSD', ''),
+            TokenName: parserMapping<string>(responseBody, 'token_name', ''),
         }
     }
-    if (responseBody.hasOwnProperty('total_supply') && responseBody.total_supply !== null && responseBody.total_supply !== '') {
+    if (
+        responseBody.hasOwnProperty('tokenPriceUSD') &&
+        responseBody.tokenPriceUSD !== null &&
+        responseBody.tokenPriceUSD !== ''
+    ) {
         tokenInfo = {
             ...tokenInfo,
-            totalSupply: parserMapping<string>(responseBody, 'total_supply', ''),
+            TokenPriceUSD: parserMapping<string>(responseBody, 'tokenPriceUSD', ''),
         }
     }
-    if (responseBody.hasOwnProperty('twitter') && responseBody.twitter !== null && responseBody.twitter !== '') {
+    if (
+        responseBody.hasOwnProperty('total_supply') &&
+        responseBody.total_supply !== null &&
+        responseBody.total_supply !== ''
+    ) {
         tokenInfo = {
             ...tokenInfo,
-            twitter: parserMapping<string>(responseBody, 'twitter', ''),
+            TotalSupply: parserMapping<string>(responseBody, 'total_supply', ''),
         }
     }
-    if (responseBody.hasOwnProperty('website') && responseBody.website !== null && responseBody.website !== '') {
+    if (
+        responseBody.hasOwnProperty('twitter') &&
+        responseBody.twitter !== null &&
+        responseBody.twitter !== ''
+    ) {
         tokenInfo = {
             ...tokenInfo,
-            website: parserMapping<string>(responseBody, 'website', ''),
+            Twitter: parserMapping<string>(responseBody, 'twitter', ''),
         }
     }
-    if (responseBody.hasOwnProperty('wechat') && responseBody.wechat !== null && responseBody.wechat !== '') {
+    if (
+        responseBody.hasOwnProperty('wechat') &&
+        responseBody.wechat !== null &&
+        responseBody.wechat !== ''
+    ) {
         tokenInfo = {
             ...tokenInfo,
-            wechat: parserMapping<string>(responseBody, 'wechat', ''),
+            Wechat: parserMapping<string>(responseBody, 'wechat', ''),
         }
     }
-    if (responseBody.hasOwnProperty('whitepaper') && responseBody.whitepaper !== null && responseBody.whitepaper !== '') {
+    if (
+        responseBody.hasOwnProperty('whitepaper') &&
+        responseBody.whitepaper !== null &&
+        responseBody.whitepaper !== ''
+    ) {
         tokenInfo = {
             ...tokenInfo,
-            whitepaper: parserMapping<string>(responseBody, 'whitepaper', ''),
+            Whitepaper: parserMapping<string>(responseBody, 'whitepaper', ''),
         }
     }
-    
+
     return tokenInfo
 }
 

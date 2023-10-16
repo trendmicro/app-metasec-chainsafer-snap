@@ -21,6 +21,7 @@ import { IPostTransactionRiskSummaryResponseParsed } from '../helpers/parser/pgw
 import { TTransactionInsightLayout } from './types/snapContent.type'
 import Logger from '../controllers/logger'
 import { isGreaterVersion } from './versionCheck'
+import { IGetTokenInfoResponseParsed } from './parser/pgw/types/getTokenInfo.type'
 
 const logger = new Logger('[helpers.snapContent]')
 const { formatEther } = require('@ethersproject/units')
@@ -61,20 +62,14 @@ export const transactionInsightLayout: TTransactionInsightLayout = async (
             postTransactionSimulation(chainId, transaction),
         ])
 
-        if (
-            simulationResult &&
-            simulationResult.senderAssetChange.tokenChanges!= null &&
-            simulationResult.senderAssetChange.tokenChanges.length > 0 &&
-            simulationResult.senderAssetChange.tokenChanges[0].contractAddress != ''
-        ) {
-            const [tokenInfoResult, tokenInfoError] = await getTokenInfo(
-                simulationResult.senderAssetChange.tokenChanges[0].contractAddress
-            )
-        }
+        const [tokenInfoResult, tokenInfoError] = await getTokenInfoBySimulationResult(
+            simulationResult
+        )
 
         let riskPanel = convertToRiskPanel(riskResult, riskError)
         let riskSummaryPanel = convertToRiskSummaryPanel(riskSummaryResult, riskSummaryError)
         let simulationPanel = convertToSimulationPanel(simulationResult, simulationError)
+        let ProjectInsightPanel = covertToProjectInsightPanel(tokenInfoResult, tokenInfoError)
 
         let displayPanel = panel([])
         if (riskSummaryResult.severity == 'caution') {
@@ -85,6 +80,8 @@ export const transactionInsightLayout: TTransactionInsightLayout = async (
                 riskSummaryPanel,
                 divider(),
                 riskPanel,
+                divider(),
+                ProjectInsightPanel,
             ])
         } else {
             displayPanel = panel([
@@ -94,6 +91,8 @@ export const transactionInsightLayout: TTransactionInsightLayout = async (
                 riskPanel,
                 divider(),
                 simulationPanel,
+                divider(),
+                ProjectInsightPanel,
             ])
         }
 
@@ -312,6 +311,31 @@ function convertToSimulationPanel(
     ])
 }
 
+function covertToProjectInsightPanel(result: IGetTokenInfoResponseParsed, error: IResponseError) {
+    if (error) {
+        return panel([
+            heading('Project Insight'),
+            divider(),
+            text(`⛔️**Oops, service have something problems...**!😑`),
+            text(`${JSON.stringify(error)}`),
+        ])
+    }
+
+    if (result == null) {
+        return panel([])
+    }
+
+    const arrayFromObject = Object.keys(result)
+
+    return panel([
+        heading('Project Insight'),
+        divider(),
+        ...arrayFromObject.map((key) => {
+            return text(`${key}: ${result[key]}`)
+        }),
+    ])
+}
+
 function convertWeiToEth(wei: string): string {
     if (Number.isNaN(parseInt(wei))) {
         return '0'
@@ -319,4 +343,21 @@ function convertWeiToEth(wei: string): string {
     let eth = formatEther(wei)
 
     return eth
+}
+
+async function getTokenInfoBySimulationResult(
+    simulationResult: IPostTransactionSimulationResponseParsed
+) {
+    if (
+        simulationResult &&
+        simulationResult.senderAssetChange.tokenChanges != null &&
+        simulationResult.senderAssetChange.tokenChanges.length > 0 &&
+        simulationResult.senderAssetChange.tokenChanges[0].contractAddress != ''
+    ) {
+        return await getTokenInfo(
+            simulationResult.senderAssetChange.tokenChanges[0].contractAddress
+        )
+    } else {
+        return [null, null]
+    }
 }
