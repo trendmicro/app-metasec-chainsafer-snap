@@ -11,6 +11,9 @@ import {
 } from '../helpers/parser/pgw/types/postTransactionSimulation.type'
 import { IPostTransactionRiskSummaryResponseParsed } from './../helpers/parser/pgw/types/postTransactionRiskSummary.type'
 import { IGetSnapLatestVersionResponseParsed } from '../helpers/parser/pgw/types/getSnapLatestVersion.type'
+import {
+    IGetTokenInfoResponseParsed
+} from '../helpers/parser/pgw/types/getTokenInfo.type'
 
 const logger = new Logger('[controllers.chainsafer]')
 
@@ -100,6 +103,22 @@ export const getSnapLatestVersion = async (): Promise<
 
     try {
         result = await pgw.getSnapLatestVersion()
+    } catch (e) {
+        logger.error(`${JSON.stringify(e)}`)
+        error = e
+    }
+
+    return [result, error]
+}
+
+export const getTokenInfo = async (
+    contractAddress: string
+): Promise<[IGetTokenInfoResponseParsed, IResponseError]> => {
+    let result: IGetTokenInfoResponseParsed = {} as IGetTokenInfoResponseParsed
+    let error: IResponseError = null
+
+    try {
+        result = await pgw.getTokenInfo(contractAddress)
     } catch (e) {
         logger.error(`${JSON.stringify(e)}`)
         error = e

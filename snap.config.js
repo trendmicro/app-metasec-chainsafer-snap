@@ -38,7 +38,10 @@ module.exports = {
                     process.env.API_PGW_PATH_POST_TRANSACTION_RISK_SUMMARY,
                 API_PGW_PATH_POST_TRANSACTION_SIMULATION:
                     process.env.API_PGW_PATH_POST_TRANSACTION_SIMULATION,
-                API_PGW_PATH_GET_SNAP_LATEST_VERSION: process.env.API_PGW_PATH_GET_SNAP_LATEST_VERSION 
+                API_PGW_PATH_GET_SNAP_LATEST_VERSION:
+                    process.env.API_PGW_PATH_GET_SNAP_LATEST_VERSION,
+                API_PGW_PATH_GET_TOKEN_INFO:
+                    process.env.API_PGW_PATH_GET_TOKEN_INFO,
             })
         )
   },

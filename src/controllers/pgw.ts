@@ -2,12 +2,14 @@ import type { IPostTransactionRisksResponseBody } from '../helpers/parser/pgw/ty
 import type { IPostTransactionRiskSummaryResponseBody } from '../helpers/parser/pgw/types/postTransactionRiskSummary.type'
 import type { IPostTransactionSimulationResponseBody } from '../helpers/parser/pgw/types/postTransactionSimulation.type'
 import type { IGetSnapLatestVersionResponseBody } from '../helpers/parser/pgw/types/getSnapLatestVersion.type'
+import type { IGetTokenInfoResponseBody } from '../helpers/parser/pgw/types/getTokenInfo.type'
 import type {
     TGetSnapLatestVersion,
     TOnResponseErrorCode,
     TPostTransactionRisks,
     TPostTransactionRiskSummary,
     TPostTransactionSimulation,
+    TGetTokenInfo,
 } from '../controllers/types/pgw.type'
 
 import { generatedUUIDV4 } from '../helpers/secret'
@@ -128,9 +130,7 @@ const postTransactionSimulation: TPostTransactionSimulation = async (
     return responseParsed
 }
 
-const getSnapLatestVersion: TGetSnapLatestVersion = async (
-    headerOption = {}
-) => {
+const getSnapLatestVersion: TGetSnapLatestVersion = async (headerOption = {}) => {
     const keyPath = 'GET_SNAP_LATEST_VERSION'
     const url = pgwBase(keyPath)
     const body = {}
@@ -155,9 +155,37 @@ const getSnapLatestVersion: TGetSnapLatestVersion = async (
     return responseParsed
 }
 
+const getTokenInfo: TGetTokenInfo = async (contractAddress, headerOption = {}) => {
+    const keyPath = 'GET_TOKEN_INFO'
+    const url = pgwBase(keyPath, (path: string) =>
+        path.replace('{contractAddress}', contractAddress)
+    )
+    const body = {}
+    const headers = header(headerOption)
+
+    logger.log('getTokenInfo', 'head', headers)
+    logger.log('getTokenInfo', 'body', body)
+
+    const request = await get(url, payload(body, headers), onResponseErrorCode)
+    const [error, response] = await request<IGetTokenInfoResponseBody>()
+
+    logger.log('getTokenInfo', 'error', error)
+    logger.log('getTokenInfo', 'response', response)
+
+    if (error) {
+        throw error
+    }
+
+    const responseParsed = pgwParser[keyPath](response)
+    logger.log('getTokenInfo', 'responseParsed', responseParsed)
+
+    return responseParsed
+}
+
 export default {
     postTransactionRisks,
     postTransactionRiskSummary,
     postTransactionSimulation,
     getSnapLatestVersion,
+    getTokenInfo,
 }
