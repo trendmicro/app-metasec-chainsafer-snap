@@ -22,6 +22,7 @@ import { TTransactionInsightLayout } from './types/snapContent.type'
 import Logger from '../controllers/logger'
 import { isGreaterVersion } from './versionCheck'
 import { IGetTokenInfoResponseParsed } from './parser/pgw/types/getTokenInfo.type'
+import { VERSION } from '../constants/config'
 
 const logger = new Logger('[helpers.snapContent]')
 const { formatEther } = require('@ethersproject/units')
@@ -31,6 +32,7 @@ export const transactionInsightLayout: TTransactionInsightLayout = async (
     state
 ) => {
     if (transaction) {
+        logger.log('VERSION:', VERSION)
         const [latestVersionResult, latestVersionError] = await getSnapLatestVersion()
         const isUpdateAvailable = isGreaterVersion(
             latestVersionResult.latestVersion,
