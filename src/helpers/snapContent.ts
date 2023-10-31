@@ -143,8 +143,7 @@ function convertToRiskSummaryPanel(
 
     return panel([
         heading(
-            `${riskIconMapping.transaction_risks_summary[result.severity]} ${
-                apiMapping.transaction_risks_summary[result.severity]
+            `${riskIconMapping.transaction_risks_summary[result.severity]} ${apiMapping.transaction_risks_summary[result.severity]
             }`
         ),
         text(`**${apiMapping.transaction_risks_summary[result.ruleName]}**`),
@@ -170,8 +169,7 @@ function convertToRiskPanel(result: IPostTransactionRisksResponseParsed, error: 
         ...result.factors.map((insight) =>
             panel([
                 text(
-                    `${riskIconMapping.transaction_risk_type[insight.type]} ${
-                        apiMapping.transaction_risks[insight.name]
+                    `${riskIconMapping.transaction_risk_type[insight.type]} ${apiMapping.transaction_risks[insight.name]
                     }`
                 ),
                 ...insight.message.split('\n').map((message) => text(`${message}`)),
@@ -229,8 +227,7 @@ function convertToSimulationPanel(
         paymentDetailPanel = [
             text(`Pay ➞`),
             text(
-                `${convertWeiToEth(diffWei.toString())} Eth${
-                    Number.isNaN(diffUSD) ? `` : ` ($ ${diffUSD})`
+                `${convertWeiToEth(diffWei.toString())} Eth${Number.isNaN(diffUSD) ? `` : ` ($ ${diffUSD})`
                 }`
             ),
         ]
@@ -239,8 +236,6 @@ function convertToSimulationPanel(
             divider(),
             text(`Before ➞`),
             text(
-                `${convertWeiToEth(originWei.toString())} Eth ${
-                    Number.isNaN(originUSD) ? `` : ` ($ ${originUSD})`
                 `${convertWeiToEth(originWei.toString())} Eth ${Number.isNaN(originUSD) ? `` : ` ($ ${originUSD})`
                 }`
             ),
