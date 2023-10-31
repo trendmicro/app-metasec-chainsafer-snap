@@ -29,18 +29,16 @@ const { formatEther } = require('@ethersproject/units')
 
 export const transactionInsightLayout: TTransactionInsightLayout = async (
     { transactionOrigin, chainId, transaction },
-    state
 ) => {
     if (transaction) {
-        logger.log('VERSION:', VERSION)
         const [latestVersionResult, latestVersionError] = await getSnapLatestVersion()
         const isUpdateAvailable = isGreaterVersion(
             latestVersionResult.latestVersion,
-            state.snapInfo.version
+            VERSION
         )
         const isForceUpdate = isGreaterVersion(
             latestVersionResult.latestForceUpdateVersion,
-            state.snapInfo.version
+            VERSION
         )
         let updateAlertPanel = convertToUpdateAlertPanel(
             isUpdateAvailable,
@@ -243,19 +241,18 @@ function convertToSimulationPanel(
             text(
                 `${convertWeiToEth(originWei.toString())} Eth ${
                     Number.isNaN(originUSD) ? `` : ` ($ ${originUSD})`
+                `${convertWeiToEth(originWei.toString())} Eth ${Number.isNaN(originUSD) ? `` : ` ($ ${originUSD})`
                 }`
             ),
             text(`➞ After`),
             text(
-                `${convertWeiToEth(afterWei.toString())} Eth ${
-                    Number.isNaN(afterUSD) ? `` : ` ($ ${afterUSD})`
+                `${convertWeiToEth(afterWei.toString())} Eth ${Number.isNaN(afterUSD) ? `` : ` ($ ${afterUSD})`
                 }`
             ),
             text(`**---**`),
             text(`**💰Balance Diff.**`),
             text(
-                `${convertWeiToEth(diffWei.toString())} Eth${
-                    Number.isNaN(diffUSD) ? `` : ` ($ ${diffUSD})`
+                `${convertWeiToEth(diffWei.toString())} Eth${Number.isNaN(diffUSD) ? `` : ` ($ ${diffUSD})`
                 }`
             ),
         ]
@@ -280,24 +277,20 @@ function convertToSimulationPanel(
     if (result.contracts != null && result.contracts.length > 0) {
         contractPanel.push(
             text(
-                `**Via ${result.contracts[0].contractName} and other ${
-                    result.contracts.length - 1
+                `**Via ${result.contracts[0].contractName} and other ${result.contracts.length - 1
                 } contracts ✅**`
             )
         )
         result.contracts.forEach(function (contract, index) {
             contractPanel.push(
-                text(`${index + 1}.[${contract.contractName}] Contract address 👉[${
-                    contract.address
-                }] 🌐[Contract: ${contract.isPublic == true ? 'Open✅' : 'Private❗️'}] ${
-                    parseFloat(contract.fee) > 0
+                text(`${index + 1}.[${contract.contractName}] Contract address 👉[${contract.address
+                    }] 🌐[Contract: ${contract.isPublic == true ? 'Open✅' : 'Private❗️'}] ${parseFloat(contract.fee) > 0
                         ? `▶ ${convertWeiToEth(contract.fee).toString()} ETH`
                         : ''
-                } ${
-                    Number.isNaN(parseInt(contract.feeDollarValue))
+                    } ${Number.isNaN(parseInt(contract.feeDollarValue))
                         ? ''
                         : `($${contract.feeDollarValue})`
-                }
+                    }
         `)
             )
         })

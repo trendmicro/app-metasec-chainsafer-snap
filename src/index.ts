@@ -1,7 +1,7 @@
 import { OnTransactionHandler, OnRpcRequestHandler } from '@metamask/snaps-types'
 import { transactionInsightLayout } from './helpers/snapContent'
 import { TSnapState } from './helpers/types/snapState.type'
-import { getSnapState, setSnapState } from './helpers/snapState'
+import { setSnapState } from './helpers/snapState'
 
 import Logger from './controllers/logger'
 const logger = new Logger('[index]')
@@ -14,10 +14,8 @@ export const onTransaction: OnTransactionHandler = async ({
     logger.log('transactionOrigin:', transactionOrigin)
     logger.log('chainId:', chainId)
     logger.log('transaction:', transaction)
-    logger.log('snap state:', getSnapState())
-    const snapState = (await getSnapState()) as TSnapState
 
-    return transactionInsightLayout({ transactionOrigin, chainId, transaction }, snapState)
+    return transactionInsightLayout({ transactionOrigin, chainId, transaction })
 }
 
 export const onRpcRequest: OnRpcRequestHandler = async ({ origin, request }) => {

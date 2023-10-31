@@ -9,5 +9,4 @@ export type TTransactionInsightLayout = (
         chainId: string
         transactionOrigin?: string
     },
-    state: TSnapState
 ) => Promise<OnTransactionResponse>
