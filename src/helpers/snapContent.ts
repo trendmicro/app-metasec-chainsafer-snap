@@ -71,7 +71,7 @@ export const transactionInsightLayout: TTransactionInsightLayout = async (
         let riskPanel = convertToRiskPanel(riskResult, riskError)
         let riskSummaryPanel = convertToRiskSummaryPanel(riskSummaryResult, riskSummaryError)
         let simulationPanel = convertToSimulationPanel(simulationResult, simulationError)
-        let ProjectInsightPanel = covertToProjectInsightPanel(tokenInfoResult, tokenInfoError)
+        let projectInsightPanel = covertToProjectInsightPanel(tokenInfoResult, tokenInfoError)
 
         let displayPanel = panel([])
         if (riskSummaryResult.severity == 'caution') {
@@ -83,7 +83,7 @@ export const transactionInsightLayout: TTransactionInsightLayout = async (
                 divider(),
                 riskPanel,
                 divider(),
-                ProjectInsightPanel,
+                projectInsightPanel,
             ])
         } else {
             displayPanel = panel([
@@ -94,7 +94,7 @@ export const transactionInsightLayout: TTransactionInsightLayout = async (
                 divider(),
                 simulationPanel,
                 divider(),
-                ProjectInsightPanel,
+                projectInsightPanel,
             ])
         }
 
@@ -352,6 +352,7 @@ async function getTokenInfoBySimulationResult(
 ) {
     if (
         simulationResult &&
+        simulationResult.senderAssetChange != null &&
         simulationResult.senderAssetChange.tokenChanges != null &&
         simulationResult.senderAssetChange.tokenChanges.length > 0 &&
         simulationResult.senderAssetChange.tokenChanges[0].contractAddress != ''
