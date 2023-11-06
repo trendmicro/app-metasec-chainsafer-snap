@@ -18,17 +18,3 @@ export const onTransaction: OnTransactionHandler = async ({
     return transactionInsightLayout({ transactionOrigin, chainId, transaction })
 }
 
-export const onRpcRequest: OnRpcRequestHandler = async ({ origin, request }) => {
-    switch (request.method) {
-        case 'storeState':
-            if (request.params) {
-                const state: TSnapState = (request.params as TSnapState) ?? undefined
-                if (state) {
-                    await setSnapState(state)
-                }
-            }
-            return true
-        default:
-            throw new Error('Method not found.')
-    }
-}

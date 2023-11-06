@@ -11,9 +11,7 @@ import {
 } from '../helpers/parser/pgw/types/postTransactionSimulation.type'
 import { IPostTransactionRiskSummaryResponseParsed } from './../helpers/parser/pgw/types/postTransactionRiskSummary.type'
 import { IGetSnapLatestVersionResponseParsed } from '../helpers/parser/pgw/types/getSnapLatestVersion.type'
-import {
-    IGetTokenInfoResponseParsed
-} from '../helpers/parser/pgw/types/getTokenInfo.type'
+import { IGetTokenInfoResponseParsed } from '../helpers/parser/pgw/types/getTokenInfo.type'
 
 const logger = new Logger('[controllers.chainsafer]')
 
@@ -111,7 +109,25 @@ export const getSnapLatestVersion = async (): Promise<
     return [result, error]
 }
 
-export const getTokenInfo = async (
+export const getTokenInfoBySimulationResult = async (
+    simulationResult: IPostTransactionSimulationResponseParsed
+): Promise<[IGetTokenInfoResponseParsed, IResponseError]> => {
+    if (
+        simulationResult &&
+        simulationResult.senderAssetChange != null &&
+        simulationResult.senderAssetChange.tokenChanges != null &&
+        simulationResult.senderAssetChange.tokenChanges.length > 0 &&
+        simulationResult.senderAssetChange.tokenChanges[0].contractAddress != ''
+    ) {
+        return await getTokenInfo(
+            simulationResult.senderAssetChange.tokenChanges[0].contractAddress
+        )
+    } else {
+        return [null, null]
+    }
+}
+
+const getTokenInfo = async (
     contractAddress: string
 ): Promise<[IGetTokenInfoResponseParsed, IResponseError]> => {
     let result: IGetTokenInfoResponseParsed = {} as IGetTokenInfoResponseParsed

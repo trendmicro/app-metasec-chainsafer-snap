@@ -3,7 +3,7 @@
   "description": "TM Chainsafer of MetaMask Snaps.",
   "proposedName": "TM ChainSafer",
   "source": {
-    "shasum": "TvTOsn/S2L9QxVV8BvLaALmaMIbCI2xwWMLAkau6w3k=",
+    "shasum": "K/0lukPJBZ8fQPMXCud6fm+CwB80wrMFa78Iyg94Zl4=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -17,12 +17,7 @@
     "endowment:transaction-insight": {
       "allowTransactionOrigin": true
     },
-    "endowment:network-access": {},
-    "snap_manageState": {},
-    "endowment:rpc": {
-      "dapps": true,
-      "snaps": false
-    }
+    "endowment:network-access": {}
   },
   "manifestVersion": "0.1"
 }
