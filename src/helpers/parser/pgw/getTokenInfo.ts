@@ -1,6 +1,7 @@
 import type { TGetTokenInfo } from '../../../helpers/parser/pgw/types/getTokenInfo.type'
 
 import { parserMapping } from '../../../helpers/parser/parser'
+import { projectWebsiteLink } from '../../../constants/content'
 
 const getTokenInfo: TGetTokenInfo = (responseBody) => {
     let tokenInfo = {}

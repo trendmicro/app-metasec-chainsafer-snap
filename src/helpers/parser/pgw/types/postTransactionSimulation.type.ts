@@ -92,16 +92,16 @@ export interface IPostTransactionSimulationTokenChangeParsed {
     name: string
     icon: string
     decimals: number
-    dollarValue: string
+    dollarValue: number
     description: string
     tokenId: number
 }
 
 export interface IPostTransactionSimulationBalanceDiffParsed {
-    origin: string
-    after: string
-    originDollarValue: string
-    afterDollarValue: string
+    origin: number
+    after: number
+    originDollarValue: number
+    afterDollarValue: number
     symbol: string
     name: string
     icon: string

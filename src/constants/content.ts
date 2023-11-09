@@ -11,20 +11,71 @@ export const riskIconMapping = {
     },
 }
 export const updateAlert = {
-    forceUpdate: '[❕ ALERT] Current version is not available anymore! Please visit 🌐“https://chainsafer.stag.nexone.io/snap/#/” to update.',
-    snapUpdate: '[❕ ALERT] There is an update of ChainSafer Snap, for better protection, please visit 🌐“https://chainsafer.stag.nexone.io/snap/#/” to update.'
-}
-   
-export const serviceError ={
-    serviceError: '⛔️**Oops, service have something problems...**!😬'
+    forceUpdate:
+        '[❕ ALERT] Current version is not available anymore! Please visit 🌐“https://chainsafer.stag.nexone.io/snap/#/” to update.',
+    snapUpdate:
+        '[❕ ALERT] There is an update of ChainSafer Snap, for better protection, please visit 🌐“https://chainsafer.stag.nexone.io/snap/#/” to update.',
 }
 
+export function collectionSummary(collectionTokenName: string, reputation: string) {
+    return `Collection:${collectionTokenName} (Reputation ${reputation} )`
+}
+export const serviceError = {
+    serviceError: '⛔️**Oops, service have something problems...**!😬',
+    simulationError: '😕 Transaction simulation unavailable',
+    riskApiError: '🚧 [Risk detection] No service',
+    riskApiErrorDetail: 'Risk detection service not available now, please try again later.',
+}
+export function evmErrorAddress(evmErrorAddress: string) {
+    return `address: ${evmErrorAddress}`
+}
+export function evmErrMessage(evmErrMessage: string) {
+    return `error: ${evmErrMessage}`
+}
+
+export function transactionMethodIs(method: string) {
+    return `Transaction Method: ${method}`
+}
 export const headingText = {
-    latestVersion:'Latest Version',
+    latestVersion: 'Latest Version',
     riskSummary: 'Risk Summary Check',
-    riskFactor: '**- Risky factors -**'
+    riskFactor: '**- Risky factors -**',
+    transactionSimulation: 'Transaction Simulation',
+    pay: 'Pay ➞',
+    balanceChanges: 'Balance Changes',
+    transactionMethod: 'Transaction method',
+    paymentDetailPanel: 'Payment Detail',
+    projectInsightPanel: 'Project Insight',
+    recipientsPanel: 'Recipients',
 }
-
+export function tokenNameWithBlueMark(tokenName: string) {
+    return `${tokenName} (Reputation 🆗)`
+}
+export function tokenNameWithoutBlueMark(tokenName: string) {
+    return `${tokenName} (Reputation ❔️)`
+}
+export function tokenSymbolAndValue(
+    tokenType: string,
+    tokenSymbol: string,
+    rawAmount: string,
+    usd: number
+) {
+    return `{${tokenType}} ${tokenSymbol} ${rawAmount} ($${usd})`
+}
+export function balanceWithUsd(eth: number, usd: number) {
+    return `${eth} ETH ($ ${usd})`
+}
+export function balance(eth: number) {
+    return `${eth} ETH`
+}
+export const simulationBalanceChange = {
+    balanceChangeBefore: 'Before ➞',
+    balanceChangeAfter: '➞ After',
+    separators: '---',
+    balanceDiff: '💰Balance Diff.',
+    paymentDetailPanelGet: '➞ Get',
+    paymentDetailPanelSell: '➞ Sell',
+}
 export const apiMapping = {
     transaction_risks_summary: {
         fatal_risk: 'Extreme Risk',
