@@ -12,7 +12,7 @@ export const covertToProjectInsightPanel: TProjectInsightPanel = (result, error)
         ])
     }
 
-    if (result == null) {
+    if (result == null || Object.keys(result).length == 0) {
         return panel([])
     }
 
@@ -22,7 +22,7 @@ export const covertToProjectInsightPanel: TProjectInsightPanel = (result, error)
         heading(headingText.projectInsightPanel),
         divider(),
         ...arrayFromObject.map((key) => {
-            return text(`${key}: ${result[key]}`)
+            return text(`${result[key]}`)
         }),
     ])
 }
