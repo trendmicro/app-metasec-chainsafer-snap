@@ -52,17 +52,13 @@ function convertToAssetChangeParsed(
     let balanceDiff = null
     if (assetChange.balance_diff != null) {
         balanceDiff = {
-            origin: parserMapping<string>(assetChange.balance_diff, 'origin', ''),
-            after: parserMapping<string>(assetChange.balance_diff, 'after', ''),
-            originDollarValue: parserMapping<string>(
-                assetChange.balance_diff,
-                'origin_dollar_value',
-                ''
+            origin: parseFloat(parserMapping<string>(assetChange.balance_diff, 'origin', '')),
+            after: parseFloat(parserMapping<string>(assetChange.balance_diff, 'after', '')),
+            originDollarValue: parseFloat(
+                parserMapping<string>(assetChange.balance_diff, 'origin_dollar_value', '')
             ),
-            afterDollarValue: parserMapping<string>(
-                assetChange.balance_diff,
-                'after_dollar_value',
-                ''
+            afterDollarValue: parseFloat(
+                parserMapping<string>(assetChange.balance_diff, 'after_dollar_value', '')
             ),
             symbol: parserMapping<string>(assetChange.balance_diff, 'symbol', ''),
             name: parserMapping<string>(assetChange.balance_diff, 'name', ''),
@@ -83,7 +79,7 @@ function convertToAssetChangeParsed(
                 name: parserMapping<string>(tokenChange, 'name', ''),
                 icon: parserMapping<string>(tokenChange, 'icon', ''),
                 decimals: parserMapping<number>(tokenChange, 'decimals', 0),
-                dollarValue: parserMapping<string>(tokenChange, 'dollar_value', ''),
+                dollarValue: parseFloat(parserMapping<string>(tokenChange, 'dollar_value', '')),
                 description: parserMapping<string>(tokenChange, 'description', ''),
                 tokenId: parserMapping<number>(tokenChange, 'token_id', 0),
             })

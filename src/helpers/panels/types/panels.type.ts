@@ -24,7 +24,8 @@ export type TRiskSummaryPanel = (
 
 export type TSimulationPanel = (
     result: IPostTransactionSimulationResponseParsed,
-    error: IResponseError
+    error: IResponseError,
+    isBlueMark: boolean
 ) => Panel
 
 export type TProjectInsightPanel = (

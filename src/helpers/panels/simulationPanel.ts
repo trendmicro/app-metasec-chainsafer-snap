@@ -1,13 +1,26 @@
 import { panel, heading, text, divider } from '@metamask/snaps-ui'
 import { TSimulationPanel } from './types/panels.type'
-const { formatEther } = require('@ethersproject/units')
+import {
+    headingText,
+    simulationBalanceChange,
+    tokenSymbolAndValue,
+    evmErrorAddress,
+    evmErrMessage,
+    serviceError,
+    balanceWithUsd,
+    balanceWithoutUsd,
+    tokenNameWithBlueMark,
+    tokenNameWithoutBlueMark,
+} from '../../constants/content'
+import Logger from '../../controllers/logger'
+const logger = new Logger('[helper.panels.simulationPanel]')
 
-export const convertToSimulationPanel: TSimulationPanel = (result, error) => {
+export const convertToSimulationPanel: TSimulationPanel = (result, error, isBlueMark) => {
     if (error) {
         return panel([
-            heading('Transaction Simulation'),
+            heading(headingText.transactionSimulation),
             divider(),
-            text(`⛔️**Oops, service have something problems...**!😑`),
+            text(serviceError.simulationError),
             text(`${JSON.stringify(error)}`),
         ])
     }
@@ -18,11 +31,11 @@ export const convertToSimulationPanel: TSimulationPanel = (result, error) => {
 
     if (result.evmErrAddress != '' || result.evmErrMessage != '') {
         return panel([
-            heading('Transaction Simulation'),
+            heading(headingText.transactionSimulation),
             divider(),
-            text(`⛔️**Oops, service have something problems...**!😑`),
-            text(`address: ${result.evmErrAddress}`),
-            text(`error: ${result.evmErrMessage}`),
+            text(serviceError.simulationError),
+            text(evmErrorAddress(result.evmErrAddress)),
+            text(evmErrMessage(result.evmErrMessage)),
         ])
     }
 
@@ -32,47 +45,31 @@ export const convertToSimulationPanel: TSimulationPanel = (result, error) => {
 
     let paymentDetailPanel = []
     let tokenChangePanel = []
-    let contractPanel = []
     let balanceChangePanel = []
 
     if (result.senderAssetChange != null && result.senderAssetChange.balanceDiff != null) {
-        const originWei = parseInt(result.senderAssetChange.balanceDiff.origin)
-        const originUSD = parseInt(result.senderAssetChange.balanceDiff.originDollarValue)
-        const afterWei = parseInt(result.senderAssetChange.balanceDiff.after)
-        const afterUSD = parseInt(result.senderAssetChange.balanceDiff.afterDollarValue)
-        const diffWei = afterWei - originWei
-        const diffUSD = afterUSD - originUSD
+        const originWei = result.senderAssetChange.balanceDiff.origin
+        const originUSD = result.senderAssetChange.balanceDiff.originDollarValue
+        const afterWei = result.senderAssetChange.balanceDiff.after
+        const afterUSD = result.senderAssetChange.balanceDiff.afterDollarValue
+        const diffWei = Math.abs(afterWei - originWei)
+        const diffUSD = Math.abs(afterUSD - originUSD)
 
         paymentDetailPanel = [
-            text(`Pay ➞`),
-            text(
-                `${convertWeiToEth(diffWei.toString())} Eth${
-                    Number.isNaN(diffUSD) ? `` : ` ($ ${diffUSD})`
-                }`
-            ),
+            heading(headingText.paymentDetailPanel),
+            text(headingText.pay),
+            text(convertWeiToEthWithUSD(diffWei, diffUSD)),
         ]
         balanceChangePanel = [
-            heading('Balance Changes'),
+            heading(headingText.balanceChanges),
             divider(),
-            text(`Before ➞`),
-            text(
-                `${convertWeiToEth(originWei.toString())} Eth ${
-                    Number.isNaN(originUSD) ? `` : ` ($ ${originUSD})`
-                }`
-            ),
-            text(`➞ After`),
-            text(
-                `${convertWeiToEth(afterWei.toString())} Eth ${
-                    Number.isNaN(afterUSD) ? `` : ` ($ ${afterUSD})`
-                }`
-            ),
-            text(`**---**`),
-            text(`**💰Balance Diff.**`),
-            text(
-                `${convertWeiToEth(diffWei.toString())} Eth${
-                    Number.isNaN(diffUSD) ? `` : ` ($ ${diffUSD})`
-                }`
-            ),
+            text(simulationBalanceChange.balanceChangeBefore),
+            text(convertWeiToEthWithUSD(originWei, originUSD)),
+            text(simulationBalanceChange.balanceChangeAfter),
+            text(convertWeiToEthWithUSD(afterWei, afterUSD)),
+            text(`**${simulationBalanceChange.separators}**`),
+            text(`**${simulationBalanceChange.balanceDiff}**`),
+            text(`**${convertWeiToEthWithUSD(diffWei, diffUSD)}**`),
         ]
     }
 
@@ -84,55 +81,50 @@ export const convertToSimulationPanel: TSimulationPanel = (result, error) => {
     ) {
         result.senderAssetChange.tokenChanges.forEach(function (tokenChange) {
             tokenChangePanel.push(
-                text(`➞ ${tokenChange.direction == 'in' ? 'Get' : 'Sell'}`),
-                text(`${tokenChange.name} ($${tokenChange.dollarValue})`)
-            )
-        })
-        tokenChangePanel.push(text(`**---**`))
-    }
-
-    // contract panel
-    if (result.contracts != null && result.contracts.length > 0) {
-        contractPanel.push(
-            text(
-                `**Via ${result.contracts[0].contractName} and other ${
-                    result.contracts.length - 1
-                } contracts ✅**`
-            )
-        )
-        result.contracts.forEach(function (contract, index) {
-            contractPanel.push(
-                text(`${index + 1}.[${contract.contractName}] Contract address 👉[${
-                    contract.address
-                }] 🌐[Contract: ${contract.isPublic == true ? 'Open✅' : 'Private❗️'}] ${
-                    parseFloat(contract.fee) > 0
-                        ? `▶ ${convertWeiToEth(contract.fee).toString()} ETH`
-                        : ''
-                } ${
-                    Number.isNaN(parseInt(contract.feeDollarValue))
-                        ? ''
-                        : `($${contract.feeDollarValue})`
-                }
-        `)
+                text(paymentDetailTokenChange(tokenChange.direction)),
+                text(
+                    tokenSymbolAndValue(
+                        tokenChange.type.toUpperCase(),
+                        tokenChange.symbol,
+                        `$raw_amount`,
+                        Number(tokenChange.dollarValue.toFixed(2))
+                    )
+                ),
+                text(covertTokenNameWithReputation(tokenChange.name, isBlueMark))
             )
         })
     }
 
-    return panel([
-        text(`**You're about to buy a NFT via a smart contract.**`),
-        divider(),
-        ...paymentDetailPanel,
-        ...tokenChangePanel,
-        ...contractPanel,
-        ...balanceChangePanel,
-    ])
+    return panel([...paymentDetailPanel, ...tokenChangePanel, ...balanceChangePanel])
 }
 
-function convertWeiToEth(wei: string): string {
-    if (Number.isNaN(parseInt(wei))) {
-        return '0'
+function covertTokenNameWithReputation(tokenName: string, isBlueMark: boolean): string {
+    if (tokenName && tokenName != '') {
+        if (isBlueMark) {
+            return tokenNameWithBlueMark(tokenName)
+        } else {
+            return tokenNameWithoutBlueMark(tokenName)
+        }
     }
-    let eth = formatEther(wei)
+    return ''
+}
 
-    return eth
+function convertWeiToEthWithUSD(wei: number, usd: number): string {
+    if (Number.isNaN(wei)) {
+        return balanceWithUsd(0, 0)
+    } else {
+        const eth = wei / 1e18
+        if (Number.isNaN(usd)) {
+            return balanceWithoutUsd(eth)
+        } else {
+            return balanceWithUsd(eth, Number(usd.toFixed(2)))
+        }
+    }
+}
+
+function paymentDetailTokenChange(direction: string): string {
+    if (direction == 'in') {
+        return simulationBalanceChange.paymentDetailPanelGet
+    }
+    return simulationBalanceChange.paymentDetailPanelSell
 }
