@@ -45,6 +45,7 @@ module.exports = {
                     API_PGW_PATH_GET_SNAP_LATEST_VERSION:
                         process.env.API_PGW_PATH_GET_SNAP_LATEST_VERSION,
                     API_PGW_PATH_GET_TOKEN_INFO: process.env.API_PGW_PATH_GET_TOKEN_INFO,
+                    API_PGW_PATH_GET_ADDRESS_LABEL: process.env.API_PGW_PATH_GET_ADDRESS_LABEL,
                 })
             )
     },

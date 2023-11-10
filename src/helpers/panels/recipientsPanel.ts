@@ -1,5 +1,6 @@
 import { panel, heading, text } from '@metamask/snaps-ui'
 import { headingText } from '../../constants/content'
+import { TGetAddressLabel } from '../parser/pgw/types/getAddressLabel.type'
 export function convertToRecipientsPanel() {
     return panel([
         heading(headingText.recipientsPanel),

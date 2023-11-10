@@ -3,11 +3,12 @@ import postTransactionRiskSummary from '../../../helpers/parser/pgw/postTransact
 import postTransactionSimulation from '../../../helpers/parser/pgw/postTransactionSimulation'
 import getSnapLatestVersion from '../../../helpers/parser/pgw/getSnapLatestVersion'
 import getTokenInfo from '../../../helpers/parser/pgw/getTokenInfo'
-
+import getAddressLabel from '../../../helpers/parser/pgw/getAddressLabel'
 export default {
     POST_TRANSACTION_RISKS: postTransactionRisks,
     POST_TRANSACTION_RISK_SUMMARY: postTransactionRiskSummary,
     POST_TRANSACTION_SIMULATION: postTransactionSimulation,
     GET_SNAP_LATEST_VERSION: getSnapLatestVersion,
     GET_TOKEN_INFO: getTokenInfo,
+    GET_ADDRESS_LABEL: getAddressLabel,
 }

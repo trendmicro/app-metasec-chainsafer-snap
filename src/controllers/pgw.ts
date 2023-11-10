@@ -3,6 +3,7 @@ import type { IPostTransactionRiskSummaryResponseBody } from '../helpers/parser/
 import type { IPostTransactionSimulationResponseBody } from '../helpers/parser/pgw/types/postTransactionSimulation.type'
 import type { IGetSnapLatestVersionResponseBody } from '../helpers/parser/pgw/types/getSnapLatestVersion.type'
 import type { IGetTokenInfoResponseBody } from '../helpers/parser/pgw/types/getTokenInfo.type'
+import type { IGetAddressLabelsResponseBody } from '../helpers/parser/pgw/types/getAddressLabel.type'
 import type {
     TGetSnapLatestVersion,
     TOnResponseErrorCode,
@@ -10,6 +11,7 @@ import type {
     TPostTransactionRiskSummary,
     TPostTransactionSimulation,
     TGetTokenInfo,
+    TGetAddressLabel,
 } from '../controllers/types/pgw.type'
 
 import { generatedUUIDV4 } from '../helpers/secret'
@@ -181,6 +183,32 @@ const getTokenInfo: TGetTokenInfo = async (contractAddress, headerOption = {}) =
 
     return responseParsed
 }
+const getAddressLabel: TGetAddressLabel = async (contractAddress, headerOption = {}) => {
+    const keyPath = 'GET_ADDRESS_LABEL'
+    const url = pgwBase(keyPath, (path: string) =>
+        path.replace('{contractAddress}', contractAddress)
+    )
+    const body = {}
+    const headers = header(headerOption)
+
+    logger.log('getAddressLabel', 'head', headers)
+    logger.log('getAddressLabel', 'body', body)
+
+    const request = await get(url, payload(body, headers), onResponseErrorCode)
+    const [error, response] = await request<IGetAddressLabelsResponseBody>()
+
+    logger.log('getAddressLabel', 'error', error)
+    logger.log('getAddressLabel', 'response', response)
+
+    if (error) {
+        throw error
+    }
+
+    const responseParsed = pgwParser[keyPath](response)
+    logger.log('getAddressLabel', 'responseParsed', responseParsed)
+
+    return responseParsed
+}
 
 export default {
     postTransactionRisks,
@@ -188,4 +216,5 @@ export default {
     postTransactionSimulation,
     getSnapLatestVersion,
     getTokenInfo,
+    getAddressLabel,
 }
