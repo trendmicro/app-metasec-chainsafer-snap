@@ -47,6 +47,12 @@ const getTokenInfo: TGetTokenInfo = (responseBody) => {
             Discord: resProjectInsightDiscord(parserMapping<string>(responseBody, 'discord', '')),
         }
     }
+    if (responseBody.hasOwnProperty('blue_checkmark') && responseBody.blue_checkmark !== null) {
+        tokenInfo = {
+            ...tokenInfo,
+            BlueCheckMark: parserMapping<boolean>(responseBody, 'blue_checkmark', ''),
+        }
+    }
     // if (
     //     responseBody.hasOwnProperty('bitcointalk') &&
     //     responseBody.bitcointalk !== null &&
@@ -55,12 +61,6 @@ const getTokenInfo: TGetTokenInfo = (responseBody) => {
     //     tokenInfo = {
     //         ...tokenInfo,
     //         Bitcointalk: parserMapping<string>(responseBody, 'bitcointalk', ''),
-    //     }
-    // }
-    // if (responseBody.hasOwnProperty('blue_checkmark') && responseBody.blue_checkmark !== null) {
-    //     tokenInfo = {
-    //         ...tokenInfo,
-    //         BlueCheckMark: parserMapping<boolean>(responseBody, 'blue_checkmark', ''),
     //     }
     // }
     // if (
