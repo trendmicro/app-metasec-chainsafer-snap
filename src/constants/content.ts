@@ -65,7 +65,7 @@ export function tokenSymbolAndValue(
 export function balanceWithUsd(eth: number, usd: number) {
     return `${eth} ETH ($ ${usd})`
 }
-export function balance(eth: number) {
+export function balanceWithoutUsd(eth: number) {
     return `${eth} ETH`
 }
 export const simulationBalanceChange = {

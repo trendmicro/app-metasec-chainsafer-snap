@@ -8,7 +8,7 @@ import {
     evmErrMessage,
     serviceError,
     balanceWithUsd,
-    balance,
+    balanceWithoutUsd,
     tokenNameWithBlueMark,
     tokenNameWithoutBlueMark,
 } from '../../constants/content'
@@ -52,8 +52,8 @@ export const convertToSimulationPanel: TSimulationPanel = (result, error, isBlue
         const originUSD = result.senderAssetChange.balanceDiff.originDollarValue
         const afterWei = result.senderAssetChange.balanceDiff.after
         const afterUSD = result.senderAssetChange.balanceDiff.afterDollarValue
-        const diffWei = afterWei - originWei
-        const diffUSD = afterUSD - originUSD
+        const diffWei = Math.abs(afterWei - originWei)
+        const diffUSD = Math.abs(afterUSD - originUSD)
 
         paymentDetailPanel = [
             heading(headingText.paymentDetailPanel),
@@ -84,7 +84,7 @@ export const convertToSimulationPanel: TSimulationPanel = (result, error, isBlue
                 text(paymentDetailTokenChange(tokenChange.direction)),
                 text(
                     tokenSymbolAndValue(
-                        tokenChange.type,
+                        tokenChange.type.toUpperCase(),
                         tokenChange.symbol,
                         `$raw_amount`,
                         Number(tokenChange.dollarValue.toFixed(2))
@@ -115,7 +115,7 @@ function convertWeiToEthWithUSD(wei: number, usd: number): string {
     } else {
         const eth = wei / 1e18
         if (Number.isNaN(usd)) {
-            return balance(eth)
+            return balanceWithoutUsd(eth)
         } else {
             return balanceWithUsd(eth, Number(usd.toFixed(2)))
         }
