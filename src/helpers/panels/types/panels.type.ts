@@ -5,7 +5,7 @@ import { IGetSnapLatestVersionResponseParsed } from '../../parser/pgw/types/getS
 import { IPostTransactionRiskSummaryResponseParsed } from '../../parser/pgw/types/postTransactionRiskSummary.type'
 import { IPostTransactionSimulationResponseParsed } from '../../parser/pgw/types/postTransactionSimulation.type'
 import { IGetTokenInfoResponseParsed } from '../../parser/pgw/types/getTokenInfo.type'
-
+import { IGetAddressLabelResponseParsed } from '../../parser/pgw/types/getAddressLabel.type'
 export type TUpdateAlert = { panel: Panel; isForceUpdate: boolean }
 export type TUpdateAlertPanel = (
     result: IGetSnapLatestVersionResponseParsed,
@@ -30,5 +30,9 @@ export type TSimulationPanel = (
 
 export type TProjectInsightPanel = (
     result: IGetTokenInfoResponseParsed,
+    error: IResponseError
+) => Panel
+export type TGetAddressLabel = (
+    result: IGetAddressLabelResponseParsed,
     error: IResponseError
 ) => Panel
