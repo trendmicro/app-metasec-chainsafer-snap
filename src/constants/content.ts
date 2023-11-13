@@ -59,10 +59,10 @@ export function tokenSymbolAndValue(
     rawAmount: string,
     usd: number
 ) {
-    return `{${tokenType}} ${tokenSymbol} ${rawAmount} ($${usd})`
+    return `{${tokenType}} ${rawAmount} ${tokenSymbol} (≈$ ${usd})`
 }
 export function balanceWithUsd(eth: number, usd: number) {
-    return `${eth} ETH ($ ${usd})`
+    return `${eth} ETH (≈$ ${usd})`
 }
 
 export function resProjectInsightWebsite(website: string) { 
