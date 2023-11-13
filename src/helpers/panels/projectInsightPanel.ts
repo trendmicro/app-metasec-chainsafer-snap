@@ -1,7 +1,6 @@
 import { heading, divider, panel, text } from '@metamask/snaps-ui'
 import { TProjectInsightPanel } from './types/panels.type'
 import { headingText, serviceError } from '../../constants/content'
-
 export const covertToProjectInsightPanel: TProjectInsightPanel = (result, error) => {
     if (error) {
         return panel([
@@ -12,7 +11,11 @@ export const covertToProjectInsightPanel: TProjectInsightPanel = (result, error)
         ])
     }
 
-    if (result == null) {
+    if (
+        result == null ||
+        Object.keys(result).length == 0 ||
+        (result.BlueCheckMark != null && Object.keys(result).length == 1)
+    ) {
         return panel([])
     }
 
@@ -21,8 +24,10 @@ export const covertToProjectInsightPanel: TProjectInsightPanel = (result, error)
     return panel([
         heading(headingText.projectInsightPanel),
         divider(),
-        ...arrayFromObject.map((key) => {
-            return text(`${key}: ${result[key]}`)
-        }),
+        ...arrayFromObject
+            .filter((key) => key != 'BlueCheckMark')
+            .map((key) => {
+                return text(`${result[key]}`)
+            }),
     ])
 }
