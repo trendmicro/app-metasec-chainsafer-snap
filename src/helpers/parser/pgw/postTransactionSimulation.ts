@@ -82,6 +82,7 @@ function convertToAssetChangeParsed(
                 dollarValue: parseFloat(parserMapping<string>(tokenChange, 'dollar_value', '')),
                 description: parserMapping<string>(tokenChange, 'description', ''),
                 tokenId: parserMapping<number>(tokenChange, 'token_id', 0),
+                rawAmount: parserMapping<string>(tokenChange, 'raw_amount', ''),
             })
         })
     }

@@ -43,7 +43,6 @@ export const headingText = {
     transactionSimulation: 'Transaction Simulation',
     pay: 'Pay ➞',
     balanceChanges: 'Balance Changes',
-    transactionMethod: 'Transaction method',
     paymentDetailPanel: 'Payment Detail',
     projectInsightPanel: 'Project Insight',
     recipientsPanel: 'Recipients',

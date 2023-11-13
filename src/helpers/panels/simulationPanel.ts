@@ -11,9 +11,8 @@ import {
     balanceWithoutUsd,
     tokenNameWithBlueMark,
     tokenNameWithoutBlueMark,
+    transactionMethodIs,
 } from '../../constants/content'
-import Logger from '../../controllers/logger'
-const logger = new Logger('[helper.panels.simulationPanel]')
 
 export const convertToSimulationPanel: TSimulationPanel = (result, error, isBlueMark) => {
     if (error) {
@@ -43,10 +42,18 @@ export const convertToSimulationPanel: TSimulationPanel = (result, error, isBlue
         return panel([])
     }
 
-    let paymentDetailPanel = []
-    let tokenChangePanel = []
-    let balanceChangePanel = []
+    let transactionMethod = []
+    let paymentDetail = []
+    let tokenChanges = []
+    let balanceChange = []
+    let recipients = []
 
+    //transaction method
+    if (result.txnMethodName != null && result.txnMethodName != '') {
+        transactionMethod = [divider(), text(transactionMethodIs(result.txnMethodName)), divider()]
+    }
+
+    // payment detail
     if (result.senderAssetChange != null && result.senderAssetChange.balanceDiff != null) {
         const originWei = result.senderAssetChange.balanceDiff.origin
         const originUSD = result.senderAssetChange.balanceDiff.originDollarValue
@@ -55,12 +62,12 @@ export const convertToSimulationPanel: TSimulationPanel = (result, error, isBlue
         const diffWei = Math.abs(afterWei - originWei)
         const diffUSD = Math.abs(afterUSD - originUSD)
 
-        paymentDetailPanel = [
+        paymentDetail = [
             heading(headingText.paymentDetailPanel),
             text(headingText.pay),
             text(convertWeiToEthWithUSD(diffWei, diffUSD)),
         ]
-        balanceChangePanel = [
+        balanceChange = [
             heading(headingText.balanceChanges),
             divider(),
             text(simulationBalanceChange.balanceChangeBefore),
@@ -73,20 +80,20 @@ export const convertToSimulationPanel: TSimulationPanel = (result, error, isBlue
         ]
     }
 
-    // payment detail panel
+    // token changes
     if (
         result.senderAssetChange != null &&
         result.senderAssetChange.tokenChanges != null &&
         result.senderAssetChange.tokenChanges.length > 0
     ) {
         result.senderAssetChange.tokenChanges.forEach(function (tokenChange) {
-            tokenChangePanel.push(
+            tokenChanges.push(
                 text(paymentDetailTokenChange(tokenChange.direction)),
                 text(
                     tokenSymbolAndValue(
                         tokenChange.type.toUpperCase(),
-                        tokenChange.symbol,
-                        `$raw_amount`,
+                        tokenChange.symbol.toUpperCase(),
+                        caculateRawAmonut(tokenChange.rawAmount, tokenChange.decimals),
                         Number(tokenChange.dollarValue.toFixed(2))
                     )
                 ),
@@ -95,7 +102,17 @@ export const convertToSimulationPanel: TSimulationPanel = (result, error, isBlue
         })
     }
 
-    return panel([...paymentDetailPanel, ...tokenChangePanel, ...balanceChangePanel])
+    // recipients
+    recipients = [
+        heading(headingText.recipientsPanel),
+        text(
+            'This transaction goes thru 4 contracts/ recipients, 1 of them might exist security concern:'
+        ),
+        text('{CA} '),
+        text('0xed1bd4a5244d35be12e84a3e9821290032a47a99 🚨Label: phishing_Etherscan'),
+    ]
+
+    return panel([...transactionMethod, ...paymentDetail, ...tokenChanges, ...balanceChange, ...recipients])
 }
 
 function covertTokenNameWithReputation(tokenName: string, isBlueMark: boolean): string {
@@ -128,3 +145,12 @@ function paymentDetailTokenChange(direction: string): string {
     }
     return simulationBalanceChange.paymentDetailPanelSell
 }
+function caculateRawAmonut(rawAmount: string, decimals: number): string {
+    if (rawAmount != null && rawAmount != '') {
+        const amount = Number(rawAmount) / Math.pow(10, decimals)
+        return amount.toString()
+    }
+    return ''
+    
+}
+

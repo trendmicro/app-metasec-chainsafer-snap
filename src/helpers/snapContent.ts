@@ -15,8 +15,6 @@ import { convertToRiskPanel } from './panels/riskPanel'
 import { convertToRiskSummaryPanel } from './panels/riskSummaryPanel'
 import { convertToSimulationPanel } from './panels/simulationPanel'
 import { covertToProjectInsightPanel } from './panels/projectInsightPanel'
-import { convertToTransactionMethodPanel } from './panels/transactionMethodPanel'
-import { convertToRecipientsPanel } from './panels/recipientsPanel'
 export const transactionInsightLayout: TTransactionInsightLayout = async ({
     transactionOrigin,
     chainId,
@@ -53,35 +51,23 @@ export const transactionInsightLayout: TTransactionInsightLayout = async ({
         let riskSummaryPanel = convertToRiskSummaryPanel(riskSummaryResult, riskSummaryError)
         let simulationPanel = convertToSimulationPanel(simulationResult, simulationError, tokenInfoResult && tokenInfoResult.BlueCheckMark)
         let projectInsightPanel = covertToProjectInsightPanel(tokenInfoResult, tokenInfoError)
-        let transactionMethodPanel = convertToTransactionMethodPanel(simulationResult, simulationError)
-        let recipientsPanel = convertToRecipientsPanel()
         let displayPanel = panel([])
+        
         if (riskSummaryResult.severity == 'caution') {
             displayPanel = panel([
                 updateAlert.panel,
                 simulationPanel,
+                divider(),
                 riskSummaryPanel,
-                divider(),
                 riskPanel,
-                divider(),
-                transactionMethodPanel,
-                divider(),
-                recipientsPanel,
-                divider(),
                 projectInsightPanel,
             ])
         } else {
             displayPanel = panel([
                 updateAlert.panel,
                 riskSummaryPanel,
-                divider(),
                 riskPanel,
-                divider(),
-                transactionMethodPanel,
-                divider(),
                 simulationPanel,
-                recipientsPanel,
-                divider(),
                 projectInsightPanel,
             ])
         }
