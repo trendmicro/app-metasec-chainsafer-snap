@@ -36,6 +36,11 @@ export function evmErrMessage(evmErrMessage: string) {
 export function transactionMethodIs(method: string) {
     return `Transaction Method: ${method}`
 }
+export const chainSaferAd = {
+    adTitle:'[ 📣 NEWS] Want a comprehensive protection? 🛡️ ',
+    adContent:'Check the SecuX x Trend Micro ChainSafer special hardware wallet 💪🏼'
+
+}
 export const headingText = {
     latestVersion: 'Latest Version',
     riskSummary: 'Risk Summary Check',
