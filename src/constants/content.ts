@@ -65,6 +65,23 @@ export function tokenSymbolAndValue(
 export function balanceWithUsd(eth: number, usd: number) {
     return `${eth} ETH ($ ${usd})`
 }
+
+export function resProjectInsightWebsite(website: string) { 
+    return `Website  🌐 [${website}]`
+}
+
+export function resProjectInsightBlog(blog: string) {
+    return `Blog  🌐 [${blog}]`
+}
+
+export function resProjectInsightTwitter(twitter: string) {
+    return `Twitter👉🏻 [${twitter}]`
+}
+
+export function resProjectInsightDiscord(discord: string) {
+    return `Discord👉🏻 [${discord}]`
+}
+
 export function balanceWithoutUsd(eth: number) {
     return `${eth} ETH`
 }

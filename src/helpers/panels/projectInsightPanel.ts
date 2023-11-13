@@ -11,7 +11,11 @@ export const covertToProjectInsightPanel: TProjectInsightPanel = (result, error)
         ])
     }
 
-    if (result == null) {
+    if (
+        result == null ||
+        Object.keys(result).length == 0 ||
+        (result.BlueCheckMark != null && Object.keys(result).length == 1)
+    ) {
         return panel([])
     }
 
@@ -20,8 +24,10 @@ export const covertToProjectInsightPanel: TProjectInsightPanel = (result, error)
     return panel([
         heading(headingText.projectInsightPanel),
         divider(),
-        ...arrayFromObject.map((key) => {
-            return text(`${key}: ${result[key]}`)
-        }),
+        ...arrayFromObject
+            .filter((key) => key != 'BlueCheckMark')
+            .map((key) => {
+                return text(`${result[key]}`)
+            }),
     ])
 }
