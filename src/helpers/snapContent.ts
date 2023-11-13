@@ -15,8 +15,7 @@ import { convertToRiskPanel } from './panels/riskPanel'
 import { convertToRiskSummaryPanel } from './panels/riskSummaryPanel'
 import { convertToSimulationPanel } from './panels/simulationPanel'
 import { covertToProjectInsightPanel } from './panels/projectInsightPanel'
-
-import { convertAdPanel } from './panels/secuxAdPanel'
+import { convertAdPanel } from './panels/adPanel'
 
 export const transactionInsightLayout: TTransactionInsightLayout = async ({
     transactionOrigin,
@@ -59,6 +58,7 @@ export const transactionInsightLayout: TTransactionInsightLayout = async ({
         
         if (riskSummaryResult.severity == 'caution') {
             displayPanel = panel([
+                divider(),
                 adDisplayPanel,
                 divider(),
                 updateAlert.panel,
@@ -70,6 +70,7 @@ export const transactionInsightLayout: TTransactionInsightLayout = async ({
             ])
         } else {
             displayPanel = panel([
+                divider(),
                 adDisplayPanel,
                 divider(),
                 updateAlert.panel,
