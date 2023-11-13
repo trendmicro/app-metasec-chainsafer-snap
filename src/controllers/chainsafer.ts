@@ -12,7 +12,7 @@ import {
 import { IPostTransactionRiskSummaryResponseParsed } from './../helpers/parser/pgw/types/postTransactionRiskSummary.type'
 import { IGetSnapLatestVersionResponseParsed } from '../helpers/parser/pgw/types/getSnapLatestVersion.type'
 import { IGetTokenInfoResponseParsed } from '../helpers/parser/pgw/types/getTokenInfo.type'
-import { IGetAddressLabelResponseParsed } from '../helpers/parser/pgw/types/getAddressLabel.type'
+import { IGetAddressLabelResponseParsed, IGetAddressLabelsResponseBody } from '../helpers/parser/pgw/types/getAddressLabel.type'
 const logger = new Logger('[controllers.chainsafer]')
 
 export const postTransactionRiskSummary = async (
@@ -147,7 +147,6 @@ export const getAddressLabel = async (
 ): Promise<[IGetAddressLabelResponseParsed, IResponseError]> => {
     let result: IGetAddressLabelResponseParsed = {} as IGetAddressLabelResponseParsed
     let error: IResponseError = null
-
     try {
         result = await pgw.getAddressLabel(contractAddress)
     } catch (e) {

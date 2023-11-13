@@ -20,14 +20,11 @@ export interface IGetAddressLabelsNotesBody {
     source: string
 }
 
-export interface IGetAddressLabelsLabelsResponseParsed{
-    labelName: string
-    sourceFrom: string
-}
-
 export interface IGetAddressLabelResponseParsed{
+    //labelName: string
+    //sourceFrom: string
     address: string
-    labelInfos:IGetAddressLabelsLabelInfosBody[]
+    label_infos:IGetAddressLabelsLabelInfosBody[]
     notes:IGetAddressLabelsNotesBody[]
 }
 

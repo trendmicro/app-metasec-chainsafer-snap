@@ -1,9 +1,13 @@
-import type {TGetAddressLabel,IGetAddressLabelsLabelInfosBody,IGetAddressLabelsNotesBody, IGetAddressLabelsLabelsBody, IGetAddressLabelsLabelsResponseParsed} from '../../../helpers/parser/pgw/types/getAddressLabel.type'
+import type {TGetAddressLabel,IGetAddressLabelsLabelInfosBody,IGetAddressLabelsNotesBody, IGetAddressLabelsLabelsBody} from '../../../helpers/parser/pgw/types/getAddressLabel.type'
 import { parserMapping } from '../../../helpers/parser/parser'
 import { IPostTransactionSimulationAssetChangeParsed } from './types/postTransactionSimulation.type'
 //this import will remove
-import { getAddressLabel } from '../../../controllers/chainsafer'
+//import { getAddressLabel } from '../../../controllers/chainsafer'
 // TODO
-//const getAddressLabel: TGetAddressLabel = (responseBody) => {}
+let addressLabel 
+const getAddressLabel: TGetAddressLabel = (responseBody) => {
+    addressLabel=parserMapping<string>(responseBody, 'address', '')
+    return addressLabel
+}
 
 export default getAddressLabel

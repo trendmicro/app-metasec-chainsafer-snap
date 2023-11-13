@@ -3,7 +3,7 @@
   "description": "TM Chainsafer of MetaMask Snaps.",
   "proposedName": "TM ChainSafer",
   "source": {
-    "shasum": "BVwECE2dq/gORBlc6dUgqcto8oV0pPFOTcx/J/rSNyY=",
+    "shasum": "DkdkZPPTfeMwjsv+3tdILCGqz/AGFu4fZNMgwkljk2A=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",

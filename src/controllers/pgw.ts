@@ -183,6 +183,7 @@ const getTokenInfo: TGetTokenInfo = async (contractAddress, headerOption = {}) =
 
     return responseParsed
 }
+
 const getAddressLabel: TGetAddressLabel = async (contractAddress, headerOption = {}) => {
     const keyPath = 'GET_ADDRESS_LABEL'
     const url = pgwBase(keyPath, (path: string) =>
@@ -204,10 +205,10 @@ const getAddressLabel: TGetAddressLabel = async (contractAddress, headerOption =
         throw error
     }
 
-    const responseParsed = pgwParser[keyPath](response)
-    logger.log('getAddressLabel', 'responseParsed', responseParsed)
-
-    return responseParsed
+    //const responseParsed = pgwParser[keyPath](response)
+    //logger.log('getAddressLabel', 'responseParsed', responseParsed)
+    return response
+    //return responseParsed
 }
 
 export default {
