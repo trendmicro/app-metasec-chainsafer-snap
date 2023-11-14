@@ -45,6 +45,7 @@ export interface IPostTransactionSimulationTokenChangeBody {
     dollar_value: string
     description: string
     token_id: number
+    raw_amount: string
 }
 
 export interface IPostTransactionSimulationBalanceDiffBody {
@@ -95,6 +96,7 @@ export interface IPostTransactionSimulationTokenChangeParsed {
     dollarValue: number
     description: string
     tokenId: number
+    rawAmount: string
 }
 
 export interface IPostTransactionSimulationBalanceDiffParsed {

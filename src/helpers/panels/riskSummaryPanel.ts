@@ -1,4 +1,4 @@
-import { panel, heading, text } from '@metamask/snaps-ui'
+import { panel, heading, text, divider } from '@metamask/snaps-ui'
 import { headingText, serviceError, riskIconMapping, apiMapping } from '../../constants/content'
 import { TRiskSummaryPanel } from './types/panels.type'
 
@@ -8,6 +8,7 @@ export const convertToRiskSummaryPanel: TRiskSummaryPanel = (result, error) => {
             heading(`${headingText.riskSummary}`),
             text(`${serviceError.serviceError}`),
             text(`${JSON.stringify(error)}`),
+            divider(),
         ])
     }
 
@@ -22,5 +23,6 @@ export const convertToRiskSummaryPanel: TRiskSummaryPanel = (result, error) => {
             }`
         ),
         text(`**${apiMapping.transaction_risks_summary[result.ruleName]}**`),
+        divider(),
     ])
 }
