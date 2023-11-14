@@ -112,7 +112,7 @@ export const convertToSimulationPanel: TSimulationPanel = (result, error, isBlue
         text('0xed1bd4a5244d35be12e84a3e9821290032a47a99 🚨Label: phishing_Etherscan'),
     ]
 
-    return panel([...transactionMethod, ...paymentDetail, ...tokenChanges, ...balanceChange, ...recipients])
+    return panel([...transactionMethod, ...paymentDetail, ...tokenChanges, ...balanceChange])
 }
 
 function covertTokenNameWithReputation(tokenName: string, isBlueMark: boolean): string {
