@@ -69,7 +69,6 @@ export const convertToSimulationPanel: TSimulationPanel = (result, error, isBlue
         ]
         balanceChange = [
             heading(headingText.balanceChanges),
-            divider(),
             text(simulationBalanceChange.balanceChangeBefore),
             text(convertWeiToEthWithUSD(originWei, originUSD)),
             text(simulationBalanceChange.balanceChangeAfter),
