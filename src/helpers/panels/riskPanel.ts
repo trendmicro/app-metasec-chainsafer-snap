@@ -24,7 +24,6 @@ export const convertToRiskPanel: TRiskPanel = (result, error) => {
                         apiMapping.transaction_risks[insight.name]
                     }`
                 ),
-                ...insight.message.split('\n').map((message) => text(`${message}`)),
             ])
         ),
     ])
