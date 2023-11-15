@@ -75,7 +75,7 @@ export const postTransactionSimulation = async (
     let error: IResponseError = null
 
     let payload = {
-        network_id: chainId.split(':')[1].length == 2 ? chainId.split(':')[1] : '1',
+        network_id: (chainId.length > 0 && chainId.split(':').length == 2 ) ? chainId.split(':')[1]: '',
         from: transaction['from'] || '',
         to: transaction['to'] || '',
         call_data: transaction['data'] || '',
