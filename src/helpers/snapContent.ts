@@ -53,7 +53,7 @@ export const transactionInsightLayout: TTransactionInsightLayout = async ({
         let riskSummaryPanel = convertToRiskSummaryPanel(riskSummaryResult, riskSummaryError)
         let simulationPanel = convertToSimulationPanel(simulationResult, simulationError, tokenInfoResult && tokenInfoResult.BlueCheckMark)
         let projectInsightPanel = covertToProjectInsightPanel(tokenInfoResult, tokenInfoError)
-        let adDisplayPanel=convertAdPanel()
+        let adDisplayPanel = convertAdPanel()
         let displayPanel = panel([])
         
         if (riskSummaryResult.severity == 'caution') {
