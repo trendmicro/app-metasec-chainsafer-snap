@@ -58,9 +58,7 @@ export const transactionInsightLayout: TTransactionInsightLayout = async ({
         
         if (riskSummaryResult.severity == 'caution') {
             displayPanel = panel([
-                divider(),
                 adDisplayPanel,
-                divider(),
                 updateAlert.panel,
                 simulationPanel,
                 divider(),
@@ -70,9 +68,7 @@ export const transactionInsightLayout: TTransactionInsightLayout = async ({
             ])
         } else {
             displayPanel = panel([
-                divider(),
                 adDisplayPanel,
-                divider(),
                 updateAlert.panel,
                 riskSummaryPanel,
                 riskPanel,
