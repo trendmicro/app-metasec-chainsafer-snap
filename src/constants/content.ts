@@ -105,8 +105,8 @@ export const apiMapping = {
         rule_address_eip712_transfer:
             'Signing may pre-approve transfers to known malicious account',
         rule_address_withdraw_ape_coin: 'Ape transfer to known malicious contract',
-        rule_address_increase_approval: 'ERC-1155 Token approval for known malicious contract',
-        rule_address_increase_allowance: 'ERC-1155 Token allowance for known malicious contract',
+        rule_address_increase_approval: 'Token approval for known malicious contract',
+        rule_address_increase_allowance: 'Token allowance for known malicious contract',
         rule_address_eth_sign: 'High-risk signing method (eth_sign)',
         rule_address_eth_signature: 'Malicious address detected',
         rule_address_eth_transfer_payable_contract: 'Transfer to known malicious contract',
