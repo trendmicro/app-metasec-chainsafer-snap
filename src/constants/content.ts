@@ -105,6 +105,8 @@ export const apiMapping = {
         rule_address_eip712_transfer:
             'Signing may pre-approve transfers to known malicious account',
         rule_address_withdraw_ape_coin: 'Ape transfer to known malicious contract',
+        rule_address_increase_approval: 'ERC-1155 Token approval for known malicious contract',
+        rule_address_increase_allowance: 'ERC-1155 Token allowance for known malicious contract',
         rule_address_eth_sign: 'High-risk signing method (eth_sign)',
         rule_address_eth_signature: 'Malicious address detected',
         rule_address_eth_transfer_payable_contract: 'Transfer to known malicious contract',
@@ -143,6 +145,14 @@ export const apiMapping = {
         rule_domain_short_available_time_with_withdrawapecoin:
             'Short duration domain & withdraw ape coin',
         rule_ssl_domain_mismatch_with_withdrawapecoin: 'Domain-SSL mismatch & withdraw ape',
+        rule_domain_short_available_time_with_increaseapproval:
+            'Short duration domain & increase approval',
+        rule_ssl_domain_mismatch_with_increaseapproval:
+            'Domain-SSL mismatch & increase approval',
+        rule_domain_short_available_time_with_increaseallowance:
+            'Short duration domain & increase allowance', 
+        rule_ssl_domain_mismatch_with_increaseallowance:
+            'Domain-SSL mismatch & increase allowance',         
         rule_ssl_short_available_time_with_erc20_transfer:
             'SSL certificate expires soon & ERC-20 transfer to account',
         rule_ssl_short_available_time_with_eip712_transfer:
@@ -203,6 +213,18 @@ export const apiMapping = {
             'Recently created domain & withdraw ape',
         rule_ssl_short_create_time_with_withdrawapecoin: 'Recent SSL certificate & withdraw ape',
         rule_address_withdraw_ape_coin_caution: 'withdraw ape coin',
+        rule_ssl_short_available_time_with_increaseapproval:
+            'SSL certificate expires soon & increase approval',
+        rule_domain_short_create_time_with_increaseapproval:
+            'Recently created domain & increase approval',
+        rule_ssl_short_create_time_with_increaseapproval: 'Recent SSL certificate & increase approval',
+        rule_address_increase_approval_caution: 'increase approval',
+        rule_ssl_short_available_time_with_increaseallowance:
+            'SSL certificate expires soon & increase allowance',
+        rule_domain_short_create_time_with_increaseallowance:
+            'Recently created domain & increase allowance',
+        rule_ssl_short_create_time_with_increaseallowance: 'Recent SSL certificate & increase allowance',
+        rule_address_increase_allowance_caution: 'increase allowance',
     },
     transaction_risks: {
         factor_url_blocklist: 'Known malicious website',
@@ -224,5 +246,7 @@ export const apiMapping = {
         factor_ssl_domain_mismatch: 'SSL certificate-domain mismatch',
         factor_payable_contract_transfer: 'Contract may have the ability to transfer assets',
         factor_withdraw_ape_coin: 'Withdraw Ape Coin',
+        factor_increase_approval: 'Increase Approval',
+        factor_increase_allowance: 'Increase Allowance',
     },
 }
