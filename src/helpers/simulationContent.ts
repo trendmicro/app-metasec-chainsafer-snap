@@ -57,7 +57,7 @@ async function getPaymentDetails(
                     token.type.toUpperCase(),
                     token.symbol.toUpperCase(),
                     caculateRawAmonut(token.rawAmount, token.decimals),
-                    Number(token.dollarValue.toFixed(2))
+                    Number.isNaN(token.dollarValue) ? 0 : Number(token.dollarValue.toFixed(2))
                 )
             )
         )
