@@ -1,4 +1,4 @@
-import { panel, text } from '@metamask/snaps-ui'
+import { panel, text, divider } from '@metamask/snaps-ui'
 import { TRiskPanel } from './types/panels.type'
 import { apiMapping, headingText, riskIconMapping, serviceError } from '../../constants/content'
 
@@ -8,6 +8,7 @@ export const convertToRiskPanel: TRiskPanel = (result, error) => {
             text(`${headingText.riskFactor}`),
             text(`${serviceError.serviceError}`),
             text(`${JSON.stringify(error)}`),
+            divider(),
         ])
     }
 
@@ -26,5 +27,6 @@ export const convertToRiskPanel: TRiskPanel = (result, error) => {
                 ),
             ])
         ),
+        divider(),
     ])
 }

@@ -12,7 +12,10 @@ import {
 import { IPostTransactionRiskSummaryResponseParsed } from './../helpers/parser/pgw/types/postTransactionRiskSummary.type'
 import { IGetSnapLatestVersionResponseParsed } from '../helpers/parser/pgw/types/getSnapLatestVersion.type'
 import { IGetTokenInfoResponseParsed } from '../helpers/parser/pgw/types/getTokenInfo.type'
-import { IGetAddressLabelResponseParsed, IGetAddressLabelsResponseBody } from '../helpers/parser/pgw/types/getAddressLabel.type'
+import {
+    IGetAddressLabelResponseParsed,
+    IGetAddressLabelsResponseBody,
+} from '../helpers/parser/pgw/types/getAddressLabel.type'
 const logger = new Logger('[controllers.chainsafer]')
 
 export const postTransactionRiskSummary = async (
@@ -75,7 +78,8 @@ export const postTransactionSimulation = async (
     let error: IResponseError = null
 
     let payload = {
-        network_id: (chainId.length > 0 && chainId.split(':').length == 2 ) ? chainId.split(':')[1]: '',
+        network_id:
+            chainId.length > 0 && chainId.split(':').length == 2 ? chainId.split(':')[1] : '',
         from: transaction['from'] || '',
         to: transaction['to'] || '',
         call_data: transaction['data'] || '',
@@ -116,18 +120,22 @@ export const getTokenInfoBySimulationResult = async (
         simulationResult &&
         simulationResult.senderAssetChange != null &&
         simulationResult.senderAssetChange.tokenChanges != null &&
-        simulationResult.senderAssetChange.tokenChanges.length > 0 &&
-        simulationResult.senderAssetChange.tokenChanges[0].contractAddress != ''
+        simulationResult.senderAssetChange.tokenChanges.length > 0
     ) {
-        return await getTokenInfo(
-            simulationResult.senderAssetChange.tokenChanges[0].contractAddress
+        const filterTokenChanges = simulationResult.senderAssetChange.tokenChanges.filter(
+            (tokenChange) => tokenChange.direction == 'in'
         )
+        if (filterTokenChanges.length > 0) {
+            return await getTokenInfo(filterTokenChanges[0].contractAddress)
+        } else {
+            return [null, null]
+        }
     } else {
         return [null, null]
     }
 }
 
-const getTokenInfo = async (
+export const getTokenInfo = async (
     contractAddress: string
 ): Promise<[IGetTokenInfoResponseParsed, IResponseError]> => {
     let result: IGetTokenInfoResponseParsed = {} as IGetTokenInfoResponseParsed

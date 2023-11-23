@@ -38,9 +38,8 @@ export function transactionMethodIs(method: string) {
     return `Transaction Method: ${method}`
 }
 export const chainSaferAd = {
-    adTitle:'[ 📣 NEWS] Want a comprehensive protection? 🛡️ ',
-    adContent:'Check the SecuX x Trend Micro ChainSafer special hardware wallet 💪🏼'
-
+    adTitle: '[ 📣 NEWS] Want a comprehensive protection? 🛡️ ',
+    adContent: 'Check the SecuX x Trend Micro ChainSafer special hardware wallet 💪🏼',
 }
 export const headingText = {
     latestVersion: 'Latest Version',
@@ -71,7 +70,7 @@ export function balanceWithUsd(eth: number, usd: number) {
     return `${eth} ETH (≈$ ${usd})`
 }
 
-export function resProjectInsightWebsite(website: string) { 
+export function resProjectInsightWebsite(website: string) {
     return `Website  🌐 [${website}]`
 }
 
@@ -96,7 +95,7 @@ export const simulationBalanceChange = {
     separators: '---',
     balanceDiff: '💰Balance Diff.',
     paymentDetailPanelGet: '➞ Get',
-    paymentDetailPanelSell: '➞ Sell',
+    paymentDetailPanelPay: 'Pay ➞',
 }
 export const apiMapping = {
     transaction_risks_summary: {
@@ -153,12 +152,10 @@ export const apiMapping = {
         rule_ssl_domain_mismatch_with_withdrawapecoin: 'Domain-SSL mismatch & withdraw ape',
         rule_domain_short_available_time_with_increaseapproval:
             'Short duration domain & increase approval',
-        rule_ssl_domain_mismatch_with_increaseapproval:
-            'Domain-SSL mismatch & increase approval',
+        rule_ssl_domain_mismatch_with_increaseapproval: 'Domain-SSL mismatch & increase approval',
         rule_domain_short_available_time_with_increaseallowance:
-            'Short duration domain & increase allowance', 
-        rule_ssl_domain_mismatch_with_increaseallowance:
-            'Domain-SSL mismatch & increase allowance',         
+            'Short duration domain & increase allowance',
+        rule_ssl_domain_mismatch_with_increaseallowance: 'Domain-SSL mismatch & increase allowance',
         rule_ssl_short_available_time_with_erc20_transfer:
             'SSL certificate expires soon & ERC-20 transfer to account',
         rule_ssl_short_available_time_with_eip712_transfer:
@@ -223,13 +220,15 @@ export const apiMapping = {
             'SSL certificate expires soon & increase approval',
         rule_domain_short_create_time_with_increaseapproval:
             'Recently created domain & increase approval',
-        rule_ssl_short_create_time_with_increaseapproval: 'Recent SSL certificate & increase approval',
+        rule_ssl_short_create_time_with_increaseapproval:
+            'Recent SSL certificate & increase approval',
         rule_address_increase_approval_caution: 'increase approval',
         rule_ssl_short_available_time_with_increaseallowance:
             'SSL certificate expires soon & increase allowance',
         rule_domain_short_create_time_with_increaseallowance:
             'Recently created domain & increase allowance',
-        rule_ssl_short_create_time_with_increaseallowance: 'Recent SSL certificate & increase allowance',
+        rule_ssl_short_create_time_with_increaseallowance:
+            'Recent SSL certificate & increase allowance',
         rule_address_increase_allowance_caution: 'increase allowance',
     },
     transaction_risks: {
