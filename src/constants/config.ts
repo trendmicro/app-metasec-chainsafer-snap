@@ -16,3 +16,4 @@ export const API = {
         },
     },
 }
+export const supportChainIds = ["1"]

@@ -4,7 +4,7 @@ import {
     postTransactionRiskSummary,
     getSnapLatestVersion,
     getTokenInfoBySimulationResult,
-    getAddressLabel
+    getAddressLabel,
 } from '../controllers/chainsafer'
 import { panel, divider, text } from '@metamask/snaps-ui'
 import { serviceError } from '../constants/content'
@@ -16,6 +16,7 @@ import { convertToRiskSummaryPanel } from './panels/riskSummaryPanel'
 import { convertToSimulationPanel } from './panels/simulationPanel'
 import { covertToProjectInsightPanel } from './panels/projectInsightPanel'
 import { convertAdPanel } from './panels/adPanel'
+import { supportChainIds } from '../constants/config'
 
 export const transactionInsightLayout: TTransactionInsightLayout = async ({
     transactionOrigin,
@@ -36,26 +37,41 @@ export const transactionInsightLayout: TTransactionInsightLayout = async ({
                 content: updateAlert.panel,
             }
         }
-        const [
-            [riskSummaryResult, riskSummaryError],
-            [riskResult, riskError],
-            [simulationResult, simulationError],
-        ] = await Promise.all([
+
+        const adDisplayPanel = convertAdPanel()
+
+        const [[riskSummaryResult, riskSummaryError], [riskResult, riskError]] = await Promise.all([
             postTransactionRiskSummary(transactionOrigin, transaction),
             postTransactionRisk(transactionOrigin, transaction),
-            postTransactionSimulation(chainId, transaction),
         ])
+        let simulationPanel = panel([])
+        let projectInsightPanel = panel([])
+        const networkId =
+            chainId.length > 0 && chainId.split(':').length == 2 ? chainId.split(':')[1] : ''
+        
+        if (supportChainIds.includes(networkId)) {
+            const [simulationResult, simulationError] = await postTransactionSimulation(
+                chainId,
+                transaction
+            )
+            const [tokenInfoResult, tokenInfoError] = await getTokenInfoBySimulationResult(
+                simulationResult
+            )
+            simulationPanel = convertToSimulationPanel(
+                simulationResult,
+                simulationError,
+                tokenInfoResult && tokenInfoResult.BlueCheckMark
+            )
+            projectInsightPanel = covertToProjectInsightPanel(tokenInfoResult, tokenInfoError)
+        } else {
+            simulationPanel = panel([divider(), text(serviceError.unsupportedChainId), divider()])
+        }
 
-        const [tokenInfoResult, tokenInfoError] = await getTokenInfoBySimulationResult(
-            simulationResult
-        )
         let riskPanel = convertToRiskPanel(riskResult, riskError)
         let riskSummaryPanel = convertToRiskSummaryPanel(riskSummaryResult, riskSummaryError)
-        let simulationPanel = convertToSimulationPanel(simulationResult, simulationError, tokenInfoResult && tokenInfoResult.BlueCheckMark)
-        let projectInsightPanel = covertToProjectInsightPanel(tokenInfoResult, tokenInfoError)
-        let adDisplayPanel = convertAdPanel()
+
         let displayPanel = panel([])
-        
+
         if (riskSummaryResult.severity == 'caution') {
             displayPanel = panel([
                 adDisplayPanel,

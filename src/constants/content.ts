@@ -25,6 +25,7 @@ export const serviceError = {
     simulationError: '😕 Transaction simulation unavailable',
     riskApiError: '🚧 [Risk detection] No service',
     riskApiErrorDetail: 'Risk detection service not available now, please try again later.',
+    unsupportedChainId: '[Simulation] Only Support Ethereum Mainnet currently.',
 }
 export function evmErrorAddress(evmErrorAddress: string) {
     return `address: ${evmErrorAddress}`
