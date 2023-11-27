@@ -11,6 +11,7 @@ export const convertToUpdateAlertPanel: TUpdateAlertPanel = (result, error) => {
                 text(`${headingText.latestVersion}`),
                 text(`${serviceError.serviceError}`),
                 text(`${JSON.stringify(error)}`),
+                divider(),
             ]),
             isForceUpdate: false,
         }
@@ -22,12 +23,12 @@ export const convertToUpdateAlertPanel: TUpdateAlertPanel = (result, error) => {
     if (isUpdateAvailable) {
         if (isForceUpdate) {
             return {
-                panel: panel([divider(), text(`${updateAlert.forceUpdate}`), divider()]),
+                panel: panel([text(`${updateAlert.forceUpdate}`), divider()]),
                 isForceUpdate,
             }
         } else {
             return {
-                panel: panel([divider(), text(`${updateAlert.snapUpdate}`), divider()]),
+                panel: panel([text(`${updateAlert.snapUpdate}`), divider()]),
                 isForceUpdate,
             }
         }

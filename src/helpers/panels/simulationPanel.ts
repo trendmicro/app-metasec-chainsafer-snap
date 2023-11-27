@@ -3,24 +3,23 @@ import { TSimulationPanel } from './types/panels.type'
 import {
     headingText,
     simulationBalanceChange,
-    tokenSymbolAndValue,
     evmErrorAddress,
     evmErrMessage,
     serviceError,
     balanceWithUsd,
     balanceWithoutUsd,
-    tokenNameWithBlueMark,
-    tokenNameWithoutBlueMark,
     transactionMethodIs,
 } from '../../constants/content'
+import { covertPaymentDetail } from '../simulationContent'
 
-export const convertToSimulationPanel: TSimulationPanel = (result, error, isBlueMark) => {
+export const convertToSimulationPanel: TSimulationPanel = async (result, error) => {
     if (error) {
         return panel([
             heading(headingText.transactionSimulation),
             divider(),
             text(serviceError.simulationError),
             text(`${JSON.stringify(error)}`),
+            divider(),
         ])
     }
 
@@ -35,6 +34,7 @@ export const convertToSimulationPanel: TSimulationPanel = (result, error, isBlue
             text(serviceError.simulationError),
             text(evmErrorAddress(result.evmErrAddress)),
             text(evmErrMessage(result.evmErrMessage)),
+            divider(),
         ])
     }
 
@@ -44,16 +44,23 @@ export const convertToSimulationPanel: TSimulationPanel = (result, error, isBlue
 
     let transactionMethod = []
     let paymentDetail = []
-    let tokenChanges = []
     let balanceChange = []
     let recipients = []
 
     //transaction method
     if (result.txnMethodName != null && result.txnMethodName != '') {
-        transactionMethod = [divider(), text(transactionMethodIs(result.txnMethodName)), divider()]
+        transactionMethod = [text(transactionMethodIs(result.txnMethodName)), divider()]
+    }
+    // payment detail
+    if (
+        result.senderAssetChange != null &&
+        result.senderAssetChange.tokenChanges != null &&
+        result.senderAssetChange.tokenChanges.length > 0
+    ) {
+        paymentDetail = await covertPaymentDetail(result.senderAssetChange.tokenChanges)
     }
 
-    // payment detail
+    // balance diff
     if (result.senderAssetChange != null && result.senderAssetChange.balanceDiff != null) {
         const originWei = result.senderAssetChange.balanceDiff.origin
         const originUSD = result.senderAssetChange.balanceDiff.originDollarValue
@@ -62,11 +69,6 @@ export const convertToSimulationPanel: TSimulationPanel = (result, error, isBlue
         const diffWei = Math.abs(afterWei - originWei)
         const diffUSD = Math.abs(afterUSD - originUSD)
 
-        paymentDetail = [
-            heading(headingText.paymentDetailPanel),
-            text(headingText.pay),
-            text(convertWeiToEthWithUSD(diffWei, diffUSD)),
-        ]
         balanceChange = [
             heading(headingText.balanceChanges),
             text(simulationBalanceChange.balanceChangeBefore),
@@ -79,28 +81,6 @@ export const convertToSimulationPanel: TSimulationPanel = (result, error, isBlue
         ]
     }
 
-    // token changes
-    if (
-        result.senderAssetChange != null &&
-        result.senderAssetChange.tokenChanges != null &&
-        result.senderAssetChange.tokenChanges.length > 0
-    ) {
-        result.senderAssetChange.tokenChanges.forEach(function (tokenChange) {
-            tokenChanges.push(
-                text(paymentDetailTokenChange(tokenChange.direction)),
-                text(
-                    tokenSymbolAndValue(
-                        tokenChange.type.toUpperCase(),
-                        tokenChange.symbol.toUpperCase(),
-                        caculateRawAmonut(tokenChange.rawAmount, tokenChange.decimals),
-                        Number(tokenChange.dollarValue.toFixed(2))
-                    )
-                ),
-                text(covertTokenNameWithReputation(tokenChange.name, isBlueMark))
-            )
-        })
-    }
-
     // recipients
     recipients = [
         heading(headingText.recipientsPanel),
@@ -111,18 +91,7 @@ export const convertToSimulationPanel: TSimulationPanel = (result, error, isBlue
         text('0xed1bd4a5244d35be12e84a3e9821290032a47a99 🚨Label: phishing_Etherscan'),
     ]
 
-    return panel([...transactionMethod, ...paymentDetail, ...tokenChanges, ...balanceChange])
-}
-
-function covertTokenNameWithReputation(tokenName: string, isBlueMark: boolean): string {
-    if (tokenName && tokenName != '') {
-        if (isBlueMark) {
-            return tokenNameWithBlueMark(tokenName)
-        } else {
-            return tokenNameWithoutBlueMark(tokenName)
-        }
-    }
-    return ''
+    return panel([...transactionMethod, ...paymentDetail, ...balanceChange, divider()])
 }
 
 function convertWeiToEthWithUSD(wei: number, usd: number): string {
@@ -137,19 +106,3 @@ function convertWeiToEthWithUSD(wei: number, usd: number): string {
         }
     }
 }
-
-function paymentDetailTokenChange(direction: string): string {
-    if (direction == 'in') {
-        return simulationBalanceChange.paymentDetailPanelGet
-    }
-    return simulationBalanceChange.paymentDetailPanelSell
-}
-function caculateRawAmonut(rawAmount: string, decimals: number): string {
-    if (rawAmount != null && rawAmount != '') {
-        const amount = Number(rawAmount) / Math.pow(10, decimals)
-        return amount.toString()
-    }
-    return ''
-    
-}
-
