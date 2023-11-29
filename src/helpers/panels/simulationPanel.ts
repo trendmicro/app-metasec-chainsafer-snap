@@ -9,9 +9,14 @@ import {
     balanceWithUsd,
     balanceWithoutUsd,
     transactionMethodIs,
+    countRecipient,
+    recipientLableInfo,
+    recipientListWarningContractTitle,
 } from '../../constants/content'
 import { covertPaymentDetail } from '../simulationContent'
-
+import { TGetAddressLabel } from './types/panels.type'
+import postTransactionSimulation from '../parser/pgw/postTransactionSimulation'
+import { getAddressLabel } from '../../controllers/chainsafer'
 export const convertToSimulationPanel: TSimulationPanel = async (result, error) => {
     if (error) {
         return panel([
@@ -82,16 +87,46 @@ export const convertToSimulationPanel: TSimulationPanel = async (result, error) 
     }
 
     // recipients
-    recipients = [
-        heading(headingText.recipientsPanel),
-        text(
-            'This transaction goes thru 4 contracts/ recipients, 1 of them might exist security concern:'
-        ),
-        text('{CA} '),
-        text('0xed1bd4a5244d35be12e84a3e9821290032a47a99 🚨Label: phishing_Etherscan'),
-    ]
+    let addressLabelsResult = []
+    let addressLabelsError = []
+    if (result && result.recipientAssetChanges != null && result.recipientAssetChanges.length > 0) {
+        recipients = [
+            heading(headingText.recipientsPanel),
+            text(countRecipient(result.recipientAssetChanges.length)),
+        ]
+        let addressList = []
+        for (let i = 0; i < result.recipientAssetChanges.length; i++) {
+            // get recipient address is CA or EOA first
+            let addressIsEoa = convertRecipientAddressIsContract(
+                result.recipientAssetChanges[i].isContract,
+            )
+            const [recipientsResult, recipientsError] = await getAddressLabel(
+                result.recipientAssetChanges[i].address,
+            )
+            addressLabelsResult.push(recipientsResult)
+            addressLabelsError.push(addressLabelsError)
+            convertToRecipientsPanel(recipientsResult, recipientsError)
+            //if get address label panel is not null, return result
+            if (convertToRecipientsPanel(recipientsResult, recipientsError).children.length != 0) {
+                warningAddressCount++
+                addressList.push(text(addressIsEoa), text(result.recipientAssetChanges[i].address))
+            }
+            addressList.push(convertToRecipientsPanel(recipientsResult, recipientsError))
+        }
+        if (warningAddressCount > 0) {
+            recipients.push(text(recipientListWarningContractTitle(warningAddressCount)))
+            warningAddressCount = 0
+        }
 
-    return panel([...transactionMethod, ...paymentDetail, ...balanceChange, divider()])
+        recipients = recipients.concat(addressList)
+    }
+    return panel([
+        ...transactionMethod,
+        ...paymentDetail,
+        ...balanceChange,
+        ...recipients,
+        divider(),
+    ])
 }
 
 function convertWeiToEthWithUSD(wei: number, usd: number): string {
@@ -105,4 +140,36 @@ function convertWeiToEthWithUSD(wei: number, usd: number): string {
             return balanceWithUsd(eth, Number(usd.toFixed(2)))
         }
     }
+}
+function convertRecipientAddressIsContract(isContract: boolean): string {
+    if (isContract) {
+        return `• {CA}`
+    }
+    return `• {EOA}`
+}
+let warningAddressCount = 0
+export const convertToRecipientsPanel: TGetAddressLabel = (result, error) => {
+    let recipientsPanel = []
+    if (result == null) {
+        return panel([])
+    }
+    if (error) {
+        return panel([])
+    }
+    if (result != null && result.labelInfos != null && result.labelInfos.length > 0) {
+        for (let i = 0; i < result.labelInfos.length; i++) {
+            let riskLevel = result.labelInfos[i].risk_level
+            // riskLevel condition
+            if (riskLevel >= 3) {
+                if (result.labelInfos[i].labels != null && result.labelInfos[i].labels.length > 0) {
+                    for (let j = 0; j < result.labelInfos[i].labels.length; j++) {
+                        let labelName = result.labelInfos[i].labels[j].name
+                        let source = result.labelInfos[i].labels[j].source
+                        recipientsPanel.push(text(recipientLableInfo(labelName, source)))
+                    }
+                }
+            }
+        }
+    }
+    return panel(recipientsPanel)
 }

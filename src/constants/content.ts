@@ -21,11 +21,22 @@ export function collectionSummary(collectionTokenName: string, reputation: strin
     return `Collection:${collectionTokenName} (Reputation ${reputation} )`
 }
 export const serviceError = {
-    serviceError: '⛔️**Oops, service have something problems...**!😬',
-    simulationError: '😕 Transaction simulation unavailable',
+    serviceError: 'Trend Micro ChainSafer is not available now, please try again later.',
+    simulationError: '[Simulation] Service not available now.',
     riskApiError: '🚧 [Risk detection] No service',
     riskApiErrorDetail: 'Risk detection service not available now, please try again later.',
     unsupportedChainId: '[Simulation] Only Support Ethereum Mainnet currently.',
+}
+
+export function countRecipient(recipientNumber: number) {
+    return `This transaction goes thru ${recipientNumber} contracts/ recipients,`
+}
+
+export function recipientLableInfo(name: string, source: string) {
+    return `🚨Label:  ${name}_${source}`
+}
+export function recipientListWarningContractTitle(contract: number) {
+    return `${contract} of them might exist security concern:`
 }
 export function evmErrorAddress(evmErrorAddress: string) {
     return `address: ${evmErrorAddress}`
@@ -62,7 +73,7 @@ export function tokenSymbolAndValue(
     tokenType: string,
     tokenSymbol: string,
     rawAmount: string,
-    usd: number
+    usd: number,
 ) {
     return `{${tokenType}} ${rawAmount} ${tokenSymbol} (≈$ ${usd})`
 }

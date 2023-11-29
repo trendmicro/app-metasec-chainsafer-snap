@@ -50,7 +50,7 @@ const header = (addition = {}) => {
 
 const postTransactionRisks: TPostTransactionRisks = async (
     postTransactionRequestBody,
-    headerOption = {}
+    headerOption = {},
 ) => {
     const keyPath = 'POST_TRANSACTION_RISKS'
     const url = pgwBase(keyPath)
@@ -78,7 +78,7 @@ const postTransactionRisks: TPostTransactionRisks = async (
 
 const postTransactionRiskSummary: TPostTransactionRiskSummary = async (
     postTransactionRequestBody,
-    headerOption = {}
+    headerOption = {},
 ) => {
     const keyPath = 'POST_TRANSACTION_RISK_SUMMARY'
     const url = pgwBase(keyPath)
@@ -106,7 +106,7 @@ const postTransactionRiskSummary: TPostTransactionRiskSummary = async (
 
 const postTransactionSimulation: TPostTransactionSimulation = async (
     postTransactionRequestBody,
-    headerOption = {}
+    headerOption = {},
 ) => {
     const keyPath = 'POST_TRANSACTION_SIMULATION'
     const url = pgwBase(keyPath)
@@ -128,7 +128,6 @@ const postTransactionSimulation: TPostTransactionSimulation = async (
 
     const responseParsed = pgwParser[keyPath](response)
     logger.log('postTransactionSimulation', 'responseParsed', responseParsed)
-
     return responseParsed
 }
 
@@ -160,7 +159,7 @@ const getSnapLatestVersion: TGetSnapLatestVersion = async (headerOption = {}) =>
 const getTokenInfo: TGetTokenInfo = async (contractAddress, headerOption = {}) => {
     const keyPath = 'GET_TOKEN_INFO'
     const url = pgwBase(keyPath, (path: string) =>
-        path.replace('{contractAddress}', contractAddress)
+        path.replace('{contractAddress}', contractAddress),
     )
     const body = {}
     const headers = header(headerOption)
@@ -187,7 +186,7 @@ const getTokenInfo: TGetTokenInfo = async (contractAddress, headerOption = {}) =
 const getAddressLabel: TGetAddressLabel = async (contractAddress, headerOption = {}) => {
     const keyPath = 'GET_ADDRESS_LABEL'
     const url = pgwBase(keyPath, (path: string) =>
-        path.replace('{contractAddress}', contractAddress)
+        path.replace('{contractAddress}', contractAddress),
     )
     const body = {}
     const headers = header(headerOption)
@@ -205,10 +204,10 @@ const getAddressLabel: TGetAddressLabel = async (contractAddress, headerOption =
         throw error
     }
 
-    //const responseParsed = pgwParser[keyPath](response)
-    //logger.log('getAddressLabel', 'responseParsed', responseParsed)
-    return response
-    //return responseParsed
+    const responseParsed = pgwParser[keyPath](response)
+    logger.log('getAddressLabel', 'responseParsed', responseParsed)
+
+    return responseParsed
 }
 
 export default {
