@@ -95,6 +95,7 @@ export const convertToSimulationPanel: TSimulationPanel = async (result, error) 
             text(countRecipient(result.recipientAssetChanges.length)),
         ]
         let addressList = []
+        let warningAddressCount = 0
         for (let i = 0; i < result.recipientAssetChanges.length; i++) {
             // get recipient address is CA or EOA first
             let addressIsEoa = convertRecipientAddressIsContract(
@@ -105,17 +106,16 @@ export const convertToSimulationPanel: TSimulationPanel = async (result, error) 
             )
             addressLabelsResult.push(recipientsResult)
             addressLabelsError.push(addressLabelsError)
-            convertToRecipientsPanel(recipientsResult, recipientsError)
+            let recipientPanel = convertToRecipientsPanel(recipientsResult, recipientsError)
             //if get address label panel is not null, return result
-            if (convertToRecipientsPanel(recipientsResult, recipientsError).children.length != 0) {
+            if (recipientPanel.children.length != 0) {
                 warningAddressCount++
                 addressList.push(text(addressIsEoa), text(result.recipientAssetChanges[i].address))
             }
-            addressList.push(convertToRecipientsPanel(recipientsResult, recipientsError))
+            addressList.push(recipientPanel)
         }
         if (warningAddressCount > 0) {
             recipients.push(text(recipientListWarningContractTitle(warningAddressCount)))
-            warningAddressCount = 0
         }
 
         recipients = recipients.concat(addressList)
@@ -141,13 +141,14 @@ function convertWeiToEthWithUSD(wei: number, usd: number): string {
         }
     }
 }
+
 function convertRecipientAddressIsContract(isContract: boolean): string {
     if (isContract) {
         return `• {CA}`
     }
     return `• {EOA}`
 }
-let warningAddressCount = 0
+
 export const convertToRecipientsPanel: TGetAddressLabel = (result, error) => {
     let recipientsPanel = []
     if (result == null) {
