@@ -1,4 +1,4 @@
-import { panel, heading, text, divider } from '@metamask/snaps-ui'
+import { panel, heading, text, divider, Panel } from '@metamask/snaps-ui'
 import { TSimulationPanel } from './types/panels.type'
 import {
     headingText,
@@ -87,38 +87,40 @@ export const convertToSimulationPanel: TSimulationPanel = async (result, error) 
     }
 
     // recipients
-    let addressLabelsResult = []
-    let addressLabelsError = []
     if (result && result.recipientAssetChanges != null && result.recipientAssetChanges.length > 0) {
-        recipients = [
-            heading(headingText.recipientsPanel),
-            text(countRecipient(result.recipientAssetChanges.length)),
-        ]
-        let addressList = []
+        let recipientAddressPanels = []
+        let recipientDescription = countRecipient(result.recipientAssetChanges.length)
         let warningAddressCount = 0
         for (let i = 0; i < result.recipientAssetChanges.length; i++) {
             // get recipient address is CA or EOA first
-            let addressIsEoa = convertRecipientAddressIsContract(
+            let addressType = converToRecipientAddressType(
                 result.recipientAssetChanges[i].isContract,
             )
-            const [recipientsResult, recipientsError] = await getAddressLabel(
+            const [addressLabelsResult, addressLabelsError] = await getAddressLabel(
                 result.recipientAssetChanges[i].address,
             )
-            addressLabelsResult.push(recipientsResult)
-            addressLabelsError.push(addressLabelsError)
-            let recipientPanel = convertToRecipientsPanel(recipientsResult, recipientsError)
+            let addressLabelsPanel = convertToAddressLabelsPanel(
+                addressLabelsResult,
+                addressLabelsError,
+            )
             //if get address label panel is not null, return result
-            if (recipientPanel.children.length != 0) {
+            if (addressLabelsPanel.children.length != 0) {
                 warningAddressCount++
-                addressList.push(text(addressIsEoa), text(result.recipientAssetChanges[i].address))
+                recipientAddressPanels.push(
+                    text(addressType),
+                    text(result.recipientAssetChanges[i].address),
+                )
             }
-            addressList.push(recipientPanel)
+            recipientAddressPanels.push(addressLabelsPanel)
         }
         if (warningAddressCount > 0) {
-            recipients.push(text(recipientListWarningContractTitle(warningAddressCount)))
+            recipientDescription += recipientListWarningContractTitle(warningAddressCount)
         }
-
-        recipients = recipients.concat(addressList)
+        recipients.push(
+            heading(headingText.recipientsPanel),
+            text(recipientDescription),
+            ...recipientAddressPanels,
+        )
     }
     return panel([
         ...transactionMethod,
@@ -142,15 +144,15 @@ function convertWeiToEthWithUSD(wei: number, usd: number): string {
     }
 }
 
-function convertRecipientAddressIsContract(isContract: boolean): string {
+function converToRecipientAddressType(isContract: boolean): string {
     if (isContract) {
         return `• {CA}`
     }
     return `• {EOA}`
 }
 
-export const convertToRecipientsPanel: TGetAddressLabel = (result, error) => {
-    let recipientsPanel = []
+export const convertToAddressLabelsPanel: TGetAddressLabel = (result, error) => {
+    let addressLabelsPanel = []
     if (result == null) {
         return panel([])
     }
@@ -166,11 +168,11 @@ export const convertToRecipientsPanel: TGetAddressLabel = (result, error) => {
                     for (let j = 0; j < result.labelInfos[i].labels.length; j++) {
                         let labelName = result.labelInfos[i].labels[j].name
                         let source = result.labelInfos[i].labels[j].source
-                        recipientsPanel.push(text(recipientLableInfo(labelName, source)))
+                        addressLabelsPanel.push(text(recipientLableInfo(labelName, source)))
                     }
                 }
             }
         }
     }
-    return panel(recipientsPanel)
+    return panel(addressLabelsPanel)
 }

@@ -29,14 +29,14 @@ export const serviceError = {
 }
 
 export function countRecipient(recipientNumber: number) {
-    return `This transaction goes thru ${recipientNumber} contracts/ recipients,`
+    return `This transaction goes thru ${recipientNumber} contracts/ recipients`
 }
 
 export function recipientLableInfo(name: string, source: string) {
     return `🚨Label:  ${name}_${source}`
 }
 export function recipientListWarningContractTitle(contract: number) {
-    return `${contract} of them might exist security concern:`
+    return `, ${contract} of them might exist security concern:`
 }
 export function evmErrorAddress(evmErrorAddress: string) {
     return `address: ${evmErrorAddress}`
