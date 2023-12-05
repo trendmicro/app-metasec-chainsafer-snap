@@ -47,7 +47,7 @@ const postTransactionSimulation: TPostTransactionSimulation = (responseBody) => 
 }
 
 function convertToAssetChangeParsed(
-    assetChange: IPostTransactionSimulationAssetChangeBody
+    assetChange: IPostTransactionSimulationAssetChangeBody,
 ): IPostTransactionSimulationAssetChangeParsed {
     let balanceDiff = null
     if (assetChange.balance_diff != null) {
@@ -55,10 +55,10 @@ function convertToAssetChangeParsed(
             origin: parseFloat(parserMapping<string>(assetChange.balance_diff, 'origin', '')),
             after: parseFloat(parserMapping<string>(assetChange.balance_diff, 'after', '')),
             originDollarValue: parseFloat(
-                parserMapping<string>(assetChange.balance_diff, 'origin_dollar_value', '')
+                parserMapping<string>(assetChange.balance_diff, 'origin_dollar_value', ''),
             ),
             afterDollarValue: parseFloat(
-                parserMapping<string>(assetChange.balance_diff, 'after_dollar_value', '')
+                parserMapping<string>(assetChange.balance_diff, 'after_dollar_value', ''),
             ),
             symbol: parserMapping<string>(assetChange.balance_diff, 'symbol', ''),
             name: parserMapping<string>(assetChange.balance_diff, 'name', ''),
@@ -89,13 +89,14 @@ function convertToAssetChangeParsed(
 
     return {
         address: parserMapping<string>(assetChange, 'address', ''),
+        isContract: parserMapping<boolean>(assetChange, 'is_contract', ''),
         balanceDiff: balanceDiff,
         tokenChanges: tokenChanges,
     }
 }
 
 function convertToContractParsed(
-    contract: IPostTransactionSimulationContractBody
+    contract: IPostTransactionSimulationContractBody,
 ): IPostTransactionSimulationContractParsed {
     return {
         address: parserMapping<string>(contract, 'address', ''),

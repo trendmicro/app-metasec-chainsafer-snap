@@ -9,9 +9,13 @@ import {
     balanceWithUsd,
     balanceWithoutUsd,
     transactionMethodIs,
+    countRecipient,
+    recipientLableInfo,
+    recipientListWarningContractTitle,
 } from '../../constants/content'
 import { covertPaymentDetail } from '../simulationContent'
-
+import { TGetAddressLabel } from './types/panels.type'
+import { getAddressLabel } from '../../controllers/chainsafer'
 export const convertToSimulationPanel: TSimulationPanel = async (result, error) => {
     if (error) {
         return panel([
@@ -82,16 +86,52 @@ export const convertToSimulationPanel: TSimulationPanel = async (result, error) 
     }
 
     // recipients
-    recipients = [
-        heading(headingText.recipientsPanel),
-        text(
-            'This transaction goes thru 4 contracts/ recipients, 1 of them might exist security concern:'
-        ),
-        text('{CA} '),
-        text('0xed1bd4a5244d35be12e84a3e9821290032a47a99 🚨Label: phishing_Etherscan'),
-    ]
+    if (result && result.recipientAssetChanges != null && result.recipientAssetChanges.length > 0) {
+        let recipientAddressPanels = []
+        let recipientDescription = countRecipient(result.recipientAssetChanges.length)
+        let warningAddressCount = 0
 
-    return panel([...transactionMethod, ...paymentDetail, ...balanceChange, divider()])
+        for (let i = 0; i < result.recipientAssetChanges.length; i++) {
+            // get recipient address is CA or EOA first
+            let addressType = converToRecipientAddressType(
+                result.recipientAssetChanges[i].isContract,
+            )
+            const [addressLabelsResult, addressLabelsError] = await getAddressLabel(
+                result.recipientAssetChanges[i].address,
+            )
+            let addressLabelsPanel = convertToAddressLabelsPanel(
+                addressLabelsResult,
+                addressLabelsError,
+            )
+            //if get address label panel is not null, return result
+            if (addressLabelsPanel.children.length != 0) {
+                warningAddressCount++
+                recipientAddressPanels.push(
+                    text(addressType),
+                    text(result.recipientAssetChanges[i].address),
+                )
+            }
+            recipientAddressPanels.push(addressLabelsPanel)
+        }
+
+        if (warningAddressCount > 0) {
+            recipientDescription += recipientListWarningContractTitle(warningAddressCount)
+        }
+
+        recipients.push(
+            heading(headingText.recipientsPanel),
+            text(recipientDescription),
+            ...recipientAddressPanels,
+        )
+    }
+
+    return panel([
+        ...transactionMethod,
+        ...paymentDetail,
+        ...balanceChange,
+        ...recipients,
+        divider(),
+    ])
 }
 
 function convertWeiToEthWithUSD(wei: number, usd: number): string {
@@ -105,4 +145,36 @@ function convertWeiToEthWithUSD(wei: number, usd: number): string {
             return balanceWithUsd(eth, Number(usd.toFixed(2)))
         }
     }
+}
+
+function converToRecipientAddressType(isContract: boolean): string {
+    if (isContract) {
+        return `• {CA}`
+    }
+    return `• {EOA}`
+}
+
+export const convertToAddressLabelsPanel: TGetAddressLabel = (result, error) => {
+    if (result == null || error) {
+        return panel([])
+    }
+
+    let addressLabelsPanel = []
+    if (result != null && result.labelInfos != null && result.labelInfos.length > 0) {
+        for (let i = 0; i < result.labelInfos.length; i++) {
+            let riskLevel = result.labelInfos[i].risk_level
+            // riskLevel condition
+            if (riskLevel >= 3) {
+                if (result.labelInfos[i].labels != null && result.labelInfos[i].labels.length > 0) {
+                    for (let j = 0; j < result.labelInfos[i].labels.length; j++) {
+                        let labelName = result.labelInfos[i].labels[j].name
+                        let source = result.labelInfos[i].labels[j].source
+                        addressLabelsPanel.push(text(recipientLableInfo(labelName, source)))
+                    }
+                }
+            }
+        }
+    }
+
+    return panel(addressLabelsPanel)
 }

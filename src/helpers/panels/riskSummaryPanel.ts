@@ -5,8 +5,8 @@ import { TRiskSummaryPanel } from './types/panels.type'
 export const convertToRiskSummaryPanel: TRiskSummaryPanel = (result, error) => {
     if (error) {
         return panel([
-            heading(`${headingText.riskSummary}`),
-            text(`${serviceError.serviceError}`),
+            heading(serviceError.riskApiError),
+            text(serviceError.riskApiErrorDetail),
             text(`${JSON.stringify(error)}`),
             divider(),
         ])
@@ -20,7 +20,7 @@ export const convertToRiskSummaryPanel: TRiskSummaryPanel = (result, error) => {
         heading(
             `${riskIconMapping.transaction_risks_summary[result.severity]} ${
                 apiMapping.transaction_risks_summary[result.severity]
-            }`
+            }`,
         ),
         text(`**${apiMapping.transaction_risks_summary[result.ruleName]}**`),
         divider(),

@@ -3,12 +3,7 @@ import { headingText, serviceError } from '../../constants/content'
 import { TProjectInsightPanel } from './types/panels.type'
 export const covertToProjectInsightPanel: TProjectInsightPanel = (result, error) => {
     if (error) {
-        return panel([
-            heading(serviceError.riskApiError),
-            divider(),
-            text(serviceError.riskApiErrorDetail),
-            text(`${JSON.stringify(error)}`),
-        ])
+        return panel([])
     }
 
     if (
