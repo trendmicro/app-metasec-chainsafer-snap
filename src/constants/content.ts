@@ -35,12 +35,15 @@ export function countRecipient(recipientNumber: number) {
 export function recipientLableInfo(name: string, source: string) {
     return `🚨Label:  ${name}_${source}`
 }
+
 export function recipientListWarningContractTitle(contract: number) {
     return `, ${contract} of them might exist security concern:`
 }
+
 export function evmErrorAddress(evmErrorAddress: string) {
     return `address: ${evmErrorAddress}`
 }
+
 export function evmErrMessage(evmErrMessage: string) {
     return `error: ${evmErrMessage}`
 }
@@ -48,10 +51,12 @@ export function evmErrMessage(evmErrMessage: string) {
 export function transactionMethodIs(method: string) {
     return `Transaction Method: ${method}`
 }
+
 export const chainSaferAd = {
     adTitle: '[ 📣 NEWS] Want a comprehensive protection? 🛡️ ',
     adContent: 'Check the SecuX x Trend Micro ChainSafer special hardware wallet 💪🏼',
 }
+
 export const headingText = {
     latestVersion: 'Latest Version',
     riskSummary: 'Risk Summary Check',
@@ -63,12 +68,15 @@ export const headingText = {
     projectInsightPanel: 'Project Insight',
     recipientsPanel: 'Recipients',
 }
+
 export function tokenNameWithBlueMark(tokenName: string) {
     return `${tokenName} (Reputation 🆗)`
 }
+
 export function tokenNameWithoutBlueMark(tokenName: string) {
     return `${tokenName} (Reputation ❔️)`
 }
+
 export function tokenSymbolAndValue(
     tokenType: string,
     tokenSymbol: string,
@@ -77,6 +85,7 @@ export function tokenSymbolAndValue(
 ) {
     return `{${tokenType}} ${rawAmount} ${tokenSymbol} (≈$ ${usd})`
 }
+
 export function balanceWithUsd(eth: number, usd: number) {
     return `${eth} ETH (≈$ ${usd})`
 }
@@ -100,6 +109,7 @@ export function resProjectInsightDiscord(discord: string) {
 export function balanceWithoutUsd(eth: number) {
     return `${eth} ETH`
 }
+
 export const simulationBalanceChange = {
     balanceChangeBefore: 'Before ➞',
     balanceChangeAfter: '➞ After',
@@ -108,6 +118,7 @@ export const simulationBalanceChange = {
     paymentDetailPanelGet: '➞ Get',
     paymentDetailPanelPay: 'Pay ➞',
 }
+
 export const apiMapping = {
     transaction_risks_summary: {
         fatal_risk: 'Extreme Risk',

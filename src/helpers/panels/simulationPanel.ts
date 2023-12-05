@@ -1,4 +1,4 @@
-import { panel, heading, text, divider, Panel } from '@metamask/snaps-ui'
+import { panel, heading, text, divider } from '@metamask/snaps-ui'
 import { TSimulationPanel } from './types/panels.type'
 import {
     headingText,
@@ -15,7 +15,6 @@ import {
 } from '../../constants/content'
 import { covertPaymentDetail } from '../simulationContent'
 import { TGetAddressLabel } from './types/panels.type'
-import postTransactionSimulation from '../parser/pgw/postTransactionSimulation'
 import { getAddressLabel } from '../../controllers/chainsafer'
 export const convertToSimulationPanel: TSimulationPanel = async (result, error) => {
     if (error) {
@@ -91,6 +90,7 @@ export const convertToSimulationPanel: TSimulationPanel = async (result, error) 
         let recipientAddressPanels = []
         let recipientDescription = countRecipient(result.recipientAssetChanges.length)
         let warningAddressCount = 0
+
         for (let i = 0; i < result.recipientAssetChanges.length; i++) {
             // get recipient address is CA or EOA first
             let addressType = converToRecipientAddressType(
@@ -113,15 +113,18 @@ export const convertToSimulationPanel: TSimulationPanel = async (result, error) 
             }
             recipientAddressPanels.push(addressLabelsPanel)
         }
+
         if (warningAddressCount > 0) {
             recipientDescription += recipientListWarningContractTitle(warningAddressCount)
         }
+
         recipients.push(
             heading(headingText.recipientsPanel),
             text(recipientDescription),
             ...recipientAddressPanels,
         )
     }
+
     return panel([
         ...transactionMethod,
         ...paymentDetail,
@@ -152,13 +155,11 @@ function converToRecipientAddressType(isContract: boolean): string {
 }
 
 export const convertToAddressLabelsPanel: TGetAddressLabel = (result, error) => {
+    if (result == null || error) {
+        return panel([])
+    }
+
     let addressLabelsPanel = []
-    if (result == null) {
-        return panel([])
-    }
-    if (error) {
-        return panel([])
-    }
     if (result != null && result.labelInfos != null && result.labelInfos.length > 0) {
         for (let i = 0; i < result.labelInfos.length; i++) {
             let riskLevel = result.labelInfos[i].risk_level
@@ -174,5 +175,6 @@ export const convertToAddressLabelsPanel: TGetAddressLabel = (result, error) => 
             }
         }
     }
+
     return panel(addressLabelsPanel)
 }
