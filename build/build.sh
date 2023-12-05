@@ -41,6 +41,9 @@ if [ ${1} == "beta" ]
 then
   npm run update:version ${appVersions}
   npm run build:stag
+elif [ "${1}" == "test" ]; then
+  npm run update:version ${appVersions}
+  npm run build:test
 else
   npm run update:version ${appVersions}
   npm run build

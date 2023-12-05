@@ -20,6 +20,7 @@
         "build": "json -I -f package.json -e 'this.name=\"tm-chainsafer-snap\"' && NODE_ENV=production mm-snap build ",
         "build:clean": "yarn clean && yarn build",
         "build:stag": "json -I -f package.json -e 'this.name=\"tm-chainsafer-snap-beta\"' && NODE_ENV=development mm-snap build",
+        "build:test": "json -I -f package.json -e 'this.name=\"tm-chainsafer-snap-test\"' && NODE_ENV=development mm-snap build",
         "clean": "rimraf dist",
         "deploy": "npm publish",
         "lint": "yarn lint:eslint && yarn lint:misc --check",
