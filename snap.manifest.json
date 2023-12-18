@@ -1,14 +1,14 @@
 {
-  "version": "1.0.227",
+  "version": "1.0.239",
   "description": "TM Chainsafer of MetaMask Snaps.",
   "proposedName": "TM ChainSafer",
   "source": {
-    "shasum": "Mr0KQ/c6Sk52iEg71spOJSacsS79p1nKoQrpFUOU6OQ=",
+    "shasum": "19Ijtz/8XfTw8ovLOUwMdJc3SO7iW3KJW6owaC26Jqo=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
         "iconPath": "images/icon.svg",
-        "packageName": "tm-chainsafer-snap-beta",
+        "packageName": "tm-chainsafer-snap-test",
         "registry": "https://registry.npmjs.org/"
       }
     }

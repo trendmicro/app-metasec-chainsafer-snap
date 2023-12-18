@@ -43,11 +43,11 @@ phases:
       # Remove Prod build
       - rm snap-prod.tar.gz
       # Run Beta build and upload artifact
-      - ./build/build.sh beta  ${VERSION_MAJOR} ${VERSION_MINOR} ${CODEBUILD_BUILD_NUMBER}
-      - mgcp-cicd artifact upload --file snap-beta.tar.gz --version $BUILD_VERSION-beta
-      - rm snap-beta.tar.gz
+      - ./build/build.sh stag  ${VERSION_MAJOR} ${VERSION_MINOR} ${CODEBUILD_BUILD_NUMBER}
+      - mgcp-cicd artifact upload --file snap-stag.tar.gz --version $BUILD_VERSION-stag
+      - rm snap-stag.tar.gz
       # Run Test build and upload artifact
-      - ./build/build.sh test  ${VERSION_MAJOR} ${VERSION_MINOR} ${CODEBUILD_BUILD_NUMBER}
+      - ./build/build.sh test ${VERSION_MAJOR} ${VERSION_MINOR} ${CODEBUILD_BUILD_NUMBER}
       - mgcp-cicd artifact upload --file snap-test.tar.gz --version $BUILD_VERSION-test
       - rm snap-test.tar.gz
       # Scan secrets in code

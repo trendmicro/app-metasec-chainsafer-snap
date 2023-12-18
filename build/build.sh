@@ -1,7 +1,7 @@
 #!/bin/bash 
 set -e
 
-#1={beta,prod} 2={major version} 3={minor version} 4={build number}
+#1={test,stag,prod} 2={major version} 3={minor version} 4={build number}
 
 BUILD_ENV="${1}"
 MAJOR_VERSION="${2}"
@@ -10,21 +10,11 @@ BUILD_VERSION="${4}"
 
 CURRENT_PATH=`pwd`
 
-SCRIPT_PATH=$(dirname $0)
-BASE_PATH="${CURRENT_PATH}/${SCRIPT_PATH}"
-
-appVersion="${BASE_PATH}/version/prod/version.ts"
-appVersionBak="${BASE_PATH}/version/prod/version.ts.bak"
-cp "${appVersion}" "${appVersionBak}"
-rm "${appVersion}"
-
-sed s/{MAJOR_VERSION}/${MAJOR_VERSION}/g ${appVersionBak} \
-  | sed s/{MINOR_VERSION}/${MINOR_VERSION}/g \
-  | sed s/{BUILD_VERSION}/${BUILD_VERSION}/g \
-  > ${appVersion}
-
 appVersions="${MAJOR_VERSION}.${MINOR_VERSION}.${BUILD_VERSION}"
 echo "appVersions ${appVersions}"
+
+npm run update:version ${appVersions}
+npm run update-snap-version this.version=\"${appVersions}\"
 
 echo "npm version"
 npm -version
@@ -37,15 +27,12 @@ echo "ready to npm install"
 npm install --unsafe-perm
 
 echo "ready to run build"
-if [ ${1} == "beta" ] 
+if [ ${1} == "stag" ] 
 then
-  npm run update:version ${appVersions}
   npm run build:stag
-elif [ "${1}" == "test" ]; then
-  npm run update:version ${appVersions}
+elif [ ${1} == "test" ]; then
   npm run build:test
 else
-  npm run update:version ${appVersions}
   npm run build
 fi
 
@@ -61,9 +48,5 @@ if [ "$exitcode" != "1" ] && [ "$exitcode" != "0" ]; then
     exit $exitcode
 fi
 set -e
-
-cp "${appVersionBak}" "${appVersion}"
-rm "${appVersionBak}"
-rm -rf node_modules
 
 echo "build success"
