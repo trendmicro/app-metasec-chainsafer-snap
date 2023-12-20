@@ -1,3 +1,5 @@
+import { DAPP_LINK } from "./config"
+
 export const riskIconMapping = {
     transaction_risks_summary: {
         fatal_risk: '❌',
@@ -12,9 +14,9 @@ export const riskIconMapping = {
 }
 export const updateAlert = {
     forceUpdate:
-        '[❕ ALERT] Current version is not available anymore! Please visit 🌐“https://chainsafer.stag.nexone.io/snap/#/” to update.',
+        `[❕ ALERT] Current version is not available anymore! Please visit 🌐“${DAPP_LINK}” to update.`,
     snapUpdate:
-        '[❕ ALERT] There is an update of ChainSafer Snap, for better protection, please visit 🌐“https://chainsafer.stag.nexone.io/snap/#/” to update.',
+        `[❕ ALERT] There is an update of ChainSafer Snap, for better protection, please visit 🌐“${DAPP_LINK}” to update.`,
 }
 
 export function collectionSummary(collectionTokenName: string, reputation: string) {
