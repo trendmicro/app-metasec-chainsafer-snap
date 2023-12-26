@@ -1,7 +1,9 @@
 # ChainSafer Snap
+
 Realtime risk check when use metamask send transaction.
 
 ## Folder Structure
+
 ```
 |-- Project
     |-- images                      --- snap logo defined
@@ -17,12 +19,13 @@ Realtime risk check when use metamask send transaction.
     |-- index.ts                    --- metamask event handler defined
 ```
 
-## Run 
-``` 
-> npm install 
-> npm start 
+## Run
+
+```
+> npm install
+> npm start
 ```
 
 ## Manual install
-visit our snap [website](https://chainsafer.stag.nexone.io/snap/#/) for manual install
 
+visit our snap [website](https://chainsafer.nexone.io/snap/#/) for manual install
