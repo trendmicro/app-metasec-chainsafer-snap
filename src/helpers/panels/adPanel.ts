@@ -1,6 +1,6 @@
-import { panel, divider,  text } from '@metamask/snaps-ui'
+import { panel, divider, text } from '@metamask/snaps-sdk'
 import { chainSaferAd } from '../../constants/content'
-export function convertAdPanel(){
+export function convertAdPanel() {
     return panel([
         divider(),
         text(chainSaferAd.adTitle),

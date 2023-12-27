@@ -1,4 +1,4 @@
-import { panel, text, divider } from '@metamask/snaps-ui'
+import { panel, text, divider } from '@metamask/snaps-sdk'
 import { headingText, serviceError, updateAlert } from '../../constants/content'
 import { TUpdateAlertPanel } from './types/panels.type'
 import { isGreaterVersion } from '../versionCheck'
