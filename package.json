@@ -34,9 +34,8 @@
     },
     "dependencies": {
         "@ethersproject/units": "^5.7.0",
-        "@metamask/snaps-cli": "^0.32.2",
-        "@metamask/snaps-types": "^0.32.2",
-        "@metamask/snaps-ui": "^0.32.2",
+        "@metamask/snaps-cli": "^4.0.0",
+        "@metamask/snaps-sdk": "^1.3.1",
         "auto-version-js": "^0.3.10",
         "browserify": "^17.0.0",
         "buffer": "^6.0.3",

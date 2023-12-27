@@ -1,4 +1,4 @@
-import { Copyable, Panel, Text, Heading, Divider, Spinner } from '@metamask/snaps-ui'
+import { Copyable, Panel, Text, Heading, Divider, Spinner } from '@metamask/snaps-sdk'
 import { IResponseError } from '../../../controllers/types/http.type'
 import { IPostTransactionRisksResponseParsed } from '../../parser/pgw/types/postTransactionRisks.type'
 import { IGetSnapLatestVersionResponseParsed } from '../../parser/pgw/types/getSnapLatestVersion.type'

@@ -3,7 +3,7 @@ import Logger from './logger'
 import { proxyConvertToPayload } from './../helpers/proxyRestructure'
 import { ISendTransactionProxyPayload } from './../helpers/types/proxyRestructure.type'
 import { IResponseError } from './../controllers/types/http.type'
-import { Json } from '@metamask/snaps-types'
+import { Json } from '@metamask/snaps-sdk'
 import { IPostTransactionRisksResponseParsed } from '../helpers/parser/pgw/types/postTransactionRisks.type'
 import {
     IPostTransactionSimulationRequestPayload,
@@ -17,7 +17,7 @@ const logger = new Logger('[controllers.chainsafer]')
 
 export const postTransactionRiskSummary = async (
     original: string,
-    transaction: Json,
+    transaction: Json
 ): Promise<[IPostTransactionRiskSummaryResponseParsed, IResponseError]> => {
     let result: IPostTransactionRiskSummaryResponseParsed =
         {} as IPostTransactionRiskSummaryResponseParsed
@@ -31,7 +31,7 @@ export const postTransactionRiskSummary = async (
 
     try {
         result = await pgw.postTransactionRiskSummary(
-            proxyConvertToPayload(original, txn as ISendTransactionProxyPayload),
+            proxyConvertToPayload(original, txn as ISendTransactionProxyPayload)
         )
     } catch (e) {
         logger.error(`${JSON.stringify(e)}`)
@@ -43,7 +43,7 @@ export const postTransactionRiskSummary = async (
 
 export const postTransactionRisk = async (
     original: string,
-    transaction: Json,
+    transaction: Json
 ): Promise<[IPostTransactionRisksResponseParsed, IResponseError]> => {
     let result: IPostTransactionRisksResponseParsed = {} as IPostTransactionRisksResponseParsed
     let error: IResponseError = null
@@ -56,7 +56,7 @@ export const postTransactionRisk = async (
 
     try {
         result = await pgw.postTransactionRisks(
-            proxyConvertToPayload(original, txn as ISendTransactionProxyPayload),
+            proxyConvertToPayload(original, txn as ISendTransactionProxyPayload)
         )
     } catch (e) {
         logger.error(`${JSON.stringify(e)}`)
@@ -68,7 +68,7 @@ export const postTransactionRisk = async (
 
 export const postTransactionSimulation = async (
     chainId: string,
-    transaction: Json,
+    transaction: Json
 ): Promise<[IPostTransactionSimulationResponseParsed, IResponseError]> => {
     let result: IPostTransactionSimulationResponseParsed =
         {} as IPostTransactionSimulationResponseParsed
@@ -111,7 +111,7 @@ export const getSnapLatestVersion = async (): Promise<
 }
 
 export const getTokenInfoBySimulationResult = async (
-    simulationResult: IPostTransactionSimulationResponseParsed,
+    simulationResult: IPostTransactionSimulationResponseParsed
 ): Promise<[IGetTokenInfoResponseParsed, IResponseError]> => {
     if (
         simulationResult &&
@@ -120,7 +120,7 @@ export const getTokenInfoBySimulationResult = async (
         simulationResult.senderAssetChange.tokenChanges.length > 0
     ) {
         const filterTokenChanges = simulationResult.senderAssetChange.tokenChanges.filter(
-            (tokenChange) => tokenChange.direction == 'in',
+            (tokenChange) => tokenChange.direction == 'in'
         )
         if (filterTokenChanges.length > 0) {
             return await getTokenInfo(filterTokenChanges[0].contractAddress)
@@ -133,7 +133,7 @@ export const getTokenInfoBySimulationResult = async (
 }
 
 export const getTokenInfo = async (
-    contractAddress: string,
+    contractAddress: string
 ): Promise<[IGetTokenInfoResponseParsed, IResponseError]> => {
     let result: IGetTokenInfoResponseParsed = {} as IGetTokenInfoResponseParsed
     let error: IResponseError = null
@@ -148,7 +148,7 @@ export const getTokenInfo = async (
     return [result, error]
 }
 export const getAddressLabel = async (
-    contractAddress: string,
+    contractAddress: string
 ): Promise<[IGetAddressLabelResponseParsed, IResponseError]> => {
     let result: IGetAddressLabelResponseParsed = {} as IGetAddressLabelResponseParsed
     let error: IResponseError = null

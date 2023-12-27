@@ -1,4 +1,4 @@
-import { Panel, heading, panel, text } from '@metamask/snaps-ui'
+import { Panel, heading, panel, text } from '@metamask/snaps-sdk'
 import { TPaymentDetail } from './panels/types/panels.type'
 import {
     simulationBalanceChange,

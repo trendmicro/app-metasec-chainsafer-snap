@@ -1,4 +1,4 @@
-import { heading, divider, panel, text } from '@metamask/snaps-ui'
+import { heading, divider, panel, text } from '@metamask/snaps-sdk'
 import { headingText, serviceError } from '../../constants/content'
 import { TProjectInsightPanel } from './types/panels.type'
 export const covertToProjectInsightPanel: TProjectInsightPanel = (result, error) => {

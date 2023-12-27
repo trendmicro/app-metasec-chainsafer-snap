@@ -5,7 +5,7 @@ import {
     getSnapLatestVersion,
     getTokenInfoBySimulationResult,
 } from '../controllers/chainsafer'
-import { panel, divider, text } from '@metamask/snaps-ui'
+import { panel, divider, text } from '@metamask/snaps-sdk'
 import { serviceError } from '../constants/content'
 import { TTransactionInsightLayout } from './types/snapContent.type'
 import { TUpdateAlert } from './panels/types/panels.type'
@@ -47,7 +47,7 @@ export const transactionInsightLayout: TTransactionInsightLayout = async ({
         let projectInsightPanel = panel([])
         const networkId =
             chainId.length > 0 && chainId.split(':').length == 2 ? chainId.split(':')[1] : ''
-        
+
         if (supportChainIds.includes(networkId)) {
             const [simulationResult, simulationError] = await postTransactionSimulation(
                 chainId,

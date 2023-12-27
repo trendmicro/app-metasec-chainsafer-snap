@@ -1,4 +1,4 @@
-import { panel, heading, text, divider } from '@metamask/snaps-ui'
+import { panel, heading, text, divider } from '@metamask/snaps-sdk'
 import { TSimulationPanel } from './types/panels.type'
 import {
     headingText,
