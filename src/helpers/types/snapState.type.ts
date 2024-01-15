@@ -1,4 +1,4 @@
-import { Json } from '@metamask/snaps-types'
+import { Json } from '@metamask/snaps-sdk'
 
 export type TSnapState = {
     snapInfo: SnapInfo

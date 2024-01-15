@@ -1,58 +1,62 @@
 version: 0.2
 
 env:
-  variables:
-    # should be integer string, or "mgcp-cicd env" command will go mad
-    VERSION_MAJOR: "1"
-    VERSION_MINOR: "0"
-    VERSION_LIBRARY_CICD: "latest"
-    INFRA_NAME: "mgcp"
-    INFRA_PREFIX: "mgcp"
-    TM_PROJECT_CODE: "PDG_220016"
+    variables:
+        # should be integer string, or "mgcp-cicd env" command will go mad
+        VERSION_MAJOR: '1'
+        VERSION_MINOR: '0'
+        VERSION_LIBRARY_CICD: 'latest'
+        INFRA_NAME: 'mgcp'
+        INFRA_PREFIX: 'mgcp'
+        TM_PROJECT_CODE: 'PDG_220016'
 phases:
-  install:
-    runtime-versions:
-      nodejs: 14
-      python: 3.7
-    commands:
-      # node update to v16
-      - n 16
-      # Install library-cicd
-      - aws s3 cp s3://${MGCP_CB_PACKAGE_BUCKET_NAME}/library-cicd/library-cicd-${VERSION_LIBRARY_CICD}.tar.gz library-cicd.tar.gz
-      - pip install -q -U pip==22.2.2
-      - pip install -q library-cicd.tar.gz
-  pre_build:
-    commands:
-      # Init build env
-      - mgcp-cicd env init --app-ci
-      - . ./.mgcp-cicd.env
-      # Init Git submodule, actually golang doesn't need submodule, what we need is ssh key
-      - mgcp-cicd git init-submodule
-      # check node version
-      - node -v
-      # Set variables
-      - BUILD_VERSION=$(mgcp-cicd env build-version --major ${VERSION_MAJOR} --minor ${VERSION_MINOR} --patch ${CODEBUILD_BUILD_NUMBER})
-  build:
-    commands:
-      - echo "Going to build ${BUILD_VERSION}"
-      # npm install
-      - npm install
-      # Run Prod build and upload artifact
-      - ./build/build.sh prod ${VERSION_MAJOR} ${VERSION_MINOR} ${CODEBUILD_BUILD_NUMBER}
-      - mgcp-cicd artifact upload --file snap-prod.tar.gz --version $BUILD_VERSION-prod
-      # Remove Prod build
-      - rm snap-prod.tar.gz
-      # Run Beta build and upload artifact
-      - ./build/build.sh beta  ${VERSION_MAJOR} ${VERSION_MINOR} ${CODEBUILD_BUILD_NUMBER}
-      - mgcp-cicd artifact upload --file snap-beta.tar.gz --version $BUILD_VERSION-beta
-      - rm snap-beta.tar.gz
-      # Scan secrets in code
-      - mgcp-cicd scan secrets
-      - mgcp-cicd scan source --path $(pwd) --jid ${TM_PROJECT_CODE} --merged-only || true
-      # Tagging on Github repo ONLY when PR is merged
-      - mgcp-cicd git create-tag --tag ${BUILD_VERSION} --commit-id ${CODEBUILD_RESOLVED_SOURCE_VERSION} --merged-only
-  post_build:
-    commands:
-      - echo "post build"
-      - echo "send notification to Urbancode"
-      - mgcp-cicd valuestream report-build --application ${MGCP_CB_APP_NAME} --version ${BUILD_VERSION} --status ${CODEBUILD_BUILD_SUCCEEDING} --commitid ${CODEBUILD_RESOLVED_SOURCE_VERSION} --buildnumber ${CODEBUILD_BUILD_NUMBER}
+    install:
+        runtime-versions:
+            nodejs: 14
+            python: 3.7
+        commands:
+            # node update to v18
+            - n 18
+            # Install library-cicd
+            - aws s3 cp s3://${MGCP_CB_PACKAGE_BUCKET_NAME}/library-cicd/library-cicd-${VERSION_LIBRARY_CICD}.tar.gz library-cicd.tar.gz
+            - pip install -q -U pip==22.2.2
+            - pip install -q library-cicd.tar.gz
+    pre_build:
+        commands:
+            # Init build env
+            - mgcp-cicd env init --app-ci
+            - . ./.mgcp-cicd.env
+            # Init Git submodule, actually golang doesn't need submodule, what we need is ssh key
+            - mgcp-cicd git init-submodule
+            # check node version
+            - node -v
+            # Set variables
+            - BUILD_VERSION=$(mgcp-cicd env build-version --major ${VERSION_MAJOR} --minor ${VERSION_MINOR} --patch ${CODEBUILD_BUILD_NUMBER})
+    build:
+        commands:
+            - echo "Going to build ${BUILD_VERSION}"
+            # npm install
+            - npm install
+            # Run Prod build and upload artifact
+            - ./build/build.sh prod ${VERSION_MAJOR} ${VERSION_MINOR} ${CODEBUILD_BUILD_NUMBER}
+            - mgcp-cicd artifact upload --file snap-prod.tar.gz --version $BUILD_VERSION-prod
+            # Remove Prod build
+            - rm snap-prod.tar.gz
+            # Run Beta build and upload artifact
+            - ./build/build.sh stag  ${VERSION_MAJOR} ${VERSION_MINOR} ${CODEBUILD_BUILD_NUMBER}
+            - mgcp-cicd artifact upload --file snap-stag.tar.gz --version $BUILD_VERSION-stag
+            - rm snap-stag.tar.gz
+            # Run Test build and upload artifact
+            - ./build/build.sh test ${VERSION_MAJOR} ${VERSION_MINOR} ${CODEBUILD_BUILD_NUMBER}
+            - mgcp-cicd artifact upload --file snap-test.tar.gz --version $BUILD_VERSION-test
+            - rm snap-test.tar.gz
+            # Scan secrets in code
+            - mgcp-cicd scan secrets
+            - mgcp-cicd scan source --path $(pwd) --jid ${TM_PROJECT_CODE} --merged-only || true
+            # Tagging on Github repo ONLY when PR is merged
+            - mgcp-cicd git create-tag --tag ${BUILD_VERSION} --commit-id ${CODEBUILD_RESOLVED_SOURCE_VERSION} --merged-only
+    post_build:
+        commands:
+            - echo "post build"
+            - echo "send notification to Urbancode"
+            - mgcp-cicd valuestream report-build --application ${MGCP_CB_APP_NAME} --version ${BUILD_VERSION} --status ${CODEBUILD_BUILD_SUCCEEDING} --commitid ${CODEBUILD_RESOLVED_SOURCE_VERSION} --buildnumber ${CODEBUILD_BUILD_NUMBER}

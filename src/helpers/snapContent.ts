@@ -4,9 +4,8 @@ import {
     postTransactionRiskSummary,
     getSnapLatestVersion,
     getTokenInfoBySimulationResult,
-    getAddressLabel,
 } from '../controllers/chainsafer'
-import { panel, divider, text } from '@metamask/snaps-ui'
+import { panel, divider, text } from '@metamask/snaps-sdk'
 import { serviceError } from '../constants/content'
 import { TTransactionInsightLayout } from './types/snapContent.type'
 import { TUpdateAlert } from './panels/types/panels.type'
@@ -48,7 +47,7 @@ export const transactionInsightLayout: TTransactionInsightLayout = async ({
         let projectInsightPanel = panel([])
         const networkId =
             chainId.length > 0 && chainId.split(':').length == 2 ? chainId.split(':')[1] : ''
-        
+
         if (supportChainIds.includes(networkId)) {
             const [simulationResult, simulationError] = await postTransactionSimulation(
                 chainId,
@@ -57,10 +56,9 @@ export const transactionInsightLayout: TTransactionInsightLayout = async ({
             const [tokenInfoResult, tokenInfoError] = await getTokenInfoBySimulationResult(
                 simulationResult
             )
-            simulationPanel = convertToSimulationPanel(
+            simulationPanel = await convertToSimulationPanel(
                 simulationResult,
-                simulationError,
-                tokenInfoResult && tokenInfoResult.BlueCheckMark
+                simulationError
             )
             projectInsightPanel = covertToProjectInsightPanel(tokenInfoResult, tokenInfoError)
         } else {
@@ -77,7 +75,6 @@ export const transactionInsightLayout: TTransactionInsightLayout = async ({
                 adDisplayPanel,
                 updateAlert.panel,
                 simulationPanel,
-                divider(),
                 riskSummaryPanel,
                 riskPanel,
                 projectInsightPanel,

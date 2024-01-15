@@ -1,4 +1,4 @@
-import { OnTransactionHandler, OnRpcRequestHandler } from '@metamask/snaps-types'
+import { OnTransactionHandler, OnRpcRequestHandler } from '@metamask/snaps-sdk'
 import { transactionInsightLayout } from './helpers/snapContent'
 import { TSnapState } from './helpers/types/snapState.type'
 import { setSnapState } from './helpers/snapState'
@@ -17,4 +17,3 @@ export const onTransaction: OnTransactionHandler = async ({
 
     return transactionInsightLayout({ transactionOrigin, chainId, transaction })
 }
-
