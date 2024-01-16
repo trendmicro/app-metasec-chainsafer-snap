@@ -31,6 +31,7 @@ export interface IPostTransactionSimulationResponseBody {
 export interface IPostTransactionSimulationAssetChangeBody {
     address: string
     balance_diff: IPostTransactionSimulationBalanceDiffBody
+    is_contract: boolean
     token_changes: IPostTransactionSimulationTokenChangeBody[]
 }
 
@@ -83,6 +84,7 @@ export interface IPostTransactionSimulationAssetChangeParsed {
     address: string
     balanceDiff: IPostTransactionSimulationBalanceDiffParsed
     tokenChanges: IPostTransactionSimulationTokenChangeParsed[]
+    isContract: boolean
 }
 
 export interface IPostTransactionSimulationTokenChangeParsed {
@@ -119,5 +121,5 @@ export interface IPostTransactionSimulationContractParsed {
 }
 
 export type TPostTransactionSimulation = (
-    responseBody: IPostTransactionSimulationResponseBody
+    responseBody: IPostTransactionSimulationResponseBody,
 ) => IPostTransactionSimulationResponseParsed

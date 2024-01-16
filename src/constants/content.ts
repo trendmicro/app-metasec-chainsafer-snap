@@ -1,3 +1,5 @@
+import { DAPP_LINK } from "./config"
+
 export const riskIconMapping = {
     transaction_risks_summary: {
         fatal_risk: '❌',
@@ -12,24 +14,38 @@ export const riskIconMapping = {
 }
 export const updateAlert = {
     forceUpdate:
-        '[❕ ALERT] Current version is not available anymore! Please visit 🌐“https://chainsafer.stag.nexone.io/snap/#/” to update.',
+        `[❕ ALERT] Current version is not available anymore! Please visit 🌐“${DAPP_LINK}” to update.`,
     snapUpdate:
-        '[❕ ALERT] There is an update of ChainSafer Snap, for better protection, please visit 🌐“https://chainsafer.stag.nexone.io/snap/#/” to update.',
+        `[❕ ALERT] There is an update of ChainSafer Snap, for better protection, please visit 🌐“${DAPP_LINK}” to update.`,
 }
 
 export function collectionSummary(collectionTokenName: string, reputation: string) {
     return `Collection:${collectionTokenName} (Reputation ${reputation} )`
 }
 export const serviceError = {
-    serviceError: '⛔️**Oops, service have something problems...**!😬',
-    simulationError: '😕 Transaction simulation unavailable',
+    serviceError: 'Trend Micro ChainSafer is not available now, please try again later.',
+    simulationError: '[Simulation] Service not available now.',
     riskApiError: '🚧 [Risk detection] No service',
     riskApiErrorDetail: 'Risk detection service not available now, please try again later.',
     unsupportedChainId: '[Simulation] Only Support Ethereum Mainnet currently.',
 }
+
+export function countRecipient(recipientNumber: number) {
+    return `This transaction goes thru ${recipientNumber} contracts/ recipients`
+}
+
+export function recipientLableInfo(name: string, source: string) {
+    return `🚨Label:  ${name}_${source}`
+}
+
+export function recipientListWarningContractTitle(contract: number) {
+    return `, ${contract} of them might exist security concern:`
+}
+
 export function evmErrorAddress(evmErrorAddress: string) {
     return `address: ${evmErrorAddress}`
 }
+
 export function evmErrMessage(evmErrMessage: string) {
     return `error: ${evmErrMessage}`
 }
@@ -37,11 +53,12 @@ export function evmErrMessage(evmErrMessage: string) {
 export function transactionMethodIs(method: string) {
     return `Transaction Method: ${method}`
 }
-export const chainSaferAd = {
-    adTitle:'[ 📣 NEWS] Want a comprehensive protection? 🛡️ ',
-    adContent:'Check the SecuX x Trend Micro ChainSafer special hardware wallet 💪🏼'
 
+export const chainSaferAd = {
+    adTitle: '[ 📣 NEWS] Want a comprehensive protection? 🛡️ ',
+    adContent: 'Check the SecuX x Trend Micro ChainSafer special hardware wallet 💪🏼',
 }
+
 export const headingText = {
     latestVersion: 'Latest Version',
     riskSummary: 'Risk Summary Check',
@@ -53,25 +70,29 @@ export const headingText = {
     projectInsightPanel: 'Project Insight',
     recipientsPanel: 'Recipients',
 }
+
 export function tokenNameWithBlueMark(tokenName: string) {
     return `${tokenName} (Reputation 🆗)`
 }
+
 export function tokenNameWithoutBlueMark(tokenName: string) {
     return `${tokenName} (Reputation ❔️)`
 }
+
 export function tokenSymbolAndValue(
     tokenType: string,
     tokenSymbol: string,
     rawAmount: string,
-    usd: number
+    usd: number,
 ) {
     return `{${tokenType}} ${rawAmount} ${tokenSymbol} (≈$ ${usd})`
 }
+
 export function balanceWithUsd(eth: number, usd: number) {
     return `${eth} ETH (≈$ ${usd})`
 }
 
-export function resProjectInsightWebsite(website: string) { 
+export function resProjectInsightWebsite(website: string) {
     return `Website  🌐 [${website}]`
 }
 
@@ -90,14 +111,16 @@ export function resProjectInsightDiscord(discord: string) {
 export function balanceWithoutUsd(eth: number) {
     return `${eth} ETH`
 }
+
 export const simulationBalanceChange = {
     balanceChangeBefore: 'Before ➞',
     balanceChangeAfter: '➞ After',
     separators: '---',
     balanceDiff: '💰Balance Diff.',
     paymentDetailPanelGet: '➞ Get',
-    paymentDetailPanelSell: '➞ Sell',
+    paymentDetailPanelPay: 'Pay ➞',
 }
+
 export const apiMapping = {
     transaction_risks_summary: {
         fatal_risk: 'Extreme Risk',
@@ -153,12 +176,10 @@ export const apiMapping = {
         rule_ssl_domain_mismatch_with_withdrawapecoin: 'Domain-SSL mismatch & withdraw ape',
         rule_domain_short_available_time_with_increaseapproval:
             'Short duration domain & increase approval',
-        rule_ssl_domain_mismatch_with_increaseapproval:
-            'Domain-SSL mismatch & increase approval',
+        rule_ssl_domain_mismatch_with_increaseapproval: 'Domain-SSL mismatch & increase approval',
         rule_domain_short_available_time_with_increaseallowance:
-            'Short duration domain & increase allowance', 
-        rule_ssl_domain_mismatch_with_increaseallowance:
-            'Domain-SSL mismatch & increase allowance',         
+            'Short duration domain & increase allowance',
+        rule_ssl_domain_mismatch_with_increaseallowance: 'Domain-SSL mismatch & increase allowance',
         rule_ssl_short_available_time_with_erc20_transfer:
             'SSL certificate expires soon & ERC-20 transfer to account',
         rule_ssl_short_available_time_with_eip712_transfer:
@@ -223,13 +244,15 @@ export const apiMapping = {
             'SSL certificate expires soon & increase approval',
         rule_domain_short_create_time_with_increaseapproval:
             'Recently created domain & increase approval',
-        rule_ssl_short_create_time_with_increaseapproval: 'Recent SSL certificate & increase approval',
+        rule_ssl_short_create_time_with_increaseapproval:
+            'Recent SSL certificate & increase approval',
         rule_address_increase_approval_caution: 'increase approval',
         rule_ssl_short_available_time_with_increaseallowance:
             'SSL certificate expires soon & increase allowance',
         rule_domain_short_create_time_with_increaseallowance:
             'Recently created domain & increase allowance',
-        rule_ssl_short_create_time_with_increaseallowance: 'Recent SSL certificate & increase allowance',
+        rule_ssl_short_create_time_with_increaseallowance:
+            'Recent SSL certificate & increase allowance',
         rule_address_increase_allowance_caution: 'increase allowance',
     },
     transaction_risks: {

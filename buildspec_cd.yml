@@ -25,13 +25,13 @@ phases:
       #check env
       - |
         if [ "${MGCP_CICD_ACCOUNT_NAME}" == "test" ] ; then
-          BUILD_PHASE=beta
+          BUILD_PHASE=test
         elif [ "${MGCP_CICD_ACCOUNT_NAME}" == "stag" ] ; then
-          BUILD_PHASE=beta
+          BUILD_PHASE=stag
         elif [ "${MGCP_CICD_ACCOUNT_NAME}" == "int" ] ; then
-          BUILD_PHASE=beta
+          BUILD_PHASE=stag
         elif [ "${MGCP_CICD_ACCOUNT_NAME}" == "beta" ] ; then
-          BUILD_PHASE=beta
+          BUILD_PHASE=stag
         elif [ "${MGCP_CICD_ACCOUNT_NAME}" == "prod" ] ; then
           BUILD_PHASE=prod
         fi
